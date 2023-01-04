@@ -40,6 +40,7 @@ function App() {
     <div className="App">
       <Header cartItems={cartItems} />
       <Routes>
+        <Route path="*" element={<Home onAdd={onAdd} />} />
         <Route path="/" element={<Home onAdd={onAdd} />} />
         <Route path="/phongkhach" element={<LivingRoom onAdd={onAdd} />} />
         <Route path="/phongbep" element={<Kitchen onAdd={onAdd} />} />
