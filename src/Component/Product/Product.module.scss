@@ -1,0 +1,146 @@
+.room {
+  position: relative;
+  background-color: #ebebeb;
+
+  &_product {
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+    max-width: 1170px;
+    margin: auto;
+    margin-top: 40px;
+  }
+
+  &_product1 {
+    position: relative;
+    margin: 0 10px 20px;
+    background-color: #fff;
+    border-radius: 4px;
+    border: 1px solid #ebebeb;
+  }
+
+  &_pos {
+    position: absolute;
+    left: 10px;
+    margin-top: 10px;
+    background-color: #f62d3e;
+    color: #fff;
+    width: 50px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    font-weight: 700;
+    border-radius: 4px;
+  }
+
+  &_badge {
+    position: relative;
+    overflow: hidden;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    height: 200px;
+
+    img {
+      width: 270px;
+      height: 200px;
+      border-top-left-radius: 4px;
+      border-top-right-radius: 4px;
+
+      &:hover {
+        transform: scale(1.2);
+        cursor: pointer;
+        transition: all 0.3s linear;
+      }
+    }
+  }
+
+  &_price {
+    margin: 10px 0;
+  }
+
+  &_text {
+    text-align: center;
+    padding-bottom: 20px;
+
+    p {
+      font-size: 16px;
+      &:hover {
+        color: #f62d3e;
+        cursor: pointer;
+      }
+    }
+
+    button {
+      color: #fff;
+      background-color: #f62d3e;
+      border: none;
+      padding: 10px 14px;
+      border-radius: 4px;
+
+      &:hover {
+        transition: all 0.3s linear;
+        background-color: #c52432;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.priceAmount {
+  color: #858585;
+  text-decoration: line-through;
+  font-size: 14px;
+}
+
+.priceRed {
+  color: #f62d3e;
+  margin-left: 10px;
+}
+
+//reponsive
+@media screen and (min-width: 922px) and (max-width: 1200px) {
+  .room {
+    &_product1 {
+      flex-basis: 31%;
+    }
+
+    &_badge {
+      img {
+        width: 100%;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 922px) {
+  .room {
+    &_product1 {
+      width: 30%;
+    }
+
+    &_badge {
+      img {
+        width: 100%;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 576px) and (max-width: 768px) {
+  .room {
+    &_product {
+      justify-content: center;
+    }
+
+    &_product1 {
+      width: 45%;
+      margin-left: 16px;
+    }
+
+    &_badge {
+      img {
+        width: 100%;
+      }
+    }
+  }
+}
