@@ -261,7 +261,7 @@ function Header(props) {
           <ul>
             {links.map((link, index) => {
               return (
-                <li>
+                <li key={index}>
                   <Link
                     onClick={() => {
                       setType(link.path);

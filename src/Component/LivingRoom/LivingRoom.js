@@ -82,12 +82,10 @@ function LivingRoom(props) {
           </div>
 
           <ul>
-            <select className={clsx(styles.select)}>
+            <select defaultValue="" className={clsx(styles.select)}>
               <option value="0">Thứ tự theo mức độ phổ biến</option>
               <option value="1">Thứ tự theo điểm đánh giá</option>
-              <option value="2" selected="selected">
-                Mới nhất
-              </option>
+              <option value="2">Mới nhất</option>
               <option value="3">Thứ tự theo giá: thấp đến cao</option>
               <option value="4">Thứ tự theo giá: cao đến thấp</option>
             </select>
