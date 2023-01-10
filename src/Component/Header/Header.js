@@ -32,10 +32,9 @@ function Header(props) {
     search.current.focus();
   };
 
-  const handleDelete = () => {
+  const handleDelete = (index) => {
     const newJobs = [...product];
-    newJobs.splice(state, 1);
-    setProduct(newJobs);
+    setProduct(newJobs.filter((e, i) => i !== index));
     setSate("");
     search.current.focus();
   };
@@ -205,6 +204,7 @@ function Header(props) {
             </>
             <span className={clsx(styles.cartSL)}>{cartItems.length}</span>
           </Link>
+
           <div className={clsx(styles.wrapper2_search)}>
             <div>
               <input
@@ -234,7 +234,10 @@ function Header(props) {
                         ></i>
                         {product.state}
                       </div>
-                      <p onClick={handleDelete} className={clsx(styles.delete)}>
+                      <p
+                        onClick={(e) => handleDelete(index, e)}
+                        className={clsx(styles.delete)}
+                      >
                         Xóa
                       </p>
                     </li>
@@ -246,6 +249,7 @@ function Header(props) {
               </button>
             </div>
           </div>
+
           <div className={clsx(styles.wrapper2_phone)}>
             <img alt="" src={Phone} />
             <div className={clsx(styles.wrapper2_hotline)}>

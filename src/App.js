@@ -13,14 +13,16 @@ import Cart from "./Component/Cart/Cart";
 function App() {
   const [cartItems, setCartItems] = useState([]);
   const onAdd = (product) => {
-    const exist = cartItems.find((x) => {
-      return x.id === product.id;
+    const exist = cartItems.find((cartItem) => {
+      return cartItem.id === product.id;
     });
 
     if (exist) {
       setCartItems(
-        cartItems.map((x) =>
-          x.id === product.id ? { ...exist, qty: exist.qty + 1 } : x
+        cartItems.map((cartItem) =>
+          cartItem.id === product.id
+            ? { ...exist, qty: exist.qty + 1 }
+            : cartItem
         )
       );
     } else {
@@ -29,7 +31,7 @@ function App() {
   };
 
   const onDelete = (product) => {
-    setCartItems(cartItems.filter((x) => x.id !== product.id));
+    setCartItems(cartItems.filter((cartItem) => cartItem.id !== product.id));
   };
 
   const total = cartItems.reduce(
