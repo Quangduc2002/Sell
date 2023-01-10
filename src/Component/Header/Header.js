@@ -27,9 +27,13 @@ function Header(props) {
   const search = useRef();
 
   const HandleOnSubmit = () => {
-    setProduct([...product, { state }]);
-    setSate("");
-    search.current.focus();
+    if (state !== "") {
+      setProduct([...product, { state }]);
+      setSate("");
+      search.current.focus();
+    } else {
+      search.current.focus();
+    }
   };
 
   const handleDelete = (index) => {
@@ -46,6 +50,7 @@ function Header(props) {
     { path: "/phonglamviec", title: "Phòng làm việc" },
     { path: "/phongngu", title: "Phòng ngủ" },
   ];
+
   const [type, setType] = useState("/");
 
   return (
@@ -209,7 +214,7 @@ function Header(props) {
             <div>
               <input
                 className={clsx(styles.input)}
-                onClick={() => setShow1(!show1)}
+                onFocus={() => setShow1(true)}
                 ref={search}
                 value={state}
                 onChange={(e) => {
@@ -358,6 +363,15 @@ function Header(props) {
             setShow2(!show2);
           }}
           className={clsx(styles.model)}
+        />
+      )}
+
+      {show1 && (
+        <div
+          onClick={() => {
+            setShow1(false);
+          }}
+          className={clsx(styles.model, styles.model_search)}
         />
       )}
     </div>

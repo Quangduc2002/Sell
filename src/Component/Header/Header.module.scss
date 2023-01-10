@@ -66,6 +66,7 @@
 
   &_search {
     position: relative;
+    z-index: 3;
     input {
       height: 40px;
       width: 500px;
@@ -392,6 +393,10 @@
   background: rgba(0, 0, 0, 0.4);
   animation: model 0.5s linear;
   z-index: 2;
+
+  &_search {
+    background: rgba(0, 0, 0, 0.01);
+  }
 }
 
 @keyframes model {
