@@ -61,9 +61,19 @@
   &_text {
     text-align: center;
     padding-bottom: 20px;
+    padding-top: 10px;
 
     p {
       font-size: 16px;
+      max-width: 200px;
+      margin: auto;
+      // line-height: 20px;
+      // tên sản phẩm dài quá kích thước đã cho thì hiện dấu 3 chấm
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 1; //muốn dấu 3 chấm hiện trên dòng nào ?
+
       &:hover {
         color: #f62d3e;
         cursor: pointer;

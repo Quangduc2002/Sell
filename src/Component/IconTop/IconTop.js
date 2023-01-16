@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import styles from "./Top.module.scss";
 import clsx from "clsx";
+import styles from "./Top.module.scss";
 
 function IconTop() {
   const [goToTop, setGoToTop] = useState(false);

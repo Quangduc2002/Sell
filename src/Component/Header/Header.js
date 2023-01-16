@@ -1,9 +1,8 @@
-import { Link } from "react-router-dom";
-import { useRef, useState } from "react";
-import { useForm } from "react-hook-form";
 import clsx from "clsx";
+import React, { useRef, useState } from "react";
+import { Link, NavLink } from "react-router-dom";
+import { useForm } from "react-hook-form";
 import styles from "../Header/Header.module.scss";
-import React from "react";
 import LogoTT from "../Image/logo-2.jpg";
 import Phone from "../Image/telephone.png";
 
@@ -50,8 +49,6 @@ function Header(props) {
     { path: "/phonglamviec", title: "Phòng làm việc" },
     { path: "/phongngu", title: "Phòng ngủ" },
   ];
-
-  const [type, setType] = useState("/");
 
   return (
     <div className={clsx(styles.wrapper)}>
@@ -195,15 +192,11 @@ function Header(props) {
           >
             <i className="fa-solid fa-bars"></i>
           </div>
-          <Link onClick={() => setType("/")} to="/">
+          <Link to="/">
             <img alt="" src={LogoTT} />
           </Link>
 
-          <Link
-            to="/giohang"
-            onClick={() => setType("/giohang")}
-            className={clsx(styles.cart, styles.cartMB)}
-          >
+          <Link to="/giohang" className={clsx(styles.cart, styles.cartMB)}>
             <>
               <i className="fa-solid fa-cart-shopping"></i>
             </>
@@ -227,7 +220,9 @@ function Header(props) {
                   className={clsx(
                     styles.wrapper2_search__ul,
                     styles.ul,
-                    product.length === 0 ? styles.active1 : ""
+                    product.length === 0
+                      ? styles.active1 && setShow1(false)
+                      : ""
                   )}
                 >
                   {product.map((product, index) => (
@@ -240,7 +235,7 @@ function Header(props) {
                         {product.state}
                       </div>
                       <p
-                        onClick={(e) => handleDelete(index, e)}
+                        onClick={() => handleDelete(index)}
                         className={clsx(styles.delete)}
                       >
                         Xóa
@@ -268,35 +263,21 @@ function Header(props) {
       <div className={clsx(styles.top2, styles.devices)}>
         <div className={clsx(styles.wrapper3)}>
           <ul>
-            {links.map((link, index) => {
+            {links.map((link) => {
               return (
-                <li key={index}>
-                  <Link
-                    onClick={() => {
-                      setType(link.path);
-                    }}
-                    key={index}
-                    className={clsx(
-                      styles.wrapper3_link,
-                      link.path === type ? styles.active : {}
-                    )}
-                    // cách 2
-                    // style={
-                    //   link.path === type ? { backgroundColor: "#f62d3e" } : {}
-                    // }
+                <li key={link.path}>
+                  <NavLink
+                    key={link.path}
+                    className={clsx(styles.wrapper3_link)}
                     to={link.path}
                   >
                     {link.title}
-                  </Link>
+                  </NavLink>
                 </li>
               );
             })}
           </ul>
-          <Link
-            to="/giohang"
-            onClick={() => setType("/giohang")}
-            className={clsx(styles.cart)}
-          >
+          <Link to="/giohang" className={clsx(styles.cart)}>
             <>
               <span>Giỏ hàng</span>
               <i className="fa-solid fa-cart-shopping"></i>
@@ -319,40 +300,28 @@ function Header(props) {
               </li>
               {links.map((link, index) => {
                 return (
-                  <li>
-                    <Link
+                  <li key={index}>
+                    <NavLink
                       onClick={() => {
-                        setType(link.path);
                         setShow2(!show2);
                       }}
                       key={index}
-                      className={clsx(
-                        styles.wrapper3_link,
-                        link.path === type ? styles.active : {}
-                      )}
-                      // cách 2
-                      // style={
-                      //   link.path === type ? { backgroundColor: "#f62d3e" } : {}
-                      // }
+                      className={clsx(styles.wrapper3_link)}
                       to={link.path}
                     >
                       {link.title}
-                    </Link>
+                    </NavLink>
                   </li>
                 );
               })}
             </ul>
-            <Link
-              to="/giohang"
-              onClick={() => setType("/giohang")}
-              className={clsx(styles.cart)}
-            >
+            <NavLink to="/giohang" className={clsx(styles.cart)}>
               <>
                 <span>Giỏ hàng</span>
                 <i className="fa-solid fa-cart-shopping"></i>
               </>
               <span className={clsx(styles.cartSL)}>{cartItems.length}</span>
-            </Link>
+            </NavLink>
           </div>
         </div>
       )}

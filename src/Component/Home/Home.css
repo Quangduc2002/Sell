@@ -36,3 +36,10 @@
   border: none;
   transition: all 0.3s linear;
 }
+
+@media screen and (max-width: 576px) {
+  .slick-prev,
+  .slick-next {
+    display: none !important;
+  }
+}

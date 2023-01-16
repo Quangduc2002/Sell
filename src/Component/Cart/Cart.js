@@ -7,7 +7,7 @@ function Cart(props) {
   const { cartItems, onDelete, total } = props;
 
   return (
-    <div>
+    <div className={clsx(styles.cart)}>
       {cartItems.length === 0 && (
         <div className={clsx(styles.product)}>
           <div>
@@ -58,11 +58,16 @@ function Cart(props) {
               </tr>
             );
           })}
-          <div className={clsx(styles.total)}>
-            <span>Tổng tiền: </span>
-            {total.toFixed(3)}.000 đ
-          </div>
         </tbody>
+        <div
+          className={clsx(
+            styles.total,
+            cartItems.length === 0 ? styles.active : ""
+          )}
+        >
+          <span>Tổng tiền: </span>
+          {total.toFixed(3)}.000 đ
+        </div>
       </table>
     </div>
   );

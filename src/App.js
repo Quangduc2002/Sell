@@ -1,5 +1,6 @@
-import "./App.css";
+import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
+import "./App.css";
 import Header from "./Component/Header/Header";
 import Home from "./Component/Home/Home";
 import Footer from "./Component/Footer/Footer";
@@ -7,7 +8,6 @@ import LivingRoom from "./Component/LivingRoom/LivingRoom";
 import Kitchen from "./Component/Kitchen/Kitchen";
 import WorkRoom from "./Component/WorkRoom/WorkRoom";
 import Bedroom from "./Component/Bedroom/Bedroom";
-import { useState } from "react";
 import Cart from "./Component/Cart/Cart";
 
 function App() {
@@ -34,15 +34,16 @@ function App() {
     setCartItems(cartItems.filter((cartItem) => cartItem.id !== product.id));
   };
 
+  //Tính tổng tiền
   const total = cartItems.reduce(
     (a, c) => a + parseFloat(c.sellingPrice) * c.qty,
     0
   );
+
   return (
     <div className="App">
       <Header cartItems={cartItems} />
       <Routes>
-        <Route path="*" element={<Home onAdd={onAdd} />} />
         <Route path="/" element={<Home onAdd={onAdd} />} />
         <Route path="/phongkhach" element={<LivingRoom onAdd={onAdd} />} />
         <Route path="/phongbep" element={<Kitchen onAdd={onAdd} />} />

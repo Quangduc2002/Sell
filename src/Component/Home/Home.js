@@ -143,32 +143,7 @@ function Home(props) {
 
       <div className={clsx(styles.home_product)}>
         {products.map((product) => {
-          return (
-            // <div key={index} className={clsx(styles.home_product1)}>
-            //   <div className={clsx(styles.home_image)}>
-            //     <div className={clsx(styles.home_badge)}>
-            //       <img alt="" src={product.image} />
-            //       <span className={clsx(styles.home_pos)}>
-            //         {product.discount}
-            //       </span>
-            //     </div>
-            //   </div>
-            //   <div className={clsx(styles.home_text)}>
-            //     <p>{product.text}</p>
-            //     <div className={clsx(styles.home_price)}>
-            //       <span className={clsx(styles.priceAmount)}>
-            //         {product.originalPrice}
-            //       </span>
-            //       <span className={clsx(styles.priceRed)}>
-            //         {product.sellingPrice}
-            //       </span>
-            //     </div>
-            //     <button>Thêm vào giỏ</button>
-            //   </div>
-            // </div>
-
-            <Product key={product.id} product={product} onAdd={onAdd} />
-          );
+          return <Product key={product.id} product={product} onAdd={onAdd} />;
         })}
       </div>
       <div className={clsx(styles.home_section)}>

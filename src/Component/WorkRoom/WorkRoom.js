@@ -9,6 +9,7 @@ import AVT4 from "../Image/ban-lam-viec-4.jpg";
 import AVT5 from "../Image/ban-lam-viec-5.jpg";
 import AVT7 from "../Image/avt7.jpg";
 import Product from "../Product/Product";
+import { Link } from "react-router-dom";
 function WorkRoom(props) {
   const { onAdd } = props;
   const products = [
@@ -66,7 +67,9 @@ function WorkRoom(props) {
       <div className={clsx(styles.room1)}>
         <div className={clsx(styles.medium)}>
           <div className={clsx(styles.breadcrumbs)}>
-            <p className={clsx(styles.Link)}>Trang chủ</p>
+            <Link to="/" className={clsx(styles.Link)}>
+              Trang chủ
+            </Link>
             <span className={clsx(styles.divider)}>/</span>
             <span>Phòng làm việc</span>
           </div>
@@ -84,32 +87,7 @@ function WorkRoom(props) {
       </div>
       <div className={clsx(styles.room_product)}>
         {products.map((product) => {
-          return (
-            // <div key={index} className={clsx(styles.room_product1)}>
-            //   <div className={clsx(styles.room_image)}>
-            //     <div className={clsx(styles.room_badge)}>
-            //       <img alt="" src={product.image} />
-            //       <span className={clsx(styles.room_pos)}>
-            //         {product.discount}
-            //       </span>
-            //     </div>
-            //   </div>
-            //   <div className={clsx(styles.room_text)}>
-            //     <p>{product.text}</p>
-            //     <div className={clsx(styles.room_price)}>
-            //       <span className={clsx(styles.priceAmount)}>
-            //         {product.originalPrice}
-            //       </span>
-            //       <span className={clsx(styles.priceRed)}>
-            //         {product.sellingPrice}
-            //       </span>
-            //     </div>
-            //     <button>Thêm vào giỏ</button>
-            //   </div>
-            // </div>
-
-            <Product key={product.id} onAdd={onAdd} product={product} />
-          );
+          return <Product key={product.id} onAdd={onAdd} product={product} />;
         })}
       </div>
 

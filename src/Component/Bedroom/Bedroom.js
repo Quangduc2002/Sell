@@ -8,6 +8,7 @@ import AVT3 from "../Image/avt6.jpg";
 import AVT4 from "../Image/avt10.jpg";
 import AVT5 from "../Image/avt11.jpg";
 import Product from "../Product/Product";
+import { Link } from "react-router-dom";
 function Bedroom(props) {
   const { onAdd } = props;
   const products = [
@@ -57,7 +58,9 @@ function Bedroom(props) {
       <div className={clsx(styles.room1)}>
         <div className={clsx(styles.medium)}>
           <div className={clsx(styles.breadcrumbs)}>
-            <p className={clsx(styles.Link)}>Trang chủ</p>
+            <Link to="/" className={clsx(styles.Link)}>
+              Trang chủ
+            </Link>
             <span className={clsx(styles.divider)}>/</span>
             <span>Phòng ngủ</span>
           </div>
@@ -75,32 +78,7 @@ function Bedroom(props) {
       </div>
       <div className={clsx(styles.room_product)}>
         {products.map((product) => {
-          return (
-            // <div key={index} className={clsx(styles.room_product1)}>
-            //   <div className={clsx(styles.room_image)}>
-            //     <div className={clsx(styles.room_badge)}>
-            //       <img alt="" src={product.image} />
-            //       <span className={clsx(styles.room_pos)}>
-            //         {product.discount}
-            //       </span>
-            //     </div>
-            //   </div>
-            //   <div className={clsx(styles.room_text)}>
-            //     <p>{product.text}</p>
-            //     <div className={clsx(styles.room_price)}>
-            //       <span className={clsx(styles.priceAmount)}>
-            //         {product.originalPrice}
-            //       </span>
-            //       <span className={clsx(styles.priceRed)}>
-            //         {product.sellingPrice}
-            //       </span>
-            //     </div>
-            //     <button>Thêm vào giỏ</button>
-            //   </div>
-            // </div>
-
-            <Product key={product.id} product={product} onAdd={onAdd} />
-          );
+          return <Product key={product.id} product={product} onAdd={onAdd} />;
         })}
       </div>
       <IconTop />
