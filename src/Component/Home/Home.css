@@ -1,45 +1,45 @@
 .slick-track {
-  display: flex;
+    display: flex;
 }
 
 .slick-arrow {
-  position: absolute;
-  align-items: center;
-  justify-content: center;
-  top: 44%;
-  width: 40px;
-  height: 40px;
-  background-color: rgba(255, 255, 255, 0.02);
-  border-radius: 50%;
-  cursor: pointer;
-  z-index: 1;
-  border: none;
-  border: 2px solid #fff;
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+    top: 44%;
+    width: 40px;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.02);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 1;
+    border: none;
+    border: 2px solid #fff;
 }
 
 .slick-prev {
-  left: 3%;
+    left: 3%;
 }
 
 .slick-next {
-  right: 3%;
+    right: 3%;
 }
 
 .fa-chevron-right,
 .fa-chevron-left {
-  color: #fff;
+    color: #fff;
 }
 
 .slick-prev:hover,
 .slick-next:hover {
-  background-color: #f62d3e;
-  border: none;
-  transition: all 0.3s linear;
+    background-color: #f62d3e;
+    border: none;
+    transition: all 0.3s linear;
 }
 
 @media screen and (max-width: 576px) {
-  .slick-prev,
-  .slick-next {
-    display: none !important;
-  }
+    .slick-prev,
+    .slick-next {
+        display: none !important;
+    }
 }
