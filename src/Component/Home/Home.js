@@ -130,7 +130,7 @@ function Home(props) {
             <div className={clsx(styles.home1)}>
                 <Slider {...settings}>
                     {slickSlides.map((slickSlide, index) => {
-                        return <img alt="" src={slickSlide} key={index} />;
+                        return <img className={clsx(styles.home1_img)} alt="" src={slickSlide} key={index} />;
                     })}
                 </Slider>
             </div>

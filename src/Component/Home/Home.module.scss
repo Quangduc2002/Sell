@@ -1,6 +1,6 @@
 .home {
     position: relative;
-    background-color: #ebebeb;
+    background-color: rgb(248, 249, 251);
 
     &_title {
         text-align: center;
@@ -134,6 +134,10 @@
 
 .home1 {
     position: relative;
+
+    &_img {
+        box-shadow: 0px 3px 10px 0px #ccc;
+    }
 }
 
 //reponsive
