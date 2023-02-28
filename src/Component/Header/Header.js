@@ -1,8 +1,6 @@
 import clsx from 'clsx';
 import React, { useRef, useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-// import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import styles from '../Header/Header.module.scss';
 import Login from '../Login/Login';
 import LogoTT from '../../assets/Image/logo-2.jpg';
@@ -18,8 +16,6 @@ function Header(props) {
     const [show1, setShow1] = useState(false);
     const [show2, setShow2] = useState(false);
     const search = useRef();
-    // const [email, setEmail] = useState('');
-    // const [password, setPassword] = useState('');
 
     const HandleOnSubmit = () => {
         if (state !== '') {
@@ -52,26 +48,6 @@ function Header(props) {
             HandleOnSubmit();
         }
     };
-
-    // const navigate = useNavigate();
-    // const handleSubmitBT = () => {
-    //     // event.preventDefault();
-    //     //preventDefault() dùng để ngăn chặn hành vi mặc định của trình duyệt
-    //     // axios
-    //     //     .post('https://reqres.in/api/login/1', { email, password })
-    //     //     .then((response) => {
-    //     if (email === 'Quangduc2002@gmail.com' && password === '221202') {
-    //         navigate('/');
-    //         setShow(!show);
-    //         toast.success('Đăng nhập thành công');
-    //     } else if (email !== '' && password !== '') {
-    //         toast.error('Tài đăng nhập không chính xác');
-    //     }
-    //     // })
-    //     // .catch((err) => {
-    //     //     console.log('lỗi', err);
-    //     // });
-    // };
 
     return (
         <div className={clsx(styles.wrapper)}>
