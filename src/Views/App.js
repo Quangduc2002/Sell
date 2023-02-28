@@ -42,24 +42,24 @@ function App() {
     //Tính tổng tiền
     const total = cartItems.reduce((a, c) => a + parseFloat(c.sellingPrice) * c.qty, 0);
     // const navigate = useNavigate();
-    // const handleSubmitBT = () => {
-    //     // event.preventDefault();
-    //     //preventDefault() dùng để ngăn chặn hành vi mặc định của trình duyệt
-    //     // axios
-    //     //     .post('https://reqres.in/api/login/1', { email, password })
-    //     //     .then((response) => {
-    //     if (email === 'Quangduc2002@gmail.com' && password === '221202') {
-    //         navigate('/abc');
-    //         // setShow(!show);
-    //         toast.success('Đăng nhập thành công');
-    //     } else if (email !== '' && password !== '') {
-    //         toast.error('Tài đăng nhập không chính xác');
-    //     }
-    //     // })
-    //     // .catch((err) => {
-    //     //     console.log('lỗi', err);
-    //     // });
-    // };
+    const handleSubmitBT = () => {
+        // event.preventDefault();
+        //preventDefault() dùng để ngăn chặn hành vi mặc định của trình duyệt
+        // axios
+        //     .post('https://reqres.in/api/login/1', { email, password })
+        //     .then((response) => {
+        if (email === 'Quangduc2002@gmail.com' && password === '221202') {
+            // navigate('/abc');
+            // setShow(!show);
+            toast.success('Đăng nhập thành công');
+        } else if (email !== '' && password !== '') {
+            toast.error('Tài đăng nhập không chính xác');
+        }
+        // })
+        // .catch((err) => {
+        //     console.log('lỗi', err);
+        // });
+    };
     return (
         <div className="App">
             {/* <Routes>
