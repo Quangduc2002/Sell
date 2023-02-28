@@ -174,7 +174,7 @@ function Home(props) {
                 </div>
             </div>
 
-            <div className={clsx(styles.inner)}>
+            {/* <div className={clsx(styles.inner)}>
                 <div className={clsx(styles.inner_container)}>
                     <h3 className={clsx(styles.inner_title)}>SẢN PHẨM BÁN CHẠY</h3>
                     <div className={clsx(styles.inner_slider)}>
@@ -185,7 +185,7 @@ function Home(props) {
                         </Slider>
                     </div>
                 </div>
-            </div>
+            </div> */}
 
             <div className={clsx(styles.home_section)}>
                 <div className={clsx(styles.home_section1)}>
