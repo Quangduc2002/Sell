@@ -13,7 +13,7 @@ function Product(props) {
                 </div>
             </div>
             <div className={clsx(styles.room_text)}>
-                <p>{product.text}</p>
+                <p title={product.text}>{product.text}</p>
                 <div className={clsx(styles.room_price)}>
                     <span className={clsx(styles.priceAmount)}>{product.originalPrice}</span>
                     <span className={clsx(styles.priceRed)}>{product.sellingPrice}</span>

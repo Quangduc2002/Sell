@@ -1,8 +1,8 @@
 import React from 'react';
 import clsx from 'clsx';
 import styles from '../Footer/Footer.module.scss';
-import Payment from '../Image/payment.png';
-import Phone from '../Image/phone_footer.png';
+import Payment from '../../assets/Image/payment.png';
+import Phone from '../../assets/Image/phone_footer.png';
 
 function Footer() {
     return (

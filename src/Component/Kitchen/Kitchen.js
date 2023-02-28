@@ -2,9 +2,9 @@ import React from 'react';
 import clsx from 'clsx';
 import styles from '../Kitchen/Kitchen.module.scss';
 import IconTop from '../IconTop/IconTop';
-import AVT1 from '../Image/ban-ghe-an-1.jpg';
-import AVT2 from '../Image/ban-ghe-an-2.jpg';
-import AVT3 from '../Image/ban-ghe-an-3.jpg';
+import AVT1 from '../../assets/Image/ban-ghe-an-1.jpg';
+import AVT2 from '../../assets/Image/ban-ghe-an-2.jpg';
+import AVT3 from '../../assets/Image/ban-ghe-an-3.jpg';
 import Product from '../Product/Product';
 import { Link } from 'react-router-dom';
 
@@ -60,10 +60,12 @@ function Kitchen(props) {
                     </ul>
                 </div>
             </div>
-            <div className={clsx(styles.room_product)}>
-                {products.map((product) => {
-                    return <Product key={product.id} product={product} onAdd={onAdd} />;
-                })}
+            <div className={clsx(styles.home__product)}>
+                <div className={clsx(styles.room_product)}>
+                    {products.map((product) => {
+                        return <Product key={product.id} product={product} onAdd={onAdd} />;
+                    })}
+                </div>
             </div>
             <IconTop />
         </div>

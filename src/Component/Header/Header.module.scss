@@ -23,6 +23,7 @@
         position: relative;
         display: flex;
         justify-content: space-between;
+        align-items: center;
     }
     li {
         position: relative;
@@ -39,10 +40,12 @@
             left: -12px;
         }
 
-        &:hover {
-            color: #eb1336;
-            cursor: pointer;
-            transition: all 0.3s linear;
+        span {
+            &:hover {
+                color: #eb1336;
+                cursor: pointer;
+                transition: all 0.3s linear;
+            }
         }
     }
 
@@ -472,6 +475,9 @@
     .bars {
         width: 38px;
         text-align: center;
+    }
+    .model {
+        z-index: 1;
     }
 }
 

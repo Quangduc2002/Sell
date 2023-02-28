@@ -2,12 +2,12 @@ import React from 'react';
 import clsx from 'clsx';
 import styles from '../WorkRoom/WorkRoom.module.scss';
 import IconTop from '../IconTop/IconTop';
-import AVT1 from '../Image/ban-lam-viec-1.jpg';
-import AVT2 from '../Image/ban-lam-viec-2.jpg';
-import AVT3 from '../Image/ban-lam-viec-3.jpg';
-import AVT4 from '../Image/ban-lam-viec-4.jpg';
-import AVT5 from '../Image/ban-lam-viec-5.jpg';
-import AVT7 from '../Image/avt7.jpg';
+import AVT1 from '../../assets/Image/ban-lam-viec-1.jpg';
+import AVT2 from '../../assets/Image/ban-lam-viec-2.jpg';
+import AVT3 from '../../assets/Image/ban-lam-viec-3.jpg';
+import AVT4 from '../../assets/Image/ban-lam-viec-4.jpg';
+import AVT5 from '../../assets/Image/ban-lam-viec-5.jpg';
+import AVT7 from '../../assets/Image/avt7.jpg';
 import Product from '../Product/Product';
 import { Link } from 'react-router-dom';
 function WorkRoom(props) {
@@ -85,10 +85,12 @@ function WorkRoom(props) {
                     </ul>
                 </div>
             </div>
-            <div className={clsx(styles.room_product)}>
-                {products.map((product) => {
-                    return <Product key={product.id} onAdd={onAdd} product={product} />;
-                })}
+            <div className={clsx(styles.home__product)}>
+                <div className={clsx(styles.room_product)}>
+                    {products.map((product) => {
+                        return <Product key={product.id} onAdd={onAdd} product={product} />;
+                    })}
+                </div>
             </div>
 
             <IconTop />

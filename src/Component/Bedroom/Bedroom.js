@@ -2,11 +2,11 @@ import React from 'react';
 import clsx from 'clsx';
 import IconTop from '../IconTop/IconTop';
 import styles from '../Bedroom/Bedroom.module.scss';
-import AVT1 from '../Image/avt4.1.jpg';
-import AVT2 from '../Image/avt4.jpg';
-import AVT3 from '../Image/avt6.jpg';
-import AVT4 from '../Image/avt10.jpg';
-import AVT5 from '../Image/avt11.jpg';
+import AVT1 from '../../assets/Image/avt4.1.jpg';
+import AVT2 from '../../assets/Image/avt4.jpg';
+import AVT3 from '../../assets/Image/avt6.jpg';
+import AVT4 from '../../assets/Image/avt10.jpg';
+import AVT5 from '../../assets/Image/avt11.jpg';
 import Product from '../Product/Product';
 import { Link } from 'react-router-dom';
 function Bedroom(props) {
@@ -76,10 +76,12 @@ function Bedroom(props) {
                     </ul>
                 </div>
             </div>
-            <div className={clsx(styles.room_product)}>
-                {products.map((product) => {
-                    return <Product key={product.id} product={product} onAdd={onAdd} />;
-                })}
+            <div className={clsx(styles.home__product)}>
+                <div className={clsx(styles.room_product)}>
+                    {products.map((product) => {
+                        return <Product key={product.id} product={product} onAdd={onAdd} />;
+                    })}
+                </div>
             </div>
             <IconTop />
         </div>

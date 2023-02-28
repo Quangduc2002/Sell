@@ -79,6 +79,11 @@
 }
 
 @media screen and (max-width: 576px) {
+    .home {
+        &__product {
+            padding-left: 10px;
+        }
+    }
     .breadcrumbs {
         span,
         p {

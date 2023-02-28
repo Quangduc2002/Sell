@@ -3,20 +3,20 @@ import Slider from 'react-slick';
 import clsx from 'clsx';
 import IconTop from '../IconTop/IconTop';
 import Product from '../Product/Product';
-import Slider1 from '../Image/slider_1.jpg';
+import Slider1 from '../../assets/Image/slider_1.jpg';
 import '../Home/Home.css';
 import styles from '../Home/Home.module.scss';
-import AVT1 from '../Image/avt1.jpg';
-import AVT2 from '../Image/avt2.jpg';
-import AVT3 from '../Image/avt3.jpg';
-import AVT4 from '../Image/avt4.jpg';
-import AVT5 from '../Image/avt5.1.jpg';
-import AVT6 from '../Image/avt6.jpg';
-import AVT7 from '../Image/avt7.jpg';
-import AVT8 from '../Image/avt8.1.jpg';
-import SRV1 from '../Image/srv_1.png';
-import SRV2 from '../Image/srv_2.png';
-import SRV3 from '../Image/srv_3.png';
+import AVT1 from '../../assets/Image/avt1.jpg';
+import AVT2 from '../../assets/Image/avt2.jpg';
+import AVT3 from '../../assets/Image/avt3.jpg';
+import AVT4 from '../../assets/Image/avt4.jpg';
+import AVT5 from '../../assets/Image/avt5.1.jpg';
+import AVT6 from '../../assets/Image/avt6.jpg';
+import AVT7 from '../../assets/Image/avt7.jpg';
+import AVT8 from '../../assets/Image/avt8.1.jpg';
+import SRV1 from '../../assets/Image/srv_1.png';
+import SRV2 from '../../assets/Image/srv_2.png';
+import SRV3 from '../../assets/Image/srv_3.png';
 
 function Home(props) {
     const { onAdd } = props;
@@ -26,6 +26,24 @@ function Home(props) {
         speed: 1000,
         infinite: true,
         slidesToShow: 1,
+        slidesToScroll: 1,
+        prevArrow: (
+            <button className="slick-arrow slick-prev">
+                <i className="fa-solid fa-chevron-left"></i>
+            </button>
+        ),
+        nextArrow: (
+            <button className="slick-arrow slick-next">
+                <i className="fa-solid fa-chevron-right"></i>
+            </button>
+        ),
+    };
+
+    const settings1 = {
+        // dots: true,
+        speed: 500,
+        infinite: true,
+        slidesToShow: 4,
         slidesToScroll: 1,
         prevArrow: (
             <button className="slick-arrow slick-prev">
@@ -134,15 +152,41 @@ function Home(props) {
                     })}
                 </Slider>
             </div>
+
             <div className={clsx(styles.home_title)}>
                 <h2>Dòng sản phẩm nổi bật</h2>
             </div>
 
-            <div className={clsx(styles.home_product)}>
-                {products.map((product) => {
-                    return <Product key={product.id} product={product} onAdd={onAdd} />;
-                })}
+            <div className={clsx(styles.home__product)}>
+                <div className={clsx(styles.home_product)}>
+                    {products.map((product) => {
+                        return <Product key={product.id} product={product} onAdd={onAdd} />;
+                    })}
+                </div>
             </div>
+
+            <div className={clsx(styles.box)}>
+                <div className={clsx(styles.box_dark)}>
+                    <div className={clsx(styles.box_info)}>
+                        <h2>Hệ thống phân phối & bán lẻ nội thất số 1 tại Việt Nam</h2>
+                        <p>Hotline: 0965420922 -Email: phamquangduc110@gmail.com</p>
+                    </div>
+                </div>
+            </div>
+
+            {/* <div className={clsx(styles.inner)}>
+                <div className={clsx(styles.inner_container)}>
+                    <h3 className={clsx(styles.inner_title)}>SẢN PHẨM BÁN CHẠY</h3>
+                    <div className={clsx(styles.inner_slider)}>
+                        <Slider {...settings1}>
+                            {products.map((product) => {
+                                return <Product key={product.id} product={product} onAdd={onAdd} />;
+                            })}
+                        </Slider>
+                    </div>
+                </div>
+            </div> */}
+
             <div className={clsx(styles.home_section)}>
                 <div className={clsx(styles.home_section1)}>
                     {sections.map((section, index) => {

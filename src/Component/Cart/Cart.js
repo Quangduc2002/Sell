@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import styles from '../Cart/Cart.module.scss';
-import CartIMG from '../Image/cart.png';
+import CartIMG from '../../assets/Image/cart.png';
 
 function Cart(props) {
     const { cartItems, onDelete, total } = props;
