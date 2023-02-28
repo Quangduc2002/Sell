@@ -39,23 +39,23 @@ function Home(props) {
         ),
     };
 
-    const settings1 = {
-        // dots: true,
-        speed: 500,
-        infinite: true,
-        slidesToShow: 4,
-        slidesToScroll: 1,
-        prevArrow: (
-            <button className="slick-arrow slick-prev">
-                <i className="fa-solid fa-chevron-left"></i>
-            </button>
-        ),
-        nextArrow: (
-            <button className="slick-arrow slick-next">
-                <i className="fa-solid fa-chevron-right"></i>
-            </button>
-        ),
-    };
+    // const settings1 = {
+    //     // dots: true,
+    //     speed: 500,
+    //     infinite: true,
+    //     slidesToShow: 4,
+    //     slidesToScroll: 1,
+    //     prevArrow: (
+    //         <button className="slick-arrow slick-prev">
+    //             <i className="fa-solid fa-chevron-left"></i>
+    //         </button>
+    //     ),
+    //     nextArrow: (
+    //         <button className="slick-arrow slick-next">
+    //             <i className="fa-solid fa-chevron-right"></i>
+    //         </button>
+    //     ),
+    // };
 
     const products = [
         {
