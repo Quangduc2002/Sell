@@ -1,0 +1,32 @@
+.pagination {
+    display: flex;
+    justify-content: center;
+}
+
+.pagination button {
+    color: rgba(0, 0, 0, 0.4);
+    background-color: #fff;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 50%;
+    font-size: 16px;
+}
+
+.pagination {
+    &_li {
+        list-style: none;
+        margin: 0 5px;
+    }
+}
+
+.active {
+    background-color: rgb(238, 77, 45) !important;
+    color: #fff !important;
+}
+
+.pagination button:hover:not(.active) {
+    background-color: #ddd;
+    border-radius: 50%;
+    cursor: pointer;
+}

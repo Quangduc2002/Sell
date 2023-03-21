@@ -1,60 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import clsx from 'clsx';
 import IconTop from '../IconTop/IconTop';
 import styles from '../Bedroom/Bedroom.module.scss';
-import AVT1 from '../../assets/Image/avt4.1.jpg';
-import AVT2 from '../../assets/Image/avt4.jpg';
-import AVT3 from '../../assets/Image/avt6.jpg';
-import AVT4 from '../../assets/Image/avt10.jpg';
-import AVT5 from '../../assets/Image/avt11.jpg';
 import Product from '../Product/Product';
 import { Link } from 'react-router-dom';
-function Bedroom(props) {
-    const { onAdd } = props;
-    const products = [
-        {
-            id: 16,
-            image: AVT1,
-            discount: '0%',
-            text: 'Bàn trang điểm',
-            originalPrice: '',
-            sellingPrice: '12.000.000 đ',
-        },
-        {
-            id: 17,
-            image: AVT2,
-            discount: '0%',
-            text: 'Bàn trang điểm PU',
-            originalPrice: '',
-            sellingPrice: '14.000.000 đ',
-        },
-        {
-            id: 18,
-            image: AVT3,
-            discount: '0%',
-            text: 'Giường hoàng gia',
-            originalPrice: '',
-            sellingPrice: ' 21.000.000 đ',
-        },
-        {
-            id: 19,
-            image: AVT4,
-            discount: '0%',
-            text: 'Giường PU',
-            originalPrice: '',
-            sellingPrice: '17.000.000 đ',
-        },
-        {
-            id: 20,
-            image: AVT5,
-            discount: '0%',
-            text: 'Giường chữ X',
-            originalPrice: '',
-            sellingPrice: '18.000.000 đ',
-        },
-    ];
+import useFetch from '../Customize/Fetch';
+import Loading from '../Loading/Loading';
+function Bedroom() {
+    const { api: products } = useFetch('https://6405c39a40597b65de406630.mockapi.io/api/Products');
+    let newProducts = [];
+    newProducts = products.slice(15, 20);
+    const [product, setProduct] = useState([]);
+
+    function handleFilterProducts() {
+        var selectedOption = document.querySelector('select').value;
+        if (selectedOption === '0') {
+            setProduct('');
+        }
+        if (selectedOption === '1') {
+            newProducts.sort((a, b) => {
+                return parseFloat(a.sellingPrice) - parseFloat(b.sellingPrice);
+            });
+            setProduct(newProducts);
+        }
+        if (selectedOption === '2') {
+            newProducts.sort((a, b) => {
+                return parseFloat(b.sellingPrice) - parseFloat(a.sellingPrice);
+            });
+            setProduct(newProducts);
+        }
+    }
+
     return (
-        <div style={{ backgroundColor: '#ebebeb', paddingBottom: 60 }}>
+        <div style={{ backgroundColor: '#f8f9fb', paddingBottom: 60 }}>
             <div className={clsx(styles.room1)}>
                 <div className={clsx(styles.medium)}>
                     <div className={clsx(styles.breadcrumbs)}>
@@ -66,22 +44,34 @@ function Bedroom(props) {
                     </div>
 
                     <ul>
-                        <select defaultValue="2" className={clsx(styles.select)}>
-                            <option value="0">Thứ tự theo mức độ phổ biến</option>
-                            <option value="1">Thứ tự theo điểm đánh giá</option>
-                            <option value="2">Mới nhất</option>
-                            <option value="3">Thứ tự theo giá: thấp đến cao</option>
-                            <option value="4">Thứ tự theo giá: cao đến thấp</option>
+                        <select
+                            defaultValue="0"
+                            onChange={() => handleFilterProducts()}
+                            className={clsx(styles.select)}
+                        >
+                            <option style={{ display: 'none' }} disabled value="0">
+                                Giá
+                            </option>
+                            <option value="1">Giá: thấp đến cao</option>
+                            <option value="2">Giá: cao đến thấp</option>
                         </select>
                     </ul>
                 </div>
             </div>
             <div className={clsx(styles.home__product)}>
-                <div className={clsx(styles.room_product)}>
-                    {products.map((product) => {
-                        return <Product key={product.id} product={product} onAdd={onAdd} />;
-                    })}
-                </div>
+                {newProducts.length === 0 ? (
+                    <Loading />
+                ) : (
+                    <div className={clsx(styles.room_product)}>
+                        {products && products.length && product.length === 0
+                            ? newProducts.map((product) => {
+                                  return <Product key={product.id} product={product} />;
+                              })
+                            : product.map((product) => {
+                                  return <Product key={product.id} product={product} />;
+                              })}
+                    </div>
+                )}
             </div>
             <IconTop />
         </div>

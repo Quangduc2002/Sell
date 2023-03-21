@@ -11,6 +11,7 @@ import Bedroom from '../Component/Bedroom/Bedroom';
 import Cart from '../Component/Cart/Cart.js';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ProductDetails from '../Component/ProductDetails/ProductDetails.js';
 // import { useNavigate } from 'react-router-dom';
 // import Login from '../Component/Login/Login';
 
@@ -18,6 +19,9 @@ function App() {
     const [cartItems, setCartItems] = useState([]);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const [productPerPage] = useState(8);
+    const [isActive, setIsActive] = useState(1);
     const onAdd = (product) => {
         const exist = cartItems.find((cartItem) => {
             return cartItem.id === product.id;
@@ -41,7 +45,6 @@ function App() {
 
     //Tính tổng tiền
     const total = cartItems.reduce((a, c) => a + parseFloat(c.sellingPrice) * c.qty, 0);
-    // const navigate = useNavigate();
     const handleSubmitBT = () => {
         // event.preventDefault();
         //preventDefault() dùng để ngăn chặn hành vi mặc định của trình duyệt
@@ -60,6 +63,17 @@ function App() {
         //     console.log('lỗi', err);
         // });
     };
+
+    // chỉ mục cuối sản phẩm
+    const indexOfLastProduct = currentPage * productPerPage;
+    // chỉ mục đầu tiên sản phẩm
+    const indeOfFirstProduct = indexOfLastProduct - productPerPage;
+
+    const pagination = (pageNumber) => {
+        setCurrentPage(pageNumber);
+        setIsActive(pageNumber);
+    };
+
     return (
         <div className="App">
             {/* <Routes>
@@ -76,7 +90,19 @@ function App() {
             />
             {/* {email === 'Quangduc2002@gmail.com' && password === '221202' ? ( */}
             <Routes>
-                <Route path="/" element={<Home onAdd={onAdd} />} />
+                <Route
+                    path="/"
+                    element={
+                        <Home
+                            onAdd={onAdd}
+                            productPerPage={productPerPage}
+                            indexOfLastProduct={indexOfLastProduct}
+                            indeOfFirstProduct={indeOfFirstProduct}
+                            pagination={pagination}
+                            isActive={isActive}
+                        />
+                    }
+                />
                 <Route path="/phongkhach" element={<LivingRoom onAdd={onAdd} />} />
                 <Route path="/phongbep" element={<Kitchen onAdd={onAdd} />} />
                 <Route path="/phonglamviec" element={<WorkRoom onAdd={onAdd} />} />
@@ -85,6 +111,7 @@ function App() {
                     path="/giohang"
                     element={<Cart onAdd={onAdd} cartItems={cartItems} onDelete={onDelete} total={total} />}
                 />
+                <Route path="/Chitietsanpham/:id" element={<ProductDetails onAdd={onAdd} />} />
             </Routes>
             {/* ) : (
                 <Routes>

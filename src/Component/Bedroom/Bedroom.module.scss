@@ -71,6 +71,11 @@
     }
 }
 
+.home {
+    &__product {
+        margin-top: 40px;
+    }
+}
 //reponsive
 @media screen and (min-width: 922px) and (max-width: 1200px) {
     .medium {

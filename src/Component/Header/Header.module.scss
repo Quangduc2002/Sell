@@ -189,12 +189,12 @@
         text-decoration: none;
 
         &[aria-current='page'] {
-            background-color: #eb1336;
+            background-color: #ee4d2d;
         }
 
         &:hover {
             color: #fff;
-            background-color: #f62d3e;
+            background-color: #ee4d2d;
             cursor: pointer;
             transition: all 0.3s linear;
         }
@@ -206,7 +206,7 @@
     display: flex;
     align-items: center;
     padding: 6px 10px;
-    background-color: #f62d3e;
+    background-color: #ee4d2d;
     border-radius: 4px;
     cursor: pointer;
     text-decoration: none;
@@ -514,7 +514,7 @@
         display: flex;
         align-items: center;
         padding: 6px 10px;
-        background-color: #f62d3e;
+        background-color: #ee4d2d;
         border-radius: 4px;
         cursor: pointer;
         text-decoration: none;
@@ -613,7 +613,7 @@
         display: flex;
         align-items: center;
         padding: 6px 10px;
-        background-color: #f62d3e;
+        background-color: #ee4d2d;
         border-radius: 4px;
         cursor: pointer;
         text-decoration: none;
@@ -718,7 +718,7 @@
         display: flex;
         align-items: center;
         padding: 6px 10px;
-        background-color: #f62d3e;
+        background-color: #ee4d2d;
         border-radius: 4px;
         cursor: pointer;
         text-decoration: none;
