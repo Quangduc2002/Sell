@@ -9,7 +9,6 @@ function Pagination(props) {
     for (let i = 1; i <= Math.ceil(totalProduct / productPerPage); i++) {
         pageNumbers.push(i);
     }
-
     return (
         <div>
             <ul className={clsx(styles.pagination)}>

@@ -7,11 +7,10 @@ import Free from '../../assets/Image/free.png';
 import Loading from '../Loading/Loading';
 
 function ProductDetails(props) {
-    const { onAdd } = props;
+    const { onAdd, count, handleProductreduction, handleIncreaseProduct } = props;
     let { id } = useParams();
     const { api: product } = useFetch(`https://6405c39a40597b65de406630.mockapi.io/api/Products/${id}`);
 
-    console.log(product);
     return (
         <div style={{ backgroundColor: 'rgb(248, 249, 251)', paddingBottom: 60 }}>
             <div className={clsx(styles.room1)}>
@@ -54,7 +53,7 @@ function ProductDetails(props) {
                                 <p>Số lượng</p>
                             </div>
                             <div className={clsx(styles.right_quantity__count)}>
-                                <button>
+                                <button onClick={handleProductreduction}>
                                     <svg
                                         enableBackground="new 0 0 10 10"
                                         viewBox="0 0 10 10"
@@ -65,8 +64,8 @@ function ProductDetails(props) {
                                         <polygon points="4.5 4.5 3.5 4.5 0 4.5 0 5.5 3.5 5.5 4.5 5.5 10 5.5 10 4.5"></polygon>
                                     </svg>
                                 </button>
-                                <span>1</span>
-                                <button>
+                                <span>{count}</span>
+                                <button onClick={handleIncreaseProduct}>
                                     <svg
                                         enableBackground="new 0 0 10 10"
                                         viewBox="0 0 10 10"

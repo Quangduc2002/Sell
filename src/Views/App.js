@@ -22,6 +22,7 @@ function App() {
     const [currentPage, setCurrentPage] = useState(1);
     const [productPerPage] = useState(8);
     const [isActive, setIsActive] = useState(1);
+    const [count, setCount] = useState(1);
     const onAdd = (product) => {
         const exist = cartItems.find((cartItem) => {
             return cartItem.id === product.id;
@@ -29,11 +30,13 @@ function App() {
 
         if (exist) {
             setCartItems(
-                cartItems.map((cartItem) => (cartItem.id === product.id ? { ...exist, qty: exist.qty + 1 } : cartItem)),
+                cartItems.map((cartItem) =>
+                    cartItem.id === product.id ? { ...exist, qty: count + cartItem.qty } : cartItem,
+                ),
             );
             toast.success('Thêm sản phẩm thành công !');
         } else {
-            setCartItems([...cartItems, { ...product, qty: 1 }]);
+            setCartItems([...cartItems, { ...product, qty: count }]);
             toast.success('Thêm sản phẩm thành công !');
         }
     };
@@ -64,6 +67,7 @@ function App() {
         // });
     };
 
+    // Pagination
     // chỉ mục cuối sản phẩm
     const indexOfLastProduct = currentPage * productPerPage;
     // chỉ mục đầu tiên sản phẩm
@@ -71,7 +75,19 @@ function App() {
 
     const pagination = (pageNumber) => {
         setCurrentPage(pageNumber);
+        // check active color
         setIsActive(pageNumber);
+    };
+
+    // Tăng số sản phẩm trong trang chi tiết sản phẩm
+    const handleIncreaseProduct = () => {
+        setCount(count + 1);
+    };
+
+    const handleProductreduction = () => {
+        if (count > 1) {
+            setCount(count - 1);
+        }
     };
 
     return (
@@ -109,9 +125,21 @@ function App() {
                 <Route path="/phongngu" element={<Bedroom onAdd={onAdd} />} />
                 <Route
                     path="/giohang"
-                    element={<Cart onAdd={onAdd} cartItems={cartItems} onDelete={onDelete} total={total} />}
+                    element={
+                        <Cart count={count} onAdd={onAdd} cartItems={cartItems} onDelete={onDelete} total={total} />
+                    }
                 />
-                <Route path="/Chitietsanpham/:id" element={<ProductDetails onAdd={onAdd} />} />
+                <Route
+                    path="/Chitietsanpham/:id"
+                    element={
+                        <ProductDetails
+                            count={count}
+                            handleIncreaseProduct={handleIncreaseProduct}
+                            handleProductreduction={handleProductreduction}
+                            onAdd={onAdd}
+                        />
+                    }
+                />
             </Routes>
             {/* ) : (
                 <Routes>
