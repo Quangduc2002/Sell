@@ -19,8 +19,14 @@ function ProductDetails(props) {
                         <Link to="/" className={clsx(styles.Link)}>
                             Trang chủ
                         </Link>
-                        <span className={clsx(styles.divider)}>/</span>
+                        <span className={clsx(styles.divider)}>
+                            <i className="fa-solid fa-angle-right"></i>
+                        </span>
                         <span>Chi tiết sản phẩm</span>
+                        <span className={clsx(styles.divider)}>
+                            <i className="fa-solid fa-angle-right"></i>
+                        </span>
+                        <span>{product.text}</span>
                     </div>
                 </div>
             </div>
@@ -77,6 +83,7 @@ function ProductDetails(props) {
                                     </svg>
                                 </button>
                             </div>
+                            <div className={clsx(styles.right_quantity__available)}>Sản phẩm có sẵn </div>
                         </div>
                         <div>
                             <button onClick={() => onAdd(product)} className={clsx(styles.right_cart)}>

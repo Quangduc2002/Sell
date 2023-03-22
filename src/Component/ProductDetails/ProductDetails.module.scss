@@ -10,6 +10,7 @@
 
 .breadcrumbs {
     display: flex;
+    align-items: center;
 
     p {
         color: rgba(102, 102, 102, 0.7);
@@ -40,7 +41,7 @@
 .productDetail {
     display: flex;
     width: 1170px;
-    margin: 40px auto;
+    margin: 0 auto;
 }
 
 .images {
@@ -62,16 +63,23 @@
         margin-bottom: 10px;
     }
 
+    &_price {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
     &_priceAmount {
         color: #858585;
         font-size: 14px;
         text-decoration: line-through;
         font-size: 20px;
+        margin-right: 10px;
     }
 
     &_priceRed {
+        width: 100%;
         color: #f62d3e;
-        margin-left: 10px;
         font-size: 30px;
     }
 
@@ -114,6 +122,7 @@
             display: flex;
             border: 1px solid #e8e8e8;
             border-radius: 4px;
+            margin-right: 15px;
 
             button {
                 width: 30px;
@@ -141,6 +150,10 @@
                 height: 30px;
                 border: 1px solid #e8e8e8;
             }
+        }
+
+        &__available {
+            color: #757575;
         }
     }
 
@@ -171,13 +184,51 @@
 .room1 {
     background-color: #f0f0f0;
     border-bottom: 1px solid #ebebeb;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
 }
 
 //reponsive
 @media screen and (min-width: 922px) and (max-width: 1200px) {
     .medium {
+        padding: 0 54px;
+        margin: 0;
+    }
+    .productDetail {
+        width: auto;
+        justify-content: center;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .medium {
+        padding: 0 54px;
+    }
+    .productDetail {
+        width: auto;
+        justify-content: center;
+    }
+
+    .images {
+        img {
+            width: 450px;
+        }
+    }
+}
+
+@media screen and (max-width: 922px) {
+    .medium {
         padding: 0 38px;
+    }
+    .productDetail {
+        display: grid;
+        justify-content: center;
+        margin: 0 30px;
+    }
+
+    .images {
+        img {
+            width: 100%;
+        }
     }
 }
 
@@ -193,7 +244,7 @@
     .breadcrumbs {
         span,
         p {
-            font-size: 16px;
+            font-size: 14px;
         }
     }
     .select {
@@ -202,6 +253,30 @@
     .room {
         &_product {
             justify-content: center;
+        }
+    }
+
+    .right {
+        &_quantity {
+            &__available {
+                display: none;
+            }
+        }
+
+        &_transport {
+            align-items: center;
+        }
+    }
+}
+
+@media screen and (max-width: 375px) {
+    .right {
+        h1 {
+            font-size: 28px;
+        }
+
+        &_priceRed {
+            font-size: 24px;
         }
     }
 }

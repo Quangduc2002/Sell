@@ -190,8 +190,8 @@
         &_price {
             display: flex;
             flex-wrap: wrap;
-            justify-content: center;
-            margin: 8px;
+            // justify-content: center;
+            // margin: 8px;
         }
 
         &_product {
@@ -199,9 +199,6 @@
         }
 
         &_product1 {
-            // width: 28%;
-            // margin-left: 16px;
-            // max-width: 40%;
             -ms-flex-preferred-size: 30%;
             flex-basis: 40%;
             margin: 0 8px 20px;
