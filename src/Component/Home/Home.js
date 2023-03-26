@@ -5,6 +5,8 @@ import IconTop from '../IconTop/IconTop';
 import useFetch from '../Customize/Fetch';
 import Product from '../Product/Product';
 import Slider1 from '../../assets/Image/slider_1.jpg';
+import Slider2 from '../../assets/Image/slider_2.jpg';
+import Slider3 from '../../assets/Image/slider_3.jpg';
 import '../Home/Home.css';
 import styles from '../Home/Home.module.scss';
 import SRV1 from '../../assets/Image/srv_1.png';
@@ -13,14 +15,17 @@ import SRV3 from '../../assets/Image/srv_3.png';
 import Pagination from '../Pagination/Pagination';
 
 function Home(props) {
-    const { indexOfLastProduct, indeOfFirstProduct, productPerPage, pagination, isActive } = props;
-    const slickSlides = [Slider1, Slider1, Slider1];
+    const { indexOfLastProduct, indeOfFirstProduct, productPerPage, pagination, isActive, handleNext, handlePrevious } =
+        props;
+    const slickSlides = [Slider1, Slider3, Slider2];
     const settings = {
         // dots: true,
         speed: 1000,
         infinite: true,
         slidesToShow: 1,
         slidesToScroll: 1,
+        autoplay: true,
+        autoplaySpeed: 5000,
         prevArrow: (
             <button className="slick-arrow slick-prev">
                 <i className="fa-solid fa-chevron-left"></i>
@@ -44,10 +49,12 @@ function Home(props) {
 
     const settings1 = {
         // dots: true,
-        speed: 500,
+        speed: 1000,
         infinite: true,
         slidesToShow: 4,
-        slidesToScroll: 1,
+        slidesToScroll: 2,
+        autoplay: true,
+        autoplaySpeed: 3000,
         prevArrow: (
             <button className="slick-arrow slick-prev">
                 <i className="fa-solid fa-chevron-left"></i>
@@ -150,6 +157,8 @@ function Home(props) {
                     totalProduct={products.length}
                     pagination={pagination}
                     isActive={isActive}
+                    handleNext={handleNext}
+                    handlePrevious={handlePrevious}
                 />
             </div>
 

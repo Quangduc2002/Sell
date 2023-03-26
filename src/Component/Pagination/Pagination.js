@@ -4,27 +4,45 @@ import clsx from 'clsx';
 import styles from './Pagination.module.scss';
 
 function Pagination(props) {
-    const { productPerPage, totalProduct, pagination, isActive } = props;
+    const { productPerPage, totalProduct, pagination, isActive, handleNext, handlePrevious } = props;
     const pageNumbers = [];
     for (let i = 1; i <= Math.ceil(totalProduct / productPerPage); i++) {
         pageNumbers.push(i);
     }
+
+    const handleRight = () => {
+        if (isActive < pageNumbers.length) {
+            handleNext();
+        }
+    };
+
+    const handleLeft = () => {
+        if (isActive > 1) {
+            handlePrevious();
+        }
+    };
+
     return (
         <div>
             <ul className={clsx(styles.pagination)}>
+                <button onClick={handleLeft} className={clsx(styles.pagination_icon)}>
+                    <i className={clsx('fa-solid fa-chevron-left')}></i>
+                </button>
                 {pageNumbers.map((number, index) => {
                     return (
-                        <li className={clsx(styles.pagination_li)}>
+                        <li key={index} className={clsx(styles.pagination_li)}>
                             <button
-                                key={index}
                                 onClick={() => pagination(number)}
-                                className={clsx(isActive === number ? styles.active : '')}
+                                className={clsx(isActive === number ? styles.active : '', styles.pagination_button)}
                             >
                                 {number}
                             </button>
                         </li>
                     );
                 })}
+                <button onClick={handleRight} className={clsx(styles.pagination_icon)}>
+                    <i className={clsx('fa-solid fa-chevron-right')}></i>
+                </button>
             </ul>
         </div>
     );

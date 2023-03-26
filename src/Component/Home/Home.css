@@ -37,3 +37,7 @@
     border: none;
     transition: all 0.3s linear;
 }
+
+.slick-slide > div:first-child {
+    height: 100%;
+}

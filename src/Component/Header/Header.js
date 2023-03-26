@@ -2,19 +2,19 @@ import clsx from 'clsx';
 import React, { useRef, useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import styles from '../Header/Header.module.scss';
-import Login from '../Login/Login';
 import LogoTT from '../../assets/Image/logo-2.jpg';
 import Phone from '../../assets/Image/telephone.png';
 import LogoUser from '../../assets/Image/user.png';
 
 function Header(props) {
-    const { cartItems, toast, email, setEmail, setPassword, password, handleSubmitBT } = props;
+    const { cartItems, toast, email, setEmail, setPassword, password } = props;
 
     const [show, setShow] = useState(false);
     const [state, setSate] = useState('');
     const [product, setProduct] = useState([]);
     const [show1, setShow1] = useState(false);
     const [show2, setShow2] = useState(false);
+    const [formErrors, setFormErrors] = useState({});
     const search = useRef();
 
     const HandleOnSubmit = () => {
@@ -47,6 +47,45 @@ function Header(props) {
             // Handle the Enter key press event
             HandleOnSubmit();
         }
+    };
+
+    const validateForm = () => {
+        let errors = {};
+        let isValid = true;
+
+        const regex = /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/;
+        if (!email) {
+            errors.email = 'Please enter Email !';
+            isValid = false;
+        } else if (!regex.test(email)) {
+            errors.email = 'Please enter correct email format !';
+            isValid = false;
+        }
+
+        if (!password) {
+            errors.password = 'Please enter Password !';
+            isValid = false;
+        } else if (password.length < 6) {
+            errors.password = 'Please enter at least 6 characters !';
+            isValid = false;
+        }
+        setFormErrors(errors);
+        return isValid;
+    };
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (validateForm()) {
+            toast.success('Đăng nhập thành công');
+            console.log('Email: ', email, 'Password: ', password);
+        }
+
+        // if (email === 'Quangduc2002@gmail.com' && password === '221202') {
+        //     // navigate('/abc');
+        //     // setShow(!show);
+        //     toast.success('Đăng nhập thành công');
+        // } else if (email !== '' && password !== '') {
+        //     toast.error('Tài đăng nhập không chính xác');
+        // }
     };
 
     return (
@@ -85,87 +124,65 @@ function Header(props) {
                                 )}
 
                                 {show && (
-                                    //     <div className={clsx(styles.nav2_form)}>
-                                    //     <div className={clsx(styles.form_header)}>
-                                    //         <h3 className={clsx(styles.form_heading)}>Đăng Nhập</h3>
-                                    //     </div>
-                                    //     <form onSubmit={handleSubmit(onSubmit)} className={clsx(styles.auth_form)}>
-                                    //         <div className={clsx(styles.auth_froup)}>
-                                    //             <input
-                                    //                 // value={email}
-                                    //                 type="text"
-                                    //                 name="email"
-                                    //                 className={clsx(styles.auth_input)}
-                                    //                 placeholder="Nhập Email"
-                                    //                 {...register('email', {
-                                    //                     required: true,
-                                    //                     pattern: /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/,
-                                    //                 })}
-                                    //                 onChange={(e) => setEmail(e.target.value)}
-                                    //             />
-                                    //             {Object.keys(errors).length !== 0 && (
-                                    //                 <div>
-                                    //                     {errors.email?.type === 'required' && (
-                                    //                         <p className={clsx(styles.form_message)}>Please enter Email !</p>
-                                    //                     )}
-                                    //                     {errors.email?.type === 'pattern' && (
-                                    //                         <p className={clsx(styles.form_message)}>Please enter correct email format !</p>
-                                    //                     )}
-                                    //                 </div>
-                                    //             )}
-                                    //         </div>
-                                    //         <div className={clsx(styles.auth_froup)}>
-                                    //             <input
-                                    //                 // value={password}
-                                    //                 type="password"
-                                    //                 name="password"
-                                    //                 className={clsx(styles.auth_input)}
-                                    //                 placeholder="Nhập mật khẩu"
-                                    //                 {...register('password', {
-                                    //                     required: true,
-                                    //                     minLength: 6,
-                                    //                 })}
-                                    //                 onChange={(e) => setPassword(e.target.value)}
-                                    //             />
-                                    //             {Object.keys(errors).length !== 0 && (
-                                    //                 <div>
-                                    //                     {errors.password?.type === 'required' && (
-                                    //                         <p className={clsx(styles.form_message)}>Please enter Password !</p>
-                                    //                     )}
-
-                                    //                     {errors.password?.type === 'minLength' && (
-                                    //                         <p className={clsx(styles.form_message)}>Please enter at least 6 characters</p>
-                                    //                     )}
-                                    //                 </div>
-                                    //             )}
-                                    //         </div>
-                                    //         <div className={clsx(styles.form_controls, styles.form_controls1)}>
-                                    //             <button
-                                    //                 onClick={() => {
-                                    //                     setShow(!show);
-                                    //                 }}
-                                    //                 className={clsx(styles.form_btn)}
-                                    //             >
-                                    //                 TRỞ LẠI
-                                    //             </button>
-                                    //             <button onClick={() => handleSubmitBT()} className={clsx(styles.form_btn, styles.form_primary)}>
-                                    //                 ĐĂNG NHẬP
-                                    //             </button>
-                                    //         </div>
-                                    //         <div className={clsx(styles.form_controls2)}>
-                                    //             <p className={clsx(styles.controls2_p)}>Quên mật khẩu</p>
-                                    //             <p>Cần trợ giúp</p>
-                                    //         </div>
-                                    //     </form>
-                                    // </div>
-                                    <Login
-                                        show={show}
-                                        setShow={setShow}
-                                        toast={toast}
-                                        handleSubmitBT={handleSubmitBT}
-                                        setEmail={setEmail}
-                                        setPassword={setPassword}
-                                    />
+                                    <div className={clsx(styles.nav2_form)}>
+                                        <div className={clsx(styles.form_header)}>
+                                            <h3 className={clsx(styles.form_heading)}>Đăng Nhập</h3>
+                                        </div>
+                                        <form className={clsx(styles.auth_form)}>
+                                            <div className={clsx(styles.auth_froup)}>
+                                                <input
+                                                    value={email}
+                                                    type="text"
+                                                    name="email"
+                                                    className={clsx(styles.auth_input)}
+                                                    placeholder="Nhập Email"
+                                                    onChange={(e) => setEmail(e.target.value)}
+                                                />
+                                                <div>
+                                                    {formErrors.email && (
+                                                        <p className={clsx(styles.form_message)}>{formErrors.email}</p>
+                                                    )}
+                                                </div>
+                                            </div>
+                                            <div className={clsx(styles.auth_froup)}>
+                                                <input
+                                                    value={password}
+                                                    type="password"
+                                                    name="password"
+                                                    className={clsx(styles.auth_input)}
+                                                    placeholder="Nhập mật khẩu"
+                                                    onChange={(e) => setPassword(e.target.value)}
+                                                />
+                                                <div>
+                                                    {formErrors.password && (
+                                                        <p className={clsx(styles.form_message)}>
+                                                            {formErrors.password}
+                                                        </p>
+                                                    )}
+                                                </div>
+                                            </div>
+                                            <div className={clsx(styles.form_controls, styles.form_controls1)}>
+                                                <button
+                                                    onClick={() => {
+                                                        setShow(!show);
+                                                    }}
+                                                    className={clsx(styles.form_btn)}
+                                                >
+                                                    TRỞ LẠI
+                                                </button>
+                                                <button
+                                                    onClick={(e) => handleSubmit(e)}
+                                                    className={clsx(styles.form_btn, styles.form_primary)}
+                                                >
+                                                    ĐĂNG NHẬP
+                                                </button>
+                                            </div>
+                                            <div className={clsx(styles.form_controls2)}>
+                                                <p className={clsx(styles.controls2_p)}>Quên mật khẩu</p>
+                                                <p>Cần trợ giúp</p>
+                                            </div>
+                                        </form>
+                                    </div>
                                 )}
 
                                 {show && (
@@ -214,7 +231,7 @@ function Header(props) {
                                     setSate(e.target.value);
                                 }}
                                 placeholder="Tìm kiếm..."
-                                onKeyPress={handleKeyPress}
+                                onKeyDown={handleKeyPress}
                             />
                             {product.length !== 0 && show1 && (
                                 <ul

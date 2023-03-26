@@ -39,6 +39,7 @@ function App() {
             setCartItems([...cartItems, { ...product, qty: count }]);
             toast.success('Thêm sản phẩm thành công !');
         }
+        setCount(1);
     };
 
     const onDelete = (product) => {
@@ -48,24 +49,6 @@ function App() {
 
     //Tính tổng tiền
     const total = cartItems.reduce((a, c) => a + parseFloat(c.sellingPrice) * c.qty, 0);
-    const handleSubmitBT = () => {
-        // event.preventDefault();
-        //preventDefault() dùng để ngăn chặn hành vi mặc định của trình duyệt
-        // axios
-        //     .post('https://reqres.in/api/login/1', { email, password })
-        //     .then((response) => {
-        if (email === 'Quangduc2002@gmail.com' && password === '221202') {
-            // navigate('/abc');
-            // setShow(!show);
-            toast.success('Đăng nhập thành công');
-        } else if (email !== '' && password !== '') {
-            toast.error('Tài đăng nhập không chính xác');
-        }
-        // })
-        // .catch((err) => {
-        //     console.log('lỗi', err);
-        // });
-    };
 
     // Pagination
     // chỉ mục cuối sản phẩm
@@ -79,6 +62,16 @@ function App() {
         setIsActive(pageNumber);
     };
 
+    const handleNext = () => {
+        setIsActive(isActive + 1);
+        setCurrentPage(currentPage + 1);
+    };
+
+    const handlePrevious = () => {
+        setIsActive(isActive - 1);
+        setCurrentPage(currentPage - 1);
+    };
+
     // Tăng số sản phẩm trong trang chi tiết sản phẩm
     const handleIncreaseProduct = () => {
         setCount(count + 1);
@@ -89,7 +82,6 @@ function App() {
             setCount(count - 1);
         }
     };
-
     return (
         <div className="App">
             {/* <Routes>
@@ -102,7 +94,6 @@ function App() {
                 password={password}
                 setEmail={setEmail}
                 setPassword={setPassword}
-                handleSubmitBT={handleSubmitBT}
             />
             {/* {email === 'Quangduc2002@gmail.com' && password === '221202' ? ( */}
             <Routes>
@@ -116,6 +107,8 @@ function App() {
                             indeOfFirstProduct={indeOfFirstProduct}
                             pagination={pagination}
                             isActive={isActive}
+                            handleNext={handleNext}
+                            handlePrevious={handlePrevious}
                         />
                     }
                 />

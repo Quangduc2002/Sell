@@ -96,12 +96,29 @@
         }
     }
 
-    .select {
-        display: none;
-    }
     .room {
         &_product {
             justify-content: center;
         }
+    }
+}
+
+@media screen and (max-width: 425px) {
+    .room1 {
+        padding: 10px 0 20px;
+    }
+
+    .medium {
+        display: block;
+        text-align: center;
+        padding: 0;
+
+        ul {
+            margin-top: 10px;
+        }
+    }
+
+    .breadcrumbs {
+        justify-content: center;
     }
 }
