@@ -15,8 +15,19 @@ import SRV3 from '../../assets/Image/srv_3.png';
 import Pagination from '../Pagination/Pagination';
 
 function Home(props) {
-    const { indexOfLastProduct, indeOfFirstProduct, productPerPage, pagination, isActive, handleNext, handlePrevious } =
-        props;
+    const {
+        indexOfLastProduct,
+        indeOfFirstProduct,
+        productPerPage,
+        pagination,
+        isActive,
+        handleNext,
+        handlePrevious,
+        succeSearch,
+        allSp,
+        setAllSp,
+    } = props;
+
     const slickSlides = [Slider1, Slider3, Slider2];
     const settings = {
         // dots: true,
@@ -124,6 +135,7 @@ function Home(props) {
     // };
     // const slice = products.slice(0, seeMore);
     const currentProduct = products.slice(indeOfFirstProduct, indexOfLastProduct);
+    const currentProductSearch = succeSearch.slice(indeOfFirstProduct, indexOfLastProduct);
 
     return (
         <div className={clsx(styles.home)}>
@@ -137,13 +149,31 @@ function Home(props) {
 
             <div className={clsx(styles.home_title)}>
                 <h2>Dòng sản phẩm nổi bật</h2>
+                <ul>
+                    <li className="tab has-icon">
+                        <button
+                            onClick={() => setAllSp(true)}
+                            className={clsx(
+                                styles.home_title_button,
+                                allSp === true ? styles.home_title_button__active : '',
+                            )}
+                        >
+                            Tất cả sản phẩm
+                        </button>
+                    </li>
+                </ul>
             </div>
 
             <div className={clsx(styles.home__product)}>
                 <div className={clsx(styles.home_product)}>
-                    {currentProduct.map((product) => {
-                        return <Product key={product.id} product={product} />;
-                    })}
+                    {allSp === true
+                        ? currentProduct.map((product) => {
+                              return <Product key={product.id} product={product} />;
+                          })
+                        : currentProductSearch.map((product) => {
+                              return <Product key={product.id} product={product} />;
+                          })}
+
                     {/* {slice.length < products.length ? (
                         <div className={clsx(styles.home_seeMore)}>
                             <button onClick={() => handleSeeMore()}>Xem thêm</button>
@@ -154,7 +184,7 @@ function Home(props) {
                 </div>
                 <Pagination
                     productPerPage={productPerPage}
-                    totalProduct={products.length}
+                    totalProduct={allSp ? products.length : succeSearch.length}
                     pagination={pagination}
                     isActive={isActive}
                     handleNext={handleNext}

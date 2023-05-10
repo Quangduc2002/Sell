@@ -4,7 +4,7 @@ import styles from '../Cart/Cart.module.scss';
 import CartIMG from '../../assets/Image/cart.png';
 
 function Cart(props) {
-    const { cartItems, onDelete, total } = props;
+    const { cartItems, onDelete, totalMoney } = props;
 
     return (
         <div className={clsx(styles.cart)}>
@@ -22,8 +22,13 @@ function Cart(props) {
                         <tr>
                             <th>Image</th>
                             <th className={clsx(styles.name)}>Name</th>
+                            <th style={{ textAlign: 'center' }} className={clsx(styles.price)}>
+                                Price
+                            </th>
                             <th className={clsx(styles.price)}>Quantity</th>
-                            <th className={clsx(styles.price)}>Price</th>
+                            <th style={{ textAlign: 'center' }} className={clsx(styles.price)}>
+                                Total
+                            </th>
                             <th>Detete</th>
                         </tr>
                     )}
@@ -38,10 +43,18 @@ function Cart(props) {
                                     <p className={clsx(styles.quantity)}>
                                         {item.qty} x {item.sellingPrice}
                                     </p>
+                                    {item.qty === 1 ? (
+                                        ''
+                                    ) : (
+                                        <p className={clsx(styles.quantity)}>total: {item.total.toFixed(3)}.000 đ</p>
+                                    )}
                                 </td>
-                                <td className={clsx(styles.price)}>x{item.qty}</td>
                                 <td className={clsx(styles.price)}>{item.sellingPrice}</td>
-                                <td className={clsx(styles.del)}>
+                                <td style={{ textAlign: 'center' }} className={clsx(styles.price)}>
+                                    x{item.qty}
+                                </td>
+                                <td className={clsx(styles.price)}>{item.total.toFixed(3)}.000 đ</td>
+                                <td style={{ textAlign: 'center' }} className={clsx(styles.del)}>
                                     <p
                                         onClick={() => {
                                             onDelete(item);
@@ -56,7 +69,7 @@ function Cart(props) {
                 </tbody>
                 <div className={clsx(styles.total, cartItems.length === 0 ? styles.active : '')}>
                     <span>Tổng tiền: </span>
-                    {total.toFixed(3)}.000 đ
+                    {totalMoney.toFixed(3)}.000 đ
                 </div>
             </table>
         </div>

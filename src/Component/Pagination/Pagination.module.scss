@@ -42,6 +42,9 @@
             cursor: pointer;
         }
     }
+    &_active {
+        display: none;
+    }
 }
 
 .active {

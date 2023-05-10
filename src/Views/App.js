@@ -12,17 +12,23 @@ import Cart from '../Component/Cart/Cart.js';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ProductDetails from '../Component/ProductDetails/ProductDetails.js';
+import useFetch from '../Component/Customize/Fetch';
 // import { useNavigate } from 'react-router-dom';
 // import Login from '../Component/Login/Login';
 
 function App() {
+    const { api: name } = useFetch('https://6405c39a40597b65de406630.mockapi.io/api/Products');
     const [cartItems, setCartItems] = useState([]);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
-    const [productPerPage] = useState(8);
+    const [productPerPage] = useState(12);
     const [isActive, setIsActive] = useState(1);
     const [count, setCount] = useState(1);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [succeSearch, setSucceSearch] = useState([]);
+    const [allSp, setAllSp] = useState(true);
+
     const onAdd = (product) => {
         const exist = cartItems.find((cartItem) => {
             return cartItem.id === product.id;
@@ -31,12 +37,18 @@ function App() {
         if (exist) {
             setCartItems(
                 cartItems.map((cartItem) =>
-                    cartItem.id === product.id ? { ...exist, qty: count + cartItem.qty } : cartItem,
+                    cartItem.id === product.id
+                        ? {
+                              ...exist,
+                              qty: count + cartItem.qty,
+                              total: (count + cartItem.qty) * parseFloat(cartItem.sellingPrice),
+                          }
+                        : cartItem,
                 ),
             );
             toast.success('Thêm sản phẩm thành công !');
         } else {
-            setCartItems([...cartItems, { ...product, qty: count }]);
+            setCartItems([...cartItems, { ...product, qty: count, total: count * parseFloat(product.sellingPrice) }]);
             toast.success('Thêm sản phẩm thành công !');
         }
         setCount(1);
@@ -48,7 +60,7 @@ function App() {
     };
 
     //Tính tổng tiền
-    const total = cartItems.reduce((a, c) => a + parseFloat(c.sellingPrice) * c.qty, 0);
+    const totalMoney = cartItems.reduce((a, c) => a + parseFloat(c.sellingPrice) * c.qty, 0);
 
     // Pagination
     // chỉ mục cuối sản phẩm
@@ -82,6 +94,25 @@ function App() {
             setCount(count - 1);
         }
     };
+
+    const HandleOnSubmit = (event) => {
+        setSucceSearch(filteredItems);
+        setSearchQuery('');
+        setAllSp(false);
+    };
+
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            // Handle the Enter key press event
+            HandleOnSubmit();
+        }
+    };
+
+    //search
+    const filteredItems = name.filter((item) => {
+        return item.text.toLowerCase().includes(searchQuery.toLowerCase());
+    });
+
     return (
         <div className="App">
             {/* <Routes>
@@ -94,6 +125,11 @@ function App() {
                 password={password}
                 setEmail={setEmail}
                 setPassword={setPassword}
+                HandleOnSubmit={HandleOnSubmit}
+                handleKeyPress={handleKeyPress}
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                filteredItems={filteredItems}
             />
             {/* {email === 'Quangduc2002@gmail.com' && password === '221202' ? ( */}
             <Routes>
@@ -109,6 +145,9 @@ function App() {
                             isActive={isActive}
                             handleNext={handleNext}
                             handlePrevious={handlePrevious}
+                            succeSearch={succeSearch}
+                            allSp={allSp}
+                            setAllSp={setAllSp}
                         />
                     }
                 />
@@ -119,7 +158,13 @@ function App() {
                 <Route
                     path="/giohang"
                     element={
-                        <Cart count={count} onAdd={onAdd} cartItems={cartItems} onDelete={onDelete} total={total} />
+                        <Cart
+                            count={count}
+                            onAdd={onAdd}
+                            cartItems={cartItems}
+                            onDelete={onDelete}
+                            totalMoney={totalMoney}
+                        />
                     }
                 />
                 <Route

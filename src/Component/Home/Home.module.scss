@@ -9,6 +9,28 @@
             font-weight: 500;
             color: #474c5f;
             text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        &_button {
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 95%;
+            background: rgb(244 245 249);
+            color: rgba(102, 102, 102, 0.85);
+            border: none;
+
+            &:hover {
+                background-color: #ee4d2d;
+                color: #fff;
+                cursor: pointer;
+                transition: all 0.3s linear;
+            }
+
+            &__active {
+                background-color: #ee4d2d;
+                color: #fff;
+            }
         }
     }
 

@@ -140,6 +140,10 @@
             }
         }
     }
+
+    &_active {
+        display: none;
+    }
 }
 
 .active1 {

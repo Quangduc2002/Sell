@@ -24,7 +24,7 @@ function Pagination(props) {
 
     return (
         <div>
-            <ul className={clsx(styles.pagination)}>
+            <ul className={clsx(styles.pagination, pageNumbers.length === 1 ? styles.pagination_active : '')}>
                 <button onClick={handleLeft} className={clsx(styles.pagination_icon)}>
                     <i className={clsx('fa-solid fa-chevron-left')}></i>
                 </button>

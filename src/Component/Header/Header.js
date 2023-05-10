@@ -7,32 +7,34 @@ import Phone from '../../assets/Image/telephone.png';
 import LogoUser from '../../assets/Image/user.png';
 
 function Header(props) {
-    const { cartItems, toast, email, setEmail, setPassword, password } = props;
+    const {
+        cartItems,
+        toast,
+        email,
+        setEmail,
+        setPassword,
+        password,
+        handleKeyPress,
+        searchQuery,
+        setSearchQuery,
+        filteredItems,
+        HandleOnSubmit,
+    } = props;
 
     const [show, setShow] = useState(false);
-    const [state, setSate] = useState('');
-    const [product, setProduct] = useState([]);
-    const [show1, setShow1] = useState(false);
+    // const [state, setSate] = useState([]);
+    // const [product, setProduct] = useState([]);
+    // const [show1, setShow1] = useState(false);
     const [show2, setShow2] = useState(false);
     const [formErrors, setFormErrors] = useState({});
     const search = useRef();
 
-    const HandleOnSubmit = () => {
-        if (state !== '') {
-            setProduct([...product, { state }]);
-            setSate('');
-            search.current.focus();
-        } else {
-            search.current.focus();
-        }
-    };
-
-    const handleDelete = (index) => {
-        const newJobs = [...product];
-        setProduct(newJobs.filter((e, i) => i !== index));
-        setSate('');
-        search.current.focus();
-    };
+    // const handleDelete = (index) => {
+    //     const newJobs = [...product];
+    //     setProduct(newJobs.filter((e, i) => i !== index));
+    //     setSate('');
+    //     search.current.focus();
+    // };
 
     const links = [
         { path: '/', title: 'Trang chủ' },
@@ -41,13 +43,6 @@ function Header(props) {
         { path: '/phonglamviec', title: 'Phòng làm việc' },
         { path: '/phongngu', title: 'Phòng ngủ' },
     ];
-
-    const handleKeyPress = (e) => {
-        if (e.key === 'Enter') {
-            // Handle the Enter key press event
-            HandleOnSubmit();
-        }
-    };
 
     const validateForm = () => {
         let errors = {};
@@ -72,6 +67,7 @@ function Header(props) {
         setFormErrors(errors);
         return isValid;
     };
+
     const handleSubmit = (e) => {
         e.preventDefault();
         if (validateForm()) {
@@ -87,7 +83,6 @@ function Header(props) {
         //     toast.error('Tài đăng nhập không chính xác');
         // }
     };
-
     return (
         <div className={clsx(styles.wrapper)}>
             <div className={clsx(styles.top)}>
@@ -224,39 +219,45 @@ function Header(props) {
                         <>
                             <input
                                 className={clsx(styles.input)}
-                                onFocus={() => setShow1(true)}
+                                // onFocus={() => setShow1(true)}
                                 ref={search}
-                                value={state}
-                                onChange={(e) => {
-                                    setSate(e.target.value);
-                                }}
+                                value={searchQuery}
+                                onChange={(event) => setSearchQuery(event.target.value)}
                                 placeholder="Tìm kiếm..."
                                 onKeyDown={handleKeyPress}
                             />
-                            {product.length !== 0 && show1 && (
+
+                            {filteredItems.length !== 0 && (
                                 <ul
                                     className={clsx(
                                         styles.wrapper2_search__ul,
                                         styles.ul,
-                                        product.length !== 0 ? 'wrapper2_active' : '',
+                                        searchQuery.length === 0 ? styles.wrapper2_active : '',
                                     )}
                                 >
-                                    {product.map((product, index) => (
-                                        <li key={index}>
+                                    {filteredItems.map((product, index) => (
+                                        <li
+                                            key={index}
+                                            onClick={() => {
+                                                setSearchQuery(product.text);
+                                                search.current.focus();
+                                            }}
+                                        >
                                             <div>
                                                 <i
                                                     style={{ marginRight: 16, color: '#555' }}
                                                     className="fa-solid fa-clock-rotate-left"
                                                 ></i>
-                                                {product.state}
+                                                {product.text}
                                             </div>
-                                            <p onClick={() => handleDelete(index)} className={clsx(styles.delete)}>
-                                                Xóa
-                                            </p>
+                                            {/* <p onClick={() => handleDelete(index)} className={clsx(styles.delete)}>
+                                             */}
+                                            <p className={clsx(styles.delete)}>Xóa</p>
                                         </li>
                                     ))}
                                 </ul>
                             )}
+                            {/* <button onClick={HandleOnSubmit}> */}
                             <button onClick={HandleOnSubmit}>
                                 <i className="fa-sharp fa-solid fa-magnifying-glass"></i>
                             </button>
@@ -341,14 +342,14 @@ function Header(props) {
                 />
             )}
 
-            {show1 && (
+            {/* {show1 && (
                 <div
                     onClick={() => {
                         setShow1(false);
                     }}
-                    className={clsx(styles.model, styles.model_search)}
+                    className={clsx(styles.model, searchQuery === '' ? styles.model_search : '')}
                 />
-            )}
+            )} */}
         </div>
     );
 }
