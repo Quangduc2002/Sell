@@ -2,8 +2,6 @@ import React from 'react';
 import clsx from 'clsx';
 import { useState } from 'react';
 import styles from './Sidebar.module.scss';
-import Logo from '../../../assets/Image/Logo.png';
-import Avt from '../../../assets/Image/IMG_2002.jpg';
 import { NavLink } from 'react-router-dom';
 import path from '../../Ultis/Path';
 
@@ -17,7 +15,7 @@ function Sidebar(props) {
         <div className={clsx(styles.sidebar)}>
             <div className={clsx(styles.sidebar_MG)}>
                 <div className={clsx(styles.sidebar_img)}>
-                    <img style={{ width: 100, height: 100 }} src={Logo} alt="" />
+                    <img style={{ width: 100, height: 100 }} src={`http://localhost:3000/Image/Logo.png`} alt="" />
                 </div>
                 <hr></hr>
                 <div className={clsx(styles.sidebar_user)}>
@@ -26,7 +24,7 @@ function Sidebar(props) {
                             <div className={clsx(styles.sidebar_user__name)}>
                                 <img
                                     style={{ width: 40, height: 40, borderRadius: 50, marginRight: 10 }}
-                                    src={Avt}
+                                    src={`http://localhost:3000/Image/IMG_2002.jpg`}
                                     alt=""
                                 />
                                 <span style={{ color: '#fff' }}>{userName}</span>
