@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Slider from 'react-slick';
 import clsx from 'clsx';
 import IconTop from '../IconTop/IconTop';
-import useFetch from '../Customize/Fetch';
 import Product from '../Product/Product';
 import Slider1 from '../../assets/Image/slider_1.jpg';
 import Slider2 from '../../assets/Image/slider_2.jpg';
@@ -12,6 +11,7 @@ import styles from '../Home/Home.module.scss';
 import SRV1 from '../../assets/Image/srv_1.png';
 import SRV2 from '../../assets/Image/srv_2.png';
 import SRV3 from '../../assets/Image/srv_3.png';
+import { fetchUser } from '../../services/UseServices';
 import Pagination from '../Pagination/Pagination';
 
 function Home(props) {
@@ -125,9 +125,24 @@ function Home(props) {
             text1: 'Tự tin là nhà cung cấp sản phẩm nội thất với giá cả tốt nhất tại Việt Nam',
         },
     ];
+    const [products, setProducts] = useState([]);
+    useEffect(() => {
+        // axios
+        //     .get('http://localhost:8080/products')
+        //     .then((res) => {
+        //         setProducts(res.data);
+        //     })
+        //     .catch((err) => {
+        //         console.log(err);
+        //     });
 
-    const { api: products } = useFetch('https://6405c39a40597b65de406630.mockapi.io/api/Products');
+        getUsers();
+    }, []);
 
+    const getUsers = async () => {
+        let res = await fetchUser('/products');
+        setTimeout(() => setProducts(res.data), 1000);
+    };
     //Xử lý xem thêm sản phẩm
     // const [seeMore, setSeeMore] = useState(8);
     // const handleSeeMore = () => {
@@ -168,19 +183,11 @@ function Home(props) {
                 <div className={clsx(styles.home_product)}>
                     {allSp === true
                         ? currentProduct.map((product) => {
-                              return <Product key={product.id} product={product} />;
+                              return <Product key={product._id} product={product} />;
                           })
                         : currentProductSearch.map((product) => {
-                              return <Product key={product.id} product={product} />;
+                              return <Product key={product._id} product={product} />;
                           })}
-
-                    {/* {slice.length < products.length ? (
-                        <div className={clsx(styles.home_seeMore)}>
-                            <button onClick={() => handleSeeMore()}>Xem thêm</button>
-                        </div>
-                    ) : (
-                        ''
-                    )} */}
                 </div>
                 <Pagination
                     productPerPage={productPerPage}
@@ -207,7 +214,7 @@ function Home(props) {
                     <div className={clsx(styles.inner_slider)}>
                         <Slider {...settings1}>
                             {products.map((product) => {
-                                return <Product key={product.id} product={product} />;
+                                return <Product key={product._id} product={product} />;
                             })}
                         </Slider>
                     </div>

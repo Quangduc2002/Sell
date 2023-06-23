@@ -1,0 +1,210 @@
+.breadcrumbs {
+    display: flex;
+
+    p {
+        color: rgba(102, 102, 102, 0.7);
+        font-size: 18px;
+    }
+
+    span {
+        font-size: 18px;
+        font-weight: bolder;
+        color: rgb(52, 71, 103);
+    }
+}
+
+.Link {
+    text-decoration: none;
+    color: rgba(102, 102, 102, 0.7);
+
+    &:hover {
+        color: #eb1336;
+    }
+}
+
+.divider {
+    margin: 0 6px;
+    color: rgba(102, 102, 102, 0.7);
+    font-weight: 500 !important;
+}
+
+.editProduct {
+    // width: 1170px;
+    // margin: 40px auto;
+    width: 80%;
+    padding: 24px;
+    overflow: hidden;
+    overflow-y: scroll;
+
+    &_header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 40px;
+        padding: 0 16px;
+    }
+
+    &_PD {
+        padding: 30px;
+        background-color: #fff;
+        border-radius: 10px;
+
+        h1 {
+            font-size: 24px;
+            color: rgb(52, 71, 103);
+        }
+    }
+}
+
+.form {
+    margin-top: 20px;
+}
+
+.add {
+    display: flex;
+    justify-content: space-between;
+
+    &_left,
+    &_right {
+        width: 46%;
+
+        label {
+            margin-left: 6px;
+        }
+    }
+
+    &_formGroup {
+        margin-bottom: 20px;
+
+        &__img {
+            border: 1px solid #d7d7d7;
+            border-radius: 4px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        &__customFile {
+            width: max-content;
+            padding: 8px 16px;
+            outline: none;
+            background-color: #ee4d2d;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #fff;
+            border: none;
+
+            &:hover {
+                transition: all 0.3s linear;
+                background-color: #c52432;
+            }
+        }
+    }
+
+    &_formControl {
+        width: 100%;
+        outline: none;
+        padding: 10px 16px;
+        border: 1px solid #d7d7d7;
+        border-radius: 4px;
+        margin-top: 10px;
+    }
+}
+
+.btnAdd,
+.btnBack {
+    padding: 8px 16px;
+    outline: none;
+    background-color: #ee4d2d;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #fff;
+    border: none;
+    font-size: 14px;
+    margin-right: 20px;
+
+    &:hover {
+        transition: all 0.3s linear;
+        background-color: #c52432;
+    }
+}
+
+.form_message {
+    margin-left: 20px;
+    letter-spacing: 1px;
+    margin-top: 10px;
+    color: #eb1336;
+}
+
+//modal
+.modal {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 500px;
+    height: 200px;
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    top: 20px;
+    z-index: 4;
+
+    &_header {
+        display: flex;
+        justify-content: space-between;
+        padding: 20px;
+
+        h5 {
+            font-size: 24px;
+        }
+    }
+
+    &_close {
+        border: none;
+        background-color: #fff;
+
+        span {
+            font-size: 24px;
+            color: #6c757d;
+
+            &:hover {
+                cursor: pointer;
+                color: #000;
+            }
+        }
+    }
+
+    &_body {
+        padding: 20px;
+        border-top: 1px solid #e9ecef;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    &_footer {
+        padding: 20px;
+        text-align: right;
+
+        button {
+            padding: 10px 12px;
+            border: none;
+            color: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    }
+
+    &_btnClose {
+        background-color: #6c757d;
+        margin-right: 10px;
+
+        &:hover {
+            background-color: #5a6268;
+        }
+    }
+
+    &_btnSave {
+        background-color: #007bff;
+
+        &:hover {
+            background-color: #0069d9;
+        }
+    }
+}

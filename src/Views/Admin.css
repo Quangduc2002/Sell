@@ -1,0 +1,13 @@
+.admin {
+    display: flex;
+    position: absolute;
+    background-color: rgb(240 242 245);
+    padding: 16px;
+    padding-right: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    overflow: hidden;
+    justify-content: space-between;
+}

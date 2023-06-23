@@ -5,7 +5,11 @@ import CartIMG from '../../assets/Image/cart.png';
 
 function Cart(props) {
     const { cartItems, onDelete, totalMoney } = props;
-
+    // format tiền
+    const VND = new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND',
+    });
     return (
         <div className={clsx(styles.cart)}>
             {cartItems.length === 0 && (
@@ -34,26 +38,33 @@ function Cart(props) {
                     )}
                     {cartItems.map((item) => {
                         return (
-                            <tr key={item.id}>
+                            <tr key={item._id}>
                                 <td>
-                                    <img className={clsx(styles.image)} alt="" src={item.image} />
+                                    <img
+                                        className={clsx(styles.image)}
+                                        alt=""
+                                        src={`http://localhost:3000/Image/${item.Image}`}
+                                    />
                                 </td>
                                 <td>
-                                    {item.text}
+                                    {item.TenSp}
                                     <p className={clsx(styles.quantity)}>
-                                        {item.qty} x {item.sellingPrice}
+                                        {item.qty} x {VND.format(item.GiaBan - (item.GiaBan * item.GiamGia) / 100)}
                                     </p>
                                     {item.qty === 1 ? (
                                         ''
                                     ) : (
-                                        <p className={clsx(styles.quantity)}>total: {item.total.toFixed(3)}.000 đ</p>
+                                        <p className={clsx(styles.quantity)}>total: {VND.format(item.total)} </p>
                                     )}
                                 </td>
-                                <td className={clsx(styles.price)}>{item.sellingPrice}</td>
+                                <td className={clsx(styles.price)}>
+                                    {' '}
+                                    {VND.format(item.GiaBan - (item.GiaBan * item.GiamGia) / 100)}
+                                </td>
                                 <td style={{ textAlign: 'center' }} className={clsx(styles.price)}>
                                     x{item.qty}
                                 </td>
-                                <td className={clsx(styles.price)}>{item.total.toFixed(3)}.000 đ</td>
+                                <td className={clsx(styles.price)}>{VND.format(item.total)} </td>
                                 <td style={{ textAlign: 'center' }} className={clsx(styles.del)}>
                                     <p
                                         onClick={() => {
@@ -69,7 +80,7 @@ function Cart(props) {
                 </tbody>
                 <div className={clsx(styles.total, cartItems.length === 0 ? styles.active : '')}>
                     <span>Tổng tiền: </span>
-                    {totalMoney.toFixed(3)}.000 đ
+                    {VND.format(totalMoney)}
                 </div>
             </table>
         </div>

@@ -1,40 +1,26 @@
-import clsx from 'clsx';
 import React, { useRef, useState } from 'react';
+import clsx from 'clsx';
 import { Link, NavLink } from 'react-router-dom';
 import styles from '../Header/Header.module.scss';
-import LogoTT from '../../assets/Image/logo-2.jpg';
+import LogoTT from '../../assets/Image/Logo.png';
 import Phone from '../../assets/Image/telephone.png';
-import LogoUser from '../../assets/Image/user.png';
+import path from '../Ultis/Path';
 
 function Header(props) {
     const {
         cartItems,
-        toast,
-        email,
-        setEmail,
-        setPassword,
-        password,
         handleKeyPress,
         searchQuery,
         setSearchQuery,
         filteredItems,
         HandleOnSubmit,
+        userName,
+        roleId,
+        date,
     } = props;
-
     const [show, setShow] = useState(false);
-    // const [state, setSate] = useState([]);
-    // const [product, setProduct] = useState([]);
-    // const [show1, setShow1] = useState(false);
     const [show2, setShow2] = useState(false);
-    const [formErrors, setFormErrors] = useState({});
     const search = useRef();
-
-    // const handleDelete = (index) => {
-    //     const newJobs = [...product];
-    //     setProduct(newJobs.filter((e, i) => i !== index));
-    //     setSate('');
-    //     search.current.focus();
-    // };
 
     const links = [
         { path: '/', title: 'Trang chủ' },
@@ -44,69 +30,39 @@ function Header(props) {
         { path: '/phongngu', title: 'Phòng ngủ' },
     ];
 
-    const validateForm = () => {
-        let errors = {};
-        let isValid = true;
-
-        const regex = /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/;
-        if (!email) {
-            errors.email = 'Please enter Email !';
-            isValid = false;
-        } else if (!regex.test(email)) {
-            errors.email = 'Please enter correct email format !';
-            isValid = false;
-        }
-
-        if (!password) {
-            errors.password = 'Please enter Password !';
-            isValid = false;
-        } else if (password.length < 6) {
-            errors.password = 'Please enter at least 6 characters !';
-            isValid = false;
-        }
-        setFormErrors(errors);
-        return isValid;
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (validateForm()) {
-            toast.success('Đăng nhập thành công');
-            console.log('Email: ', email, 'Password: ', password);
-        }
-
-        // if (email === 'Quangduc2002@gmail.com' && password === '221202') {
-        //     // navigate('/abc');
-        //     // setShow(!show);
-        //     toast.success('Đăng nhập thành công');
-        // } else if (email !== '' && password !== '') {
-        //     toast.error('Tài đăng nhập không chính xác');
-        // }
-    };
     return (
         <div className={clsx(styles.wrapper)}>
             <div className={clsx(styles.top)}>
                 <div className={clsx(styles.wrapper1)}>
                     <div className={clsx(styles.wrapper1_custom)}>
-                        <h3>CHÀO MỪNG BẠN ĐẾN VỚI HỆ THỐNG SIÊU THỊ NỘI THẤT !</h3>
+                        <h3>CHÀO MỪNG BẠN ĐẾN VỚI HỆ THỐNG SIÊU THỊ NỘI THẤT </h3>
                     </div>
                     <div className={clsx(styles.wrapper1_medium)}>
                         <ul>
-                            <li className={clsx(styles.wrapper1_medium__li)} style={{ marginRight: 12 }}>
-                                <span>Sản phẩm</span>
-                            </li>
-                            <li style={{ marginRight: 12, marginLeft: 12 }}>
+                            {roleId === '0' ? (
+                                <li className={clsx(styles.wrapper1_medium__li)} style={{ marginRight: 12 }}>
+                                    <Link to="/admin/DSSP" style={{ textDecoration: 'none', color: '#000' }}>
+                                        <span>Danh sách sản phẩm</span>
+                                    </Link>
+                                </li>
+                            ) : (
+                                ''
+                            )}
+
+                            <li
+                                className={roleId !== '0' ? clsx(styles.wrapper1_medium__li) : ''}
+                                style={{ marginRight: 12, marginLeft: 12 }}
+                            >
                                 <span>Tin tức</span>
                             </li>
                             <li style={{ marginRight: 12, marginLeft: 12 }}>
                                 <span>Liên hệ</span>
                             </li>
-                            <li style={{ marginLeft: 12, display: 'flex', alignItems: 'center' }}>
-                                {email === 'Quangduc2002@gmail.com' && password === '221202' ? (
-                                    <>
-                                        <img src={LogoUser} alt="" style={{ width: 40, height: 40 }} />
-                                        <span>{email}</span>
-                                    </>
+                            <li style={{ marginLeft: 12 }}>
+                                {!userName ? (
+                                    <Link to="/Login" style={{ textDecoration: 'none', color: '#000' }}>
+                                        <span className={clsx(styles.show)}>Đăng nhập</span>
+                                    </Link>
                                 ) : (
                                     <span
                                         className={clsx(styles.show)}
@@ -114,79 +70,18 @@ function Header(props) {
                                             setShow(!show);
                                         }}
                                     >
-                                        Đăng nhập
+                                        {userName}
+                                        {date}
+                                        <i style={{ marginLeft: 6 }} className="fa-sharp fa-solid fa-caret-down"></i>
                                     </span>
                                 )}
-
                                 {show && (
-                                    <div className={clsx(styles.nav2_form)}>
-                                        <div className={clsx(styles.form_header)}>
-                                            <h3 className={clsx(styles.form_heading)}>Đăng Nhập</h3>
-                                        </div>
-                                        <form className={clsx(styles.auth_form)}>
-                                            <div className={clsx(styles.auth_froup)}>
-                                                <input
-                                                    value={email}
-                                                    type="text"
-                                                    name="email"
-                                                    className={clsx(styles.auth_input)}
-                                                    placeholder="Nhập Email"
-                                                    onChange={(e) => setEmail(e.target.value)}
-                                                />
-                                                <div>
-                                                    {formErrors.email && (
-                                                        <p className={clsx(styles.form_message)}>{formErrors.email}</p>
-                                                    )}
-                                                </div>
-                                            </div>
-                                            <div className={clsx(styles.auth_froup)}>
-                                                <input
-                                                    value={password}
-                                                    type="password"
-                                                    name="password"
-                                                    className={clsx(styles.auth_input)}
-                                                    placeholder="Nhập mật khẩu"
-                                                    onChange={(e) => setPassword(e.target.value)}
-                                                />
-                                                <div>
-                                                    {formErrors.password && (
-                                                        <p className={clsx(styles.form_message)}>
-                                                            {formErrors.password}
-                                                        </p>
-                                                    )}
-                                                </div>
-                                            </div>
-                                            <div className={clsx(styles.form_controls, styles.form_controls1)}>
-                                                <button
-                                                    onClick={() => {
-                                                        setShow(!show);
-                                                    }}
-                                                    className={clsx(styles.form_btn)}
-                                                >
-                                                    TRỞ LẠI
-                                                </button>
-                                                <button
-                                                    onClick={(e) => handleSubmit(e)}
-                                                    className={clsx(styles.form_btn, styles.form_primary)}
-                                                >
-                                                    ĐĂNG NHẬP
-                                                </button>
-                                            </div>
-                                            <div className={clsx(styles.form_controls2)}>
-                                                <p className={clsx(styles.controls2_p)}>Quên mật khẩu</p>
-                                                <p>Cần trợ giúp</p>
-                                            </div>
-                                        </form>
+                                    <div className={clsx(styles.wrapper1_user)}>
+                                        <p>Hồ sơ cá nhân</p>
+                                        <Link to={path.Login} style={{ textDecoration: 'none', color: '#000' }}>
+                                            <p>Đăng xuất</p>
+                                        </Link>
                                     </div>
-                                )}
-
-                                {show && (
-                                    <div
-                                        onClick={() => {
-                                            setShow(!show);
-                                        }}
-                                        className={clsx(styles.model)}
-                                    />
                                 )}
                             </li>
                         </ul>
@@ -207,19 +102,21 @@ function Header(props) {
                     <Link to="/">
                         <img alt="" src={LogoTT} />
                     </Link>
-
-                    <Link to="/giohang" className={clsx(styles.cart, styles.cartMB)}>
-                        <>
-                            <i className="fa-solid fa-cart-shopping"></i>
-                        </>
-                        <span className={clsx(styles.cartSL)}>{cartItems.length}</span>
-                    </Link>
+                    {roleId !== '0' ? (
+                        <Link to="/giohang" className={clsx(styles.cart, styles.cartMB)}>
+                            <>
+                                <i className="fa-solid fa-cart-shopping"></i>
+                            </>
+                            <span className={clsx(styles.cartSL)}>{cartItems.length}</span>
+                        </Link>
+                    ) : (
+                        ''
+                    )}
 
                     <div className={clsx(styles.wrapper2_search)}>
                         <>
                             <input
                                 className={clsx(styles.input)}
-                                // onFocus={() => setShow1(true)}
                                 ref={search}
                                 value={searchQuery}
                                 onChange={(event) => setSearchQuery(event.target.value)}
@@ -239,25 +136,21 @@ function Header(props) {
                                         <li
                                             key={index}
                                             onClick={() => {
-                                                setSearchQuery(product.text);
+                                                setSearchQuery(product.TenSp);
                                                 search.current.focus();
                                             }}
                                         >
                                             <div>
                                                 <i
                                                     style={{ marginRight: 16, color: '#555' }}
-                                                    className="fa-solid fa-clock-rotate-left"
+                                                    className="fa-solid fa-magnifying-glass"
                                                 ></i>
-                                                {product.text}
+                                                {product.TenSp}
                                             </div>
-                                            {/* <p onClick={() => handleDelete(index)} className={clsx(styles.delete)}>
-                                             */}
-                                            <p className={clsx(styles.delete)}>Xóa</p>
                                         </li>
                                     ))}
                                 </ul>
                             )}
-                            {/* <button onClick={HandleOnSubmit}> */}
                             <button onClick={HandleOnSubmit}>
                                 <i className="fa-sharp fa-solid fa-magnifying-glass"></i>
                             </button>
@@ -281,19 +174,23 @@ function Header(props) {
                             return (
                                 <li key={link.path}>
                                     <NavLink key={link.path} className={clsx(styles.wrapper3_link)} to={link.path}>
-                                        {link.title}
+                                        <span>{link.title}</span>
                                     </NavLink>
                                 </li>
                             );
                         })}
                     </ul>
-                    <Link to="/giohang" className={clsx(styles.cart)}>
-                        <>
-                            <span>Giỏ hàng</span>
-                            <i className="fa-solid fa-cart-shopping"></i>
-                        </>
-                        <span className={clsx(styles.cartSL)}>{cartItems.length}</span>
-                    </Link>
+                    {roleId !== '0' ? (
+                        <Link to="/giohang" className={clsx(styles.cart)}>
+                            <>
+                                <span>Giỏ hàng</span>
+                                <i className="fa-solid fa-cart-shopping"></i>
+                            </>
+                            <span className={clsx(styles.cartSL)}>{cartItems.length}</span>
+                        </Link>
+                    ) : (
+                        ''
+                    )}
                 </div>
             </div>
 
@@ -341,15 +238,6 @@ function Header(props) {
                     className={clsx(styles.model)}
                 />
             )}
-
-            {/* {show1 && (
-                <div
-                    onClick={() => {
-                        setShow1(false);
-                    }}
-                    className={clsx(styles.model, searchQuery === '' ? styles.model_search : '')}
-                />
-            )} */}
         </div>
     );
 }

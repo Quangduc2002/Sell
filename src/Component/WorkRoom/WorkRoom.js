@@ -1,36 +1,56 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import styles from '../WorkRoom/WorkRoom.module.scss';
 import IconTop from '../IconTop/IconTop';
 import Product from '../Product/Product';
 import { Link } from 'react-router-dom';
-import useFetch from '../Customize/Fetch';
 import Loading from '../Loading/Loading';
+import { fetchUser } from '../../services/UseServices';
 
 function WorkRoom() {
-    const { api: products } = useFetch('https://6405c39a40597b65de406630.mockapi.io/api/Products');
+    const [products, setProducts] = useState([]);
     let newProducts = [];
-    newProducts = products.slice(10, 15);
-    const [product, setProduct] = useState([]);
+    newProducts = products.slice(0);
+    useEffect(() => {
+        // axios
+        //     .get('http://localhost:8080/producttypes/3')
+        //     .then((res) => {
+        //         setTimeout(() => setProducts(res.data.Product), 1000);
+        //     })
+        //     .catch((err) => {
+        //         console.log(err);
+        //     });
+        getUsers();
+    }, []);
+
+    const getUsers = async () => {
+        let res = await fetchUser('/producttypes/3');
+        setTimeout(() => setProducts(res.data.Product), 1000);
+    };
 
     function handleFilterProducts() {
         var selectedOption = document.querySelector('select').value;
-        if (selectedOption === '0') {
-            setProduct('');
-        }
         if (selectedOption === '1') {
             newProducts.sort((a, b) => {
-                return parseFloat(a.sellingPrice) - parseFloat(b.sellingPrice);
+                return (
+                    parseFloat(a.GiaBan - (a.GiaBan * a.GiamGia) / 100) -
+                    parseFloat(b.GiaBan - (b.GiaBan * b.GiamGia) / 100)
+                );
             });
-            setProduct(newProducts);
+            setProducts(newProducts);
         }
         if (selectedOption === '2') {
+            setProducts(products);
             newProducts.sort((a, b) => {
-                return parseFloat(b.sellingPrice) - parseFloat(a.sellingPrice);
+                return (
+                    parseFloat(b.GiaBan - (b.GiaBan * b.GiamGia) / 100) -
+                    parseFloat(a.GiaBan - (a.GiaBan * a.GiamGia) / 100)
+                );
             });
-            setProduct(newProducts);
+            setProducts(newProducts);
         }
     }
+
     return (
         <div style={{ backgroundColor: '#f8f9fb', paddingBottom: 60 }}>
             <div className={clsx(styles.room1)}>
@@ -63,13 +83,9 @@ function WorkRoom() {
                     <Loading />
                 ) : (
                     <div className={clsx(styles.room_product)}>
-                        {products && products.length && product.length === 0
-                            ? newProducts.map((product) => {
-                                  return <Product key={product.id} product={product} />;
-                              })
-                            : product.map((product) => {
-                                  return <Product key={product.id} product={product} />;
-                              })}
+                        {products.map((product) => {
+                            return <Product key={product._id} product={product} />;
+                        })}
                     </div>
                 )}
             </div>
