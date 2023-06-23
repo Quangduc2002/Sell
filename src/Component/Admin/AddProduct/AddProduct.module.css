@@ -1,0 +1,128 @@
+.breadcrumbs {
+  display: flex;
+}
+.breadcrumbs p {
+  color: rgba(102, 102, 102, 0.7);
+  font-size: 18px;
+}
+.breadcrumbs span {
+  font-size: 18px;
+  font-weight: bolder;
+  color: rgb(52, 71, 103);
+}
+
+.Link {
+  text-decoration: none;
+  color: rgba(102, 102, 102, 0.7);
+}
+.Link:hover {
+  color: #eb1336;
+}
+
+.divider {
+  margin: 0 6px;
+  color: rgba(102, 102, 102, 0.7);
+  font-weight: 500 !important;
+}
+
+.addProduct {
+  width: 80%;
+  padding: 24px;
+  overflow: hidden;
+  overflow-y: scroll;
+}
+.addProduct_header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 40px;
+  padding: 0 16px;
+}
+.addProduct_PD {
+  padding: 30px;
+  background-color: #fff;
+  border-radius: 10px;
+}
+.addProduct_PD h1 {
+  font-size: 24px;
+  color: rgb(52, 71, 103);
+}
+
+.form {
+  margin-top: 20px;
+}
+
+.add {
+  display: flex;
+  justify-content: space-between;
+}
+.add_left, .add_right {
+  width: 46%;
+}
+.add_left label, .add_right label {
+  margin-left: 6px;
+}
+.add_formGroup {
+  margin-bottom: 20px;
+}
+.add_formGroup__img {
+  border: 1px solid #d7d7d7;
+  border-radius: 4px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+.add_formGroup__customFile {
+  width: -moz-max-content;
+  width: max-content;
+  padding: 8px 16px;
+  outline: none;
+  background-color: #ee4d2d;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #fff;
+  border: none;
+}
+.add_formGroup__customFile:hover {
+  transition: all 0.3s linear;
+  background-color: #c52432;
+}
+.add_formControl {
+  width: 100%;
+  outline: none;
+  padding: 10px 16px;
+  border: 1px solid #d7d7d7;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+.btnAdd,
+.btnBack {
+  padding: 8px 16px;
+  outline: none;
+  background-color: #ee4d2d;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #fff;
+  border: none;
+  font-size: 14px;
+  margin-right: 20px;
+}
+.btnAdd:hover,
+.btnBack:hover {
+  transition: all 0.3s linear;
+  background-color: #c52432;
+}
+
+.form_message {
+  margin-left: 20px;
+  letter-spacing: 1px;
+  margin-top: 10px;
+  color: #eb1336;
+}
+
+::-moz-placeholder {
+  color: #000;
+}
+
+::placeholder {
+  color: #000;
+}/*# sourceMappingURL=AddProduct.module.css.map */

@@ -1,0 +1,182 @@
+.breadcrumbs {
+  display: flex;
+}
+.breadcrumbs p {
+  color: rgba(102, 102, 102, 0.7);
+  font-size: 18px;
+}
+.breadcrumbs span {
+  font-size: 18px;
+  font-weight: bolder;
+  color: rgb(52, 71, 103);
+}
+
+.Link {
+  text-decoration: none;
+  color: rgba(102, 102, 102, 0.7);
+}
+.Link:hover {
+  color: #eb1336;
+}
+
+.divider {
+  margin: 0 6px;
+  color: rgba(102, 102, 102, 0.7);
+  font-weight: 500 !important;
+}
+
+.editProduct {
+  width: 80%;
+  padding: 24px;
+  overflow: hidden;
+  overflow-y: scroll;
+}
+.editProduct_header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 40px;
+  padding: 0 16px;
+}
+.editProduct_PD {
+  padding: 30px;
+  background-color: #fff;
+  border-radius: 10px;
+}
+.editProduct_PD h1 {
+  font-size: 24px;
+  color: rgb(52, 71, 103);
+}
+
+.form {
+  margin-top: 20px;
+}
+
+.add {
+  display: flex;
+  justify-content: space-between;
+}
+.add_left, .add_right {
+  width: 46%;
+}
+.add_left label, .add_right label {
+  margin-left: 6px;
+}
+.add_formGroup {
+  margin-bottom: 20px;
+}
+.add_formGroup__img {
+  border: 1px solid #d7d7d7;
+  border-radius: 4px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+.add_formGroup__customFile {
+  width: -moz-max-content;
+  width: max-content;
+  padding: 8px 16px;
+  outline: none;
+  background-color: #ee4d2d;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #fff;
+  border: none;
+}
+.add_formGroup__customFile:hover {
+  transition: all 0.3s linear;
+  background-color: #c52432;
+}
+.add_formControl {
+  width: 100%;
+  outline: none;
+  padding: 10px 16px;
+  border: 1px solid #d7d7d7;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+.btnAdd,
+.btnBack {
+  padding: 8px 16px;
+  outline: none;
+  background-color: #ee4d2d;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #fff;
+  border: none;
+  font-size: 14px;
+  margin-right: 20px;
+}
+.btnAdd:hover,
+.btnBack:hover {
+  transition: all 0.3s linear;
+  background-color: #c52432;
+}
+
+.form_message {
+  margin-left: 20px;
+  letter-spacing: 1px;
+  margin-top: 10px;
+  color: #eb1336;
+}
+
+.modal {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 500px;
+  height: 200px;
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  top: 20px;
+  z-index: 4;
+}
+.modal_header {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+}
+.modal_header h5 {
+  font-size: 24px;
+}
+.modal_close {
+  border: none;
+  background-color: #fff;
+}
+.modal_close span {
+  font-size: 24px;
+  color: #6c757d;
+}
+.modal_close span:hover {
+  cursor: pointer;
+  color: #000;
+}
+.modal_body {
+  padding: 20px;
+  border-top: 1px solid #e9ecef;
+  border-bottom: 1px solid #e9ecef;
+}
+.modal_footer {
+  padding: 20px;
+  text-align: right;
+}
+.modal_footer button {
+  padding: 10px 12px;
+  border: none;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.modal_btnClose {
+  background-color: #6c757d;
+  margin-right: 10px;
+}
+.modal_btnClose:hover {
+  background-color: #5a6268;
+}
+.modal_btnSave {
+  background-color: #007bff;
+}
+.modal_btnSave:hover {
+  background-color: #0069d9;
+}/*# sourceMappingURL=EditProduct.module.css.map */
