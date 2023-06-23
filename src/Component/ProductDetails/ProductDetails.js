@@ -1,15 +1,67 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
 import clsx from 'clsx';
-import useFetch from '../Customize/Fetch';
+import { useNavigate } from 'react-router-dom';
 import styles from '../ProductDetails/ProductDetails.module.scss';
 import Free from '../../assets/Image/free.png';
 import Loading from '../Loading/Loading';
+import '../Product/Product.css';
+import { fetchUser } from '../../services/UseServices';
 
 function ProductDetails(props) {
-    const { onAdd, count, handleProductreduction, handleIncreaseProduct } = props;
+    const { onAdd, count, handleProductreduction, handleIncreaseProduct, userName, toast } = props;
     let { id } = useParams();
-    const { api: product } = useFetch(`https://6405c39a40597b65de406630.mockapi.io/api/Products/${id}`);
+    const [product, setProduct] = useState([]);
+    const navigate = useNavigate();
+    useEffect(() => {
+        // axios
+        //     .get(`http://localhost:8080/products/${id}`)
+        //     .then((res) => {
+        //         setTimeout(() => setProduct(res.data), 1000);
+        //     })
+        //     .catch((err) => {
+        //         console.log(err);
+        //     });
+        getUsers(id);
+    }, [id]);
+
+    const getUsers = async (id) => {
+        let res = await fetchUser(`/products/${id}`);
+        setTimeout(() => setProduct(res.data), 1000);
+    };
+
+    const handleSubmitEvaluate = (e) => {
+        e.preventDefault();
+        //lấy giá trị thẻ select option
+        if (userName) {
+            const star = document.querySelector('select').value;
+            axios
+                .put(`http://localhost:8080/products/${id}/rating`, {
+                    star: star,
+                })
+                .then((res) => {
+                    toast.success('Đánh giá thành công !');
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        } else {
+            navigate('/Login');
+        }
+    };
+
+    const VND = new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND',
+    });
+
+    // đánh giá sản phẩm
+    // khai báo 5 sao
+    const starsTotal = 5;
+    const starPercentage = (product.TongDanhGia / starsTotal) * 100;
+    // Math.round làm tròn lên
+    const starPercentageRounded = `${Math.round(starPercentage)}%`;
 
     return (
         <div style={{ backgroundColor: 'rgb(248, 249, 251)', paddingBottom: 60 }}>
@@ -26,7 +78,7 @@ function ProductDetails(props) {
                         <span className={clsx(styles.divider)}>
                             <i className="fa-solid fa-angle-right"></i>
                         </span>
-                        <span>{product.text}</span>
+                        <span>{product.TenSp}</span>
                     </div>
                 </div>
             </div>
@@ -35,18 +87,52 @@ function ProductDetails(props) {
             ) : (
                 <div className={clsx(styles.productDetail)}>
                     <div className={clsx(styles.images)}>
-                        <img src={product.image} alt="" />
+                        <img src={`http://localhost:3000/Image/${product.Image}`} alt="" />
                     </div>
                     <div className={clsx(styles.right)}>
-                        <h1>{product.text}</h1>
+                        <h1>{product.TenSp}</h1>
+                        {product.NumReview !== 0 ? (
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                <div>
+                                    <span style={{ borderBottom: '1px solid', color: '#f62d3e' }}>
+                                        {product.TongDanhGia.toFixed(1)}
+                                    </span>
+                                    &nbsp;
+                                    <div className={clsx(styles.right_star, 'stars-outer')}>
+                                        <div
+                                            style={{ width: starPercentageRounded }}
+                                            className={clsx(styles.right_starinner, 'stars-inner')}
+                                        ></div>
+                                    </div>
+                                </div>
+                                <div style={{ paddingLeft: 15 }}>
+                                    {product.NumReview} &nbsp;
+                                    <span style={{ color: '#767676' }}>Đánh giá</span>
+                                </div>
+                            </div>
+                        ) : (
+                            ''
+                        )}
                         <div className={clsx(styles.right_price)}>
-                            <span className={clsx(styles.right_priceAmount)}>{product.originalPrice}</span>
-                            <span className={clsx(styles.right_priceRed)}>{product.sellingPrice}</span>
+                            {product.GiamGia ? (
+                                <>
+                                    <span className={clsx(styles.right_priceAmount)}>{VND.format(product.GiaBan)}</span>
+                                    <span className={clsx(styles.right_priceRed)}>
+                                        {VND.format(product.GiaBan - (product.GiaBan * product.GiamGia) / 100)}
+                                    </span>
+                                </>
+                            ) : (
+                                <span className={clsx(styles.right_priceRed)}>{VND.format(product.GiaBan)}</span>
+                            )}
                         </div>
-                        <div className={clsx(styles.right_discountCode)}>
-                            <p>Mã giảm giá của shop </p>
-                            <span>{product.discount}</span>
-                        </div>
+                        {product.GiamGia !== '' ? (
+                            <div className={clsx(styles.right_discountCode)}>
+                                <p>Mã giảm giá của shop </p>
+                                <span>-{product.GiamGia}%</span>
+                            </div>
+                        ) : (
+                            ''
+                        )}
                         <div className={clsx(styles.right_transport)}>
                             <p>Vận chuyển</p>
                             <div className={clsx(styles.right_transport__free)}>
@@ -85,6 +171,27 @@ function ProductDetails(props) {
                             </div>
                             <div className={clsx(styles.right_quantity__available)}>Sản phẩm có sẵn </div>
                         </div>
+                        <form
+                            method="PUT"
+                            action={`/products/${id}/rating`}
+                            className={clsx(styles.right_quantity, styles.right_formstar)}
+                        >
+                            <select className={clsx(styles.right_select)}>
+                                <option value="1">1 Sao</option>
+                                <option value="2">2 Sao</option>
+                                <option value="3">3 Sao</option>
+                                <option value="4">4 Sao</option>
+                                <option value="5">5 Sao</option>
+                            </select>
+
+                            <button
+                                onClick={(e) => handleSubmitEvaluate(e)}
+                                style={{ height: 'auto', padding: 10, marginLeft: 20 }}
+                                className={clsx(styles.right_cart)}
+                            >
+                                <span>Đánh giá</span>
+                            </button>
+                        </form>
                         <div>
                             <button onClick={() => onAdd(product)} className={clsx(styles.right_cart)}>
                                 <span>Thêm vào giỏ hàng</span>

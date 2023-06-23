@@ -28,6 +28,17 @@
         margin-bottom: 10px;
     }
 
+    &_link {
+        text-decoration: none;
+        color: #acacac;
+        list-style: none;
+
+        &:hover {
+            color: #f62d3e;
+            transition: all 0.3s linear;
+        }
+    }
+
     &_span {
         margin-left: 8px;
     }

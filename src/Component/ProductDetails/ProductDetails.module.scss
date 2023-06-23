@@ -66,7 +66,7 @@
     &_price {
         display: flex;
         align-items: center;
-        flex-wrap: wrap;
+        // flex-wrap: wrap;
     }
 
     &_priceAmount {
@@ -176,6 +176,40 @@
             color: #fff;
             font-size: 16px;
         }
+    }
+
+    &_star {
+        &::after {
+            content: '';
+            position: absolute;
+            background-color: #d7d7d7;
+            width: 1px;
+            height: 22px;
+            right: -16px;
+        }
+
+        &::before {
+            font-weight: 500;
+            color: rgb(246, 45, 62);
+        }
+    }
+
+    &_starinner {
+        &::before {
+            color: rgb(246, 45, 62);
+        }
+    }
+
+    &_formstar {
+        margin-bottom: 0;
+    }
+
+    &_select {
+        border: 1px solid #d7d7d7;
+        padding: 10px;
+        outline: none;
+        cursor: pointer;
+        border-radius: 4px;
     }
 }
 
