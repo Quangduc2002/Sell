@@ -33,8 +33,8 @@ function ProductDetails(props) {
 
     const handleSubmitEvaluate = (e) => {
         e.preventDefault();
-        //lấy giá trị thẻ select option
         if (userName) {
+            //lấy giá trị thẻ select option
             const star = document.querySelector('select').value;
             axios
                 .put(`http://localhost:8080/products/${id}/rating`, {
@@ -62,6 +62,14 @@ function ProductDetails(props) {
     const starPercentage = (product.TongDanhGia / starsTotal) * 100;
     // Math.round làm tròn lên
     const starPercentageRounded = `${Math.round(starPercentage)}%`;
+
+    // purchase products
+    const handlePurchaseProduct = (product) => {
+        if (userName) {
+            onAdd(product);
+            navigate('/giohang');
+        }
+    };
 
     return (
         <div style={{ backgroundColor: 'rgb(248, 249, 251)', paddingBottom: 60 }}>
@@ -140,6 +148,12 @@ function ProductDetails(props) {
                                 <span>Miễn phí vận chuyển</span>
                             </div>
                         </div>
+                        <div className={clsx(styles.right_transport)}>
+                            <p>Chất liệu</p>
+                            <div className={clsx(styles.right_transport__free)}>
+                                <span>{product.ChatLieu}</span>
+                            </div>
+                        </div>
                         <div className={clsx(styles.right_quantity)}>
                             <div>
                                 <p>Số lượng</p>
@@ -193,8 +207,12 @@ function ProductDetails(props) {
                             </button>
                         </form>
                         <div>
-                            <button onClick={() => onAdd(product)} className={clsx(styles.right_cart)}>
+                            <button onClick={() => onAdd(product)} className={clsx(styles.right_addcart)}>
                                 <span>Thêm vào giỏ hàng</span>
+                            </button>
+
+                            <button onClick={() => handlePurchaseProduct(product)} className={clsx(styles.right_cart)}>
+                                <span>Mua ngay</span>
                             </button>
                         </div>
                     </div>

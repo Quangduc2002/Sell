@@ -92,7 +92,7 @@ function Sidebar(props) {
                                     style={{ color: '#fff', fontSize: 24, marginRight: 10 }}
                                     className="fa-regular fa-clipboard"
                                 ></i>
-                                <span style={{ color: '#fff' }}>Đơn đặt hàng</span>
+                                <span style={{ color: '#fff' }}>Quản lý đơn hàng</span>
                             </div>
                             <i
                                 style={{ color: 'rgba(255, 255, 255, 0.5)' }}
@@ -103,11 +103,11 @@ function Sidebar(props) {
 
                     {showOrder && (
                         <ul className={clsx(styles.sidebar_user__ul)}>
-                            <NavLink to={'a'} className={clsx(styles.sidebar_user__link)}>
-                                <li className={clsx(styles.sidebar_user__li)}>Danh sách đặt hàng</li>
+                            <NavLink to={path.LayoutAdminListOrders} className={clsx(styles.sidebar_user__link)}>
+                                <li className={clsx(styles.sidebar_user__li)}>Danh sách đơn hàng</li>
                             </NavLink>
-                            <NavLink to={'b'} className={clsx(styles.sidebar_user__link)}>
-                                <li className={clsx(styles.sidebar_user__li)}>Chi tiết đặt hàng</li>
+                            <NavLink to={path.LayoutAdminOrderDetails} className={clsx(styles.sidebar_user__link)}>
+                                <li className={clsx(styles.sidebar_user__li)}>Chi tiết đơn hàng</li>
                             </NavLink>
                         </ul>
                     )}

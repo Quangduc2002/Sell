@@ -157,6 +157,27 @@
         }
     }
 
+    &_addcart {
+        padding: 0 20px;
+        border: none;
+        background-color: rgba(208, 1, 27, 0.08);
+        border: 1px solid #ee4d2d;
+        box-shadow: 0 1px 1px 0 rgb(0 0 0 / 3%);
+        height: 48px;
+        cursor: pointer;
+        margin: 20px 10px 0 0;
+        border-radius: 4px;
+
+        &:hover {
+            background-color: rgba(241, 180, 187, 0.1628);
+        }
+
+        span {
+            color: #ee4d2d;
+            font-size: 16px;
+        }
+    }
+
     &_cart {
         padding: 0 20px;
         border: none;

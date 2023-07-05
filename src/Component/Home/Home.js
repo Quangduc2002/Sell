@@ -13,6 +13,7 @@ import SRV2 from '../../assets/Image/srv_2.png';
 import SRV3 from '../../assets/Image/srv_3.png';
 import { fetchUser } from '../../services/UseServices';
 import Pagination from '../Pagination/Pagination';
+import Loading from '../Loading/Loading';
 
 function Home(props) {
     const {
@@ -153,90 +154,96 @@ function Home(props) {
     const currentProductSearch = succeSearch.slice(indeOfFirstProduct, indexOfLastProduct);
 
     return (
-        <div className={clsx(styles.home)}>
-            <div className={clsx(styles.home1)}>
-                <Slider {...settings}>
-                    {slickSlides.map((slickSlide, index) => {
-                        return <img className={clsx(styles.home1_img)} alt="" src={slickSlide} key={index} />;
-                    })}
-                </Slider>
-            </div>
-
-            <div className={clsx(styles.home_title)}>
-                <h2>Dòng sản phẩm nổi bật</h2>
-                <ul>
-                    <li className="tab has-icon">
-                        <button
-                            onClick={() => setAllSp(true)}
-                            className={clsx(
-                                styles.home_title_button,
-                                allSp === true ? styles.home_title_button__active : '',
-                            )}
-                        >
-                            Tất cả sản phẩm
-                        </button>
-                    </li>
-                </ul>
-            </div>
-
-            <div className={clsx(styles.home__product)}>
-                <div className={clsx(styles.home_product)}>
-                    {allSp === true
-                        ? currentProduct.map((product) => {
-                              return <Product key={product._id} product={product} />;
-                          })
-                        : currentProductSearch.map((product) => {
-                              return <Product key={product._id} product={product} />;
-                          })}
-                </div>
-                <Pagination
-                    productPerPage={productPerPage}
-                    totalProduct={allSp ? products.length : succeSearch.length}
-                    pagination={pagination}
-                    isActive={isActive}
-                    handleNext={handleNext}
-                    handlePrevious={handlePrevious}
-                />
-            </div>
-
-            <div className={clsx(styles.box)}>
-                <div className={clsx(styles.box_dark)}>
-                    <div className={clsx(styles.box_info)}>
-                        <h2>Hệ thống phân phối & bán lẻ nội thất số 1 tại Việt Nam</h2>
-                        <p>Hotline: 0965420922 -Email: phamquangduc110@gmail.com</p>
-                    </div>
-                </div>
-            </div>
-
-            <div className={clsx(styles.inner)}>
-                <div className={clsx(styles.inner_container)}>
-                    <h3 className={clsx(styles.inner_title)}>SẢN PHẨM BÁN CHẠY</h3>
-                    <div className={clsx(styles.inner_slider)}>
-                        <Slider {...settings1}>
-                            {products.map((product) => {
-                                return <Product key={product._id} product={product} />;
+        <div className={clsx(styles.home, currentProduct.length === 0 ? styles.MG : '')}>
+            {currentProduct.length !== 0 ? (
+                <>
+                    <div className={clsx(styles.home1)}>
+                        <Slider {...settings}>
+                            {slickSlides.map((slickSlide, index) => {
+                                return <img className={clsx(styles.home1_img)} alt="" src={slickSlide} key={index} />;
                             })}
                         </Slider>
                     </div>
-                </div>
-            </div>
 
-            <div className={clsx(styles.home_section)}>
-                <div className={clsx(styles.home_section1)}>
-                    {sections.map((section, index) => {
-                        return (
-                            <div key={index} className={clsx(styles.home_inner)}>
-                                <img alt="" src={section.image} />
-                                <div className={clsx(styles.home_inner__box)}>
-                                    <h4 style={{ color: '#f62d3e' }}>{section.text}</h4>
-                                    <p>{section.text1}</p>
-                                </div>
+                    <div className={clsx(styles.home_title)}>
+                        <h2>Dòng sản phẩm nổi bật</h2>
+                        <ul>
+                            <li className="tab has-icon">
+                                <button
+                                    onClick={() => setAllSp(true)}
+                                    className={clsx(
+                                        styles.home_title_button,
+                                        allSp === true ? styles.home_title_button__active : '',
+                                    )}
+                                >
+                                    Tất cả sản phẩm
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div className={clsx(styles.home__product)}>
+                        <div className={clsx(styles.home_product)}>
+                            {allSp === true
+                                ? currentProduct.map((product) => {
+                                      return <Product key={product._id} product={product} />;
+                                  })
+                                : currentProductSearch.map((product) => {
+                                      return <Product key={product._id} product={product} />;
+                                  })}
+                        </div>
+                        <Pagination
+                            productPerPage={productPerPage}
+                            totalProduct={allSp ? products.length : succeSearch.length}
+                            pagination={pagination}
+                            isActive={isActive}
+                            handleNext={handleNext}
+                            handlePrevious={handlePrevious}
+                        />
+                    </div>
+
+                    <div className={clsx(styles.box)}>
+                        <div className={clsx(styles.box_dark)}>
+                            <div className={clsx(styles.box_info)}>
+                                <h2>Hệ thống phân phối & bán lẻ nội thất số 1 tại Việt Nam</h2>
+                                <p>Hotline: 0965420922 -Email: phamquangduc110@gmail.com</p>
                             </div>
-                        );
-                    })}
-                </div>
-            </div>
-            <IconTop />
+                        </div>
+                    </div>
+
+                    <div className={clsx(styles.inner)}>
+                        <div className={clsx(styles.inner_container)}>
+                            <h3 className={clsx(styles.inner_title)}>SẢN PHẨM BÁN CHẠY</h3>
+                            <div className={clsx(styles.inner_slider)}>
+                                <Slider {...settings1}>
+                                    {products.map((product) => {
+                                        return <Product key={product._id} product={product} />;
+                                    })}
+                                </Slider>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className={clsx(styles.home_section)}>
+                        <div className={clsx(styles.home_section1)}>
+                            {sections.map((section, index) => {
+                                return (
+                                    <div key={index} className={clsx(styles.home_inner)}>
+                                        <img alt="" src={section.image} />
+                                        <div className={clsx(styles.home_inner__box)}>
+                                            <h4 style={{ color: '#f62d3e' }}>{section.text}</h4>
+                                            <p>{section.text1}</p>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                    <IconTop />
+                </>
+            ) : (
+                <Loading />
+            )}
         </div>
     );
 }

@@ -7,6 +7,8 @@ import EditProduct from '../Component/Admin/EditProduct/EditProduct';
 import Sidebar from '../Component/Admin/Sidebar/Sidebar';
 import ListCustomer from '../Component/Admin/ListCustomer/ListCustomer';
 import './Admin.css';
+import ListOrderProduct from '../Component/Admin/ListOrderProduct/ListOrderProduct';
+import OrderDetail from '../Component/Admin/OrderDetail/OrderDetail';
 
 function LayoutAdmin(props) {
     const { toast, userName } = props;
@@ -61,6 +63,36 @@ function LayoutAdmin(props) {
                     path={path.LayoutAdminCustomers}
                     element={
                         <ListCustomer
+                            productPerPage={productPerPage}
+                            indexOfLastProduct={indexOfLastProduct}
+                            indeOfFirstProduct={indeOfFirstProduct}
+                            pagination={pagination}
+                            isActive={isActive}
+                            handleNext={handleNext}
+                            handlePrevious={handlePrevious}
+                            toast={toast}
+                        />
+                    }
+                />
+                <Route
+                    path={path.LayoutAdminListOrders}
+                    element={
+                        <ListOrderProduct
+                            productPerPage={productPerPage}
+                            indexOfLastProduct={indexOfLastProduct}
+                            indeOfFirstProduct={indeOfFirstProduct}
+                            pagination={pagination}
+                            isActive={isActive}
+                            handleNext={handleNext}
+                            handlePrevious={handlePrevious}
+                            toast={toast}
+                        />
+                    }
+                />
+                <Route
+                    path={path.LayoutAdminOrderDetails}
+                    element={
+                        <OrderDetail
                             productPerPage={productPerPage}
                             indexOfLastProduct={indexOfLastProduct}
                             indeOfFirstProduct={indeOfFirstProduct}

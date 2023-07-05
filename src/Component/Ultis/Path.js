@@ -11,6 +11,8 @@ const path = {
     LayoutAdminDSDP: 'DSSP',
     LayoutAdminAdd: 'ThemSp',
     LayoutAdminCustomers: 'Customer',
+    LayoutAdminListOrders: 'ListOrders',
+    LayoutAdminOrderDetails: 'OrderDetails',
     LayoutAdminEdit: 'DSSP/products/:id/edit',
     Login: '/Login',
 };

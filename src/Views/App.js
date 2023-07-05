@@ -18,6 +18,8 @@ import ListProduct from '../Component/Admin/ListProduct/ListProduct';
 import AddProduct from '../Component/Admin/AddProduct/AddProduct';
 import EditProduct from '../Component/Admin/EditProduct/EditProduct';
 import ListCustomer from '../Component/Admin/ListCustomer/ListCustomer';
+import ListOrderProduct from '../Component/Admin/ListOrderProduct/ListOrderProduct';
+import OrderDetail from '../Component/Admin/OrderDetail/OrderDetail';
 
 function App() {
     const [userName, setUserName] = useState();
@@ -39,6 +41,7 @@ function App() {
                     <Route path={path.Cart} element={<Cart />} />
                     <Route path={path.ProductDetails} element={<ProductDetails />} />
                 </Route>
+
                 {/* Admin */}
                 <Route
                     path={path.LayoutAdmin}
@@ -48,6 +51,8 @@ function App() {
                     <Route path={path.LayoutAdminAdd} element={<AddProduct />} />
                     <Route path={path.LayoutAdminEdit} element={<EditProduct />} />
                     <Route path={path.LayoutAdminCustomers} element={<ListCustomer />} />
+                    <Route path={path.LayoutAdminListOrders} element={<ListOrderProduct />} />
+                    <Route path={path.LayoutAdminOrderDetails} element={<OrderDetail />} />
                 </Route>
             </Routes>
 

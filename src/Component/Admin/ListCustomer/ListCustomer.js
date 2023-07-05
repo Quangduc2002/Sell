@@ -74,8 +74,6 @@ function ListCustomer(props) {
     const currentUsers = users.slice(indeOfFirstProduct, indexOfLastProduct);
     const currentUserSearch = succeSearch.slice(indeOfFirstProduct, indexOfLastProduct);
 
-    console.log(currentUserSearch, currentUsers, users);
-
     return (
         <div className={clsx(styles.listProduct)}>
             <div className={clsx(styles.listProduct_header)}>

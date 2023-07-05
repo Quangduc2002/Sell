@@ -16,7 +16,7 @@
 }
 
 .name {
-    width: 400px;
+    width: 360px;
 }
 
 tr {
@@ -51,8 +51,9 @@ td {
 
 .table {
     position: relative;
-    width: 1170px;
-    margin: auto;
+    height: max-content;
+    // width: 1170px;
+    // margin: auto;
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;
 }
@@ -74,6 +75,64 @@ td {
     }
 }
 
+.cart1 {
+    display: flex;
+    justify-content: center;
+
+    &_purchase {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+        align-items: center;
+    }
+
+    &__transport {
+        display: flex;
+        // margin: 20px 0;
+
+        p {
+            min-width: 80px;
+        }
+    }
+
+    &_order {
+        border: none;
+        border-radius: 25px;
+        padding: 12px 20px;
+        background-color: #ee4d2d;
+        color: #fff;
+        font-size: 16px;
+        cursor: pointer;
+
+        &:hover {
+            transition: all 0.3s linear;
+            background-color: #c52432;
+        }
+    }
+
+    &_formGroup {
+        margin: 20px 0;
+    }
+
+    &_formControl {
+        width: 100%;
+        border: 1px solid rgba(0, 0, 0, 0.15);
+        padding: 8px 12px;
+        border-radius: 4px;
+        outline: none;
+        margin-top: 8px;
+
+        &:focus {
+            border: 1px solid #6a5a9f;
+        }
+    }
+
+    &_label {
+        padding-left: 10px;
+        display: block;
+    }
+}
+
 .active {
     display: none;
 }
@@ -82,6 +141,13 @@ td {
     position: absolute;
     right: 4%;
     padding-top: 20px;
+}
+
+.form_message {
+    margin-left: 20px;
+    letter-spacing: 1px;
+    margin-top: 10px;
+    color: #eb1336;
 }
 
 @media screen and (min-width: 768px) {
@@ -103,8 +169,27 @@ td {
 }
 
 @media screen and (max-width: 576px) {
+    .cart1 {
+        &_purchase {
+            display: block;
+            float: right;
+            margin-right: 32px;
+        }
+
+        &__transport {
+            margin-bottom: 10px;
+        }
+
+        &_order {
+            width: 100%;
+        }
+
+        &_formGroup {
+            margin: 20px;
+        }
+    }
     .table {
-        margin: 60px 20px;
+        margin: 60px 20px 0;
     }
 
     th {

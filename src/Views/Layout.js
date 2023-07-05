@@ -176,11 +176,13 @@ function Layout(props) {
                     path={path.Cart}
                     element={
                         <Cart
+                            userName={userName}
                             count={count}
                             onAdd={onAdd}
                             cartItems={cartItems}
                             onDelete={onDelete}
                             totalMoney={totalMoney}
+                            toast={toast}
                         />
                     }
                 />

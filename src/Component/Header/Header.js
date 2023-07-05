@@ -204,16 +204,21 @@ function Header(props) {
                             </li>
                             {links.map((link, index) => {
                                 return (
-                                    <li key={index}>
-                                        <NavLink
-                                            onClick={() => {
-                                                setShow2(!show2);
-                                            }}
-                                            key={index}
-                                            className={clsx(styles.wrapper3_link)}
-                                            to={link.path}
-                                        >
-                                            {link.title}
+                                    // <li key={index}>
+                                    //     <NavLink
+                                    //         onClick={() => {
+                                    //             setShow2(!show2);
+                                    //         }}
+                                    //         key={index}
+                                    //         className={clsx(styles.wrapper3_link)}
+                                    //         to={link.path}
+                                    //     >
+                                    //         {link.title}
+                                    //     </NavLink>
+                                    // </li>
+                                    <li key={link.path}>
+                                        <NavLink key={link.path} className={clsx(styles.wrapper3_link)} to={link.path}>
+                                            <span>{link.title}</span>
                                         </NavLink>
                                     </li>
                                 );
