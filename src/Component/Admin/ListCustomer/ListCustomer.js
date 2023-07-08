@@ -2,6 +2,7 @@ import React from 'react';
 import clsx from 'clsx';
 import { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { motion, spring } from 'framer-motion';
 import styles from './ListCustomer.module.scss';
 import { fetchUser } from '../../../services/UseServices';
 import Loading from '../../Loading/Loading';
@@ -101,7 +102,11 @@ function ListCustomer(props) {
                             ></i>
                         )}
                     </div>
-                    <i style={{ color: 'rgb(123, 128, 154)', padding: 10 }} className="fa-sharp fa-solid fa-bell"></i>
+                    <div className={clsx(styles.listProduct_annouce)}>
+                        <div>
+                            <i className="fa-sharp fa-solid fa-bell"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div className={clsx(styles.listProduct_PD)}>
@@ -122,7 +127,15 @@ function ListCustomer(props) {
                 {currentUsers.length === 0 ? (
                     <Loading />
                 ) : (
-                    <table className={clsx(styles.table)}>
+                    <motion.table
+                        className={clsx(styles.table)}
+                        initial={{ y: '4rem', opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{
+                            duration: 1,
+                            type: spring,
+                        }}
+                    >
                         <thead>
                             <tr>
                                 <th>Tên khách hàng</th>
@@ -174,7 +187,7 @@ function ListCustomer(props) {
                                       );
                                   })}
                         </tbody>
-                    </table>
+                    </motion.table>
                 )}
                 {currentUsers.length > 0 && (
                     <Pagination

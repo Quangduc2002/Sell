@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import { useNavigate, Link } from 'react-router-dom';
+import { motion, spring } from 'framer-motion';
 import axios from 'axios';
 import styles from './AddProduct.module.scss';
 import { fetchUser } from '../../../services/UseServices';
@@ -14,7 +15,7 @@ function AddProduct(props) {
     const [gBan, setgBan] = useState();
     const [loaiSp, setLoaiSp] = useState();
     const [Image, setImage] = useState('');
-    // const [fileImage, setFileImage] = useState('');
+    const [kichThuoc, setKichThuoc] = useState('');
     const [giamGia, setGiamGia] = useState('');
     const [producttypes, setProducttypes] = useState('');
     const [formErrors, setFormErrors] = useState({});
@@ -71,6 +72,10 @@ function AddProduct(props) {
             errors.loaiSp = 'Select product type !';
             isValid = false;
         }
+        if (!kichThuoc) {
+            errors.kichThuoc = 'Please enter size !';
+            isValid = false;
+        }
         setFormErrors(errors);
         return isValid;
     };
@@ -87,6 +92,7 @@ function AddProduct(props) {
             formData.append('ProducttypeId', loaiSp);
             formData.append('Image', Image);
             formData.append('GiamGia', giamGia);
+            formData.append('KichThuoc', kichThuoc);
             axios
                 .post('http://localhost:8080/products/add', formData)
                 .then((res) => {
@@ -98,6 +104,7 @@ function AddProduct(props) {
                     setgNhap('');
                     setLoaiSp('');
                     setGiamGia('');
+                    setKichThuoc('');
                 })
                 .catch((err) => {
                     toast.error(err);
@@ -121,7 +128,15 @@ function AddProduct(props) {
                 </div>
             </div>
 
-            <div className={clsx(styles.addProduct_PD)}>
+            <motion.div
+                className={clsx(styles.addProduct_PD)}
+                initial={{ y: '4rem', opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{
+                    duration: 1,
+                    type: spring,
+                }}
+            >
                 <h1>Thêm sản phẩm</h1>
                 <form className={clsx(styles.form)} method="post" encType="multipart/form-data" action="/products/add">
                     <div className={clsx(styles.add)}>
@@ -202,6 +217,23 @@ function AddProduct(props) {
                                 </div>
                             </div>
                             <div className={clsx(styles.add_formGroup)}>
+                                <label htmlFor="level">Kích thước</label>
+                                <br />
+                                <input
+                                    placeholder="kích thước"
+                                    value={kichThuoc}
+                                    onChange={(e) => setKichThuoc(e.target.value)}
+                                    type="text"
+                                    min={0}
+                                    className={clsx(styles.add_formControl)}
+                                />
+                                <div>
+                                    {formErrors.kichThuoc && (
+                                        <p className={clsx(styles.form_message)}>{formErrors.kichThuoc}</p>
+                                    )}
+                                </div>
+                            </div>
+                            <div className={clsx(styles.add_formGroup)}>
                                 <label>Giảm giá</label>
                                 <br />
                                 <input
@@ -277,7 +309,7 @@ function AddProduct(props) {
                         </button>
                     </div>
                 </form>
-            </div>
+            </motion.div>
         </div>
     );
 }

@@ -2,6 +2,7 @@ import React from 'react';
 import clsx from 'clsx';
 import axios from 'axios';
 import { useEffect, useState, useRef } from 'react';
+import { motion, spring } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import styles from './ListOrderProduct.module.scss';
 import { fetchUser } from '../../../services/UseServices';
@@ -23,6 +24,7 @@ function ListOrderProduct(props) {
     const [listOrder, setListOrder] = useState([]);
     const [annouce, setAnnouce] = useState([]);
     const [show, setShow] = useState(false);
+    const [status, setStatus] = useState(false);
 
     // search
     const search = useRef();
@@ -31,7 +33,7 @@ function ListOrderProduct(props) {
     useEffect(() => {
         getOrder();
         getAnnouceOrder();
-    }, []);
+    }, [status]);
 
     const getOrder = async () => {
         let res = await fetchUser('/order/listOrder');
@@ -43,7 +45,6 @@ function ListOrderProduct(props) {
         setTimeout(() => setAnnouce(res.data), 1000);
     };
 
-    console.log(annouce);
     const HandleClear = () => {
         setSearchQuery('');
     };
@@ -75,6 +76,7 @@ function ListOrderProduct(props) {
                 TrangThaiDH: true,
             })
             .then((res) => {
+                setStatus(true);
                 toast.success('Xác nhận đơn hàng thành công !');
             })
             .catch((err) => {
@@ -109,7 +111,13 @@ function ListOrderProduct(props) {
                             ></i>
                         )}
                     </div>
-                    <div onClick={() => setShow(!show)} className={clsx(styles.listOrderProduct_annouce)}>
+                    <div
+                        onClick={() => setShow(!show)}
+                        className={clsx(
+                            styles.listOrderProduct_annouce,
+                            show ? styles.listOrderProduct_annouce_active : '',
+                        )}
+                    >
                         <div>
                             <i className="fa-sharp fa-solid fa-bell"></i>
                             <span>{annouce.length}</span>
@@ -131,7 +139,6 @@ function ListOrderProduct(props) {
                                                 <p>
                                                     {annouce.TenKH} (MDH{annouce.orderItem})
                                                 </p>
-                                                <p>1 giờ trước</p>
                                             </div>
                                         </div>
                                     );
@@ -159,7 +166,15 @@ function ListOrderProduct(props) {
                 {listOrder.length === 0 ? (
                     <Loading />
                 ) : (
-                    <table className={clsx(styles.table)}>
+                    <motion.table
+                        className={clsx(styles.table)}
+                        initial={{ y: '4rem', opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{
+                            duration: 1,
+                            type: spring,
+                        }}
+                    >
                         <thead>
                             <tr>
                                 <th>Mã ĐH</th>
@@ -223,7 +238,7 @@ function ListOrderProduct(props) {
                                       );
                                   })}
                         </tbody>
-                    </table>
+                    </motion.table>
                 )}
                 {currentListOrder.length > 0 && (
                     <Pagination

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
+import { motion, spring } from 'framer-motion';
 import styles from '../ListProduct/ListProduct.module.scss';
 import { fetchUser, fetchDelete } from '../../../services/UseServices';
 import Pagination from '../../Pagination/Pagination';
@@ -105,7 +106,11 @@ function ListProduct(props) {
                             ></i>
                         )}
                     </div>
-                    <i style={{ color: 'rgb(123, 128, 154)', padding: 10 }} className="fa-sharp fa-solid fa-bell"></i>
+                    <div className={clsx(styles.listProduct_annouce)}>
+                        <div>
+                            <i className="fa-sharp fa-solid fa-bell"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div className={clsx(styles.listProduct_PD)}>
@@ -132,7 +137,15 @@ function ListProduct(props) {
                 {currentProduct.length === 0 ? (
                     <Loading />
                 ) : (
-                    <table className={clsx(styles.table)}>
+                    <motion.table
+                        className={clsx(styles.table)}
+                        initial={{ y: '4rem', opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{
+                            duration: 1,
+                            type: spring,
+                        }}
+                    >
                         <thead>
                             <tr>
                                 <th>Tên sản phẩm</th>
@@ -208,7 +221,7 @@ function ListProduct(props) {
                                       );
                                   })}
                         </tbody>
-                    </table>
+                    </motion.table>
                 )}
                 {currentProduct.length > 0 && (
                     <Pagination

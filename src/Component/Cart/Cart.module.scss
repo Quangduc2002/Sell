@@ -112,10 +112,14 @@ td {
 
     &_formGroup {
         margin: 20px 0;
+
+        textarea {
+            min-height: 32px;
+        }
     }
 
     &_formControl {
-        width: 100%;
+        width: 100% !important;
         border: 1px solid rgba(0, 0, 0, 0.15);
         padding: 8px 12px;
         border-radius: 4px;
@@ -130,6 +134,11 @@ td {
     &_label {
         padding-left: 10px;
         display: block;
+    }
+
+    h3 {
+        font-weight: 400;
+        padding-left: 10px;
     }
 }
 

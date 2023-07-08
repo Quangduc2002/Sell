@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import clsx from 'clsx';
+import { motion, spring } from 'framer-motion';
 import styles from '../Cart/Cart.module.scss';
 import CartIMG from '../../assets/Image/cart.png';
 
@@ -14,6 +15,7 @@ function Cart(props) {
     const [email, setEmail] = useState('');
     const [diaChi, setDiaChi] = useState('');
     const [thanhToan, setThanhToan] = useState('');
+    const [note, setNote] = useState('');
     const [formErrors, setFormErrors] = useState({});
 
     // format tiền
@@ -65,6 +67,7 @@ function Cart(props) {
                         Email: email,
                         PhuongThucThanhToan: thanhToan,
                         Product: cartItems,
+                        Note: note,
                         TrangThaiDH: false,
                     })
                     .then((res) => {
@@ -91,7 +94,15 @@ function Cart(props) {
             )}
 
             {cartItems.length !== 0 && (
-                <div className={clsx(styles.cart1)}>
+                <motion.div
+                    className={clsx(styles.cart1)}
+                    initial={{ y: '4rem', opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{
+                        duration: 1,
+                        type: spring,
+                    }}
+                >
                     <div>
                         <table className={clsx(styles.table, cartItems.length === 0 ? styles.active : '')}>
                             <tbody>
@@ -250,6 +261,22 @@ function Cart(props) {
                                         )}
                                     </div>
                                 </div>
+
+                                <div className={clsx(styles.cart1_formGroup)}>
+                                    <h3>THÔNG TIN BỔ SUNG</h3>
+                                    <label className={clsx(styles.cart1_label)} htmlFor="company-dd">
+                                        Ghi chú đơn hàng(tùy chọn)
+                                    </label>
+                                    <textarea
+                                        cols={50}
+                                        rows={1}
+                                        value={note}
+                                        type="text"
+                                        id="company-dd"
+                                        className={clsx(styles.cart1_formControl)}
+                                        onChange={(e) => setNote(e.target.value)}
+                                    ></textarea>
+                                </div>
                             </div>
                         )}
 
@@ -271,7 +298,7 @@ function Cart(props) {
                             )}
                         </div>
                     </div>
-                </div>
+                </motion.div>
             )}
         </div>
     );

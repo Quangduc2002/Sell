@@ -133,6 +133,10 @@ th {
         margin-left: 10px;
         cursor: pointer;
 
+        &_active {
+            background-color: #ccc;
+        }
+
         &:hover {
             background-color: #ccc;
         }

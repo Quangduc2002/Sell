@@ -11,10 +11,12 @@ function Login(props) {
     const [password, setPassword] = useState('');
     const [registerEmail, setRegisterEmail] = useState('');
     const [registerPassword, setRegisterPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [registerName, setRegisterName] = useState('');
     const [registerNS, setRegisterNS] = useState('');
     const [showLogin, setShowLogin] = useState(true);
     const [formErrors, setFormErrors] = useState({});
+
     const navigate = useNavigate();
 
     const validateForm = () => {
@@ -59,6 +61,14 @@ function Login(props) {
             isValid = false;
         } else if (registerPassword.length < 6) {
             errors.registerPassword = 'Please enter at least 6 characters !';
+            isValid = false;
+        }
+
+        if (!confirmPassword) {
+            errors.confirmPassword = 'Please re-enter your password !';
+            isValid = false;
+        } else if (confirmPassword !== registerPassword) {
+            errors.confirmPassword = 'password incorrect !';
             isValid = false;
         }
 
@@ -118,6 +128,7 @@ function Login(props) {
                     setRegisterPassword('');
                     setRegisterName('');
                     setRegisterNS('');
+                    setConfirmPassword('');
                 })
                 .catch((err) => {
                     toast.error('Đăng kí không thành công !');
@@ -244,6 +255,33 @@ function Login(props) {
                                 )}
                             </div>
                         </div>
+                        <div style={{ position: 'relative' }} className={clsx(styles.auth_froup)}>
+                            <div style={{ position: 'relative' }}>
+                                <input
+                                    value={confirmPassword}
+                                    type={check === true ? 'text' : 'password'}
+                                    name="password"
+                                    className={clsx(styles.auth_input)}
+                                    placeholder="Nhập lại mật khẩu"
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                />
+                                <i
+                                    onClick={() => {
+                                        setCheck(!check);
+                                    }}
+                                    className={clsx(
+                                        styles.auth_froup__eye,
+                                        'fa-regular ',
+                                        check === true ? 'fa-eye' : 'fa-eye-slash',
+                                    )}
+                                ></i>
+                            </div>
+                            <div>
+                                {formErrors.confirmPassword && (
+                                    <p className={clsx(styles.form_message)}>{formErrors.confirmPassword}</p>
+                                )}
+                            </div>
+                        </div>
                         <div className={clsx(styles.auth_froup)}>
                             <input
                                 value={registerName}
@@ -264,9 +302,7 @@ function Login(props) {
                                 style={{ color: '#757575' }}
                                 value={registerNS}
                                 type="date"
-                                name="d"
                                 className={clsx(styles.auth_input)}
-                                placeholder="Nhập User"
                                 onChange={(e) => setRegisterNS(e.target.value)}
                             />
                             <div>

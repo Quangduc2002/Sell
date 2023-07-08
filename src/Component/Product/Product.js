@@ -1,7 +1,8 @@
 import React from 'react';
 import clsx from 'clsx';
-import styles from '../Product/Product.module.scss';
 import { Link } from 'react-router-dom';
+import { motion, spring } from 'framer-motion';
+import styles from '../Product/Product.module.scss';
 import './Product.css';
 
 function Product(props) {
@@ -20,7 +21,15 @@ function Product(props) {
     const starPercentageRounded = `${Math.round(starPercentage)}%`;
 
     return (
-        <div className={clsx(styles.room_product1)}>
+        <motion.div
+            className={clsx(styles.room_product1)}
+            initial={{ y: '4rem', opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{
+                duration: 1,
+                type: spring,
+            }}
+        >
             <Link to={`/Chitietsanpham/${product._id}`} className={clsx(styles.room_product1_link)}>
                 <div className={clsx(styles.room_image)}>
                     <div className={clsx(styles.room_badge)}>
@@ -50,7 +59,7 @@ function Product(props) {
                     <p style={{ fontSize: 14 }}>Hà Nội</p>
                 </div>
             </Link>
-        </div>
+        </motion.div>
     );
 }
 

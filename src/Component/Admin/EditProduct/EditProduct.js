@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { useParams, Link } from 'react-router-dom';
+import { motion, spring } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styles from './EditProduct.module.scss';
@@ -15,6 +16,7 @@ function EditProduct(props) {
     const [chatLieu, setChatLieu] = useState('');
     const [gnhap, setgNhap] = useState('');
     const [gBan, setgBan] = useState('');
+    const [kichThuoc, setKichThuoc] = useState('');
     const [giamGia, setGiamGia] = useState('');
     const [loaiSp, setLoaiSp] = useState('');
     const [Image, setImage] = useState('');
@@ -42,6 +44,7 @@ function EditProduct(props) {
         setGiamGia(res.data.GiamGia);
         setLoaiSp(res.data.ProducttypeId);
         setImage(res.data.Image);
+        setKichThuoc(res.data.KichThuoc);
     };
 
     const handleEdit = async (e) => {
@@ -54,6 +57,7 @@ function EditProduct(props) {
                 GiaBan: gBan,
                 GiaNhap: gnhap,
                 GiamGia: giamGia,
+                KichThuoc: kichThuoc,
                 Image: Image.name,
                 ProducttypeId: loaiSp,
             })
@@ -93,7 +97,15 @@ function EditProduct(props) {
                 </div>
             </div>
 
-            <div className={clsx(styles.editProduct_PD)}>
+            <motion.div
+                className={clsx(styles.editProduct_PD)}
+                initial={{ y: '4rem', opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{
+                    duration: 1,
+                    type: spring,
+                }}
+            >
                 <h1>Sửa sản phẩm</h1>
                 <form className={clsx(styles.form)} encType="multipart/form-data">
                     <div className={clsx(styles.add)}>
@@ -144,6 +156,18 @@ function EditProduct(props) {
                                     value={gBan}
                                     onChange={(e) => setgBan(e.target.value)}
                                     type="number"
+                                    min={0}
+                                    className={clsx(styles.add_formControl)}
+                                />
+                            </div>
+                            <div className={clsx(styles.add_formGroup)}>
+                                <label htmlFor="level">Kích thước</label>
+                                <br />
+                                <input
+                                    placeholder="kích thước"
+                                    value={kichThuoc}
+                                    onChange={(e) => setKichThuoc(e.target.value)}
+                                    type="text"
                                     min={0}
                                     className={clsx(styles.add_formControl)}
                                 />
@@ -252,7 +276,7 @@ function EditProduct(props) {
                         </div>
                     </div>
                 )}
-            </div>
+            </motion.div>
         </div>
     );
 }

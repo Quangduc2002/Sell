@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
 import clsx from 'clsx';
+import { motion, spring } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import styles from '../ProductDetails/ProductDetails.module.scss';
 import Free from '../../assets/Image/free.png';
@@ -93,7 +94,15 @@ function ProductDetails(props) {
             {product.length === 0 ? (
                 <Loading />
             ) : (
-                <div className={clsx(styles.productDetail)}>
+                <motion.div
+                    className={clsx(styles.productDetail)}
+                    initial={{ y: '4rem', opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{
+                        duration: 1,
+                        type: spring,
+                    }}
+                >
                     <div className={clsx(styles.images)}>
                         <img src={`http://localhost:3000/Image/${product.Image}`} alt="" />
                     </div>
@@ -152,6 +161,12 @@ function ProductDetails(props) {
                             <p>Chất liệu</p>
                             <div className={clsx(styles.right_transport__free)}>
                                 <span>{product.ChatLieu}</span>
+                            </div>
+                        </div>
+                        <div className={clsx(styles.right_transport)}>
+                            <p>Kích thước</p>
+                            <div className={clsx(styles.right_transport__free)}>
+                                <span>{product.KichThuoc} cm</span>
                             </div>
                         </div>
                         <div className={clsx(styles.right_quantity)}>
@@ -216,7 +231,7 @@ function ProductDetails(props) {
                             </button>
                         </div>
                     </div>
-                </div>
+                </motion.div>
             )}
         </div>
     );

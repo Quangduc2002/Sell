@@ -120,6 +120,27 @@ th {
             background-color: #c52432;
         }
     }
+
+    &_annouce {
+        position: relative;
+        background-color: #e4e4e4;
+        border-radius: 50%;
+        width: 42px;
+        height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: 10px;
+        cursor: pointer;
+
+        &:hover {
+            background-color: #ccc;
+        }
+
+        i {
+            color: rgb(123, 128, 154);
+        }
+    }
 }
 
 .table {
