@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import { motion, spring } from 'framer-motion';
+import _ from 'lodash';
 import styles from '../ListProduct/ListProduct.module.scss';
 import { fetchUser, fetchDelete } from '../../../services/UseServices';
 import Pagination from '../../Pagination/Pagination';
@@ -25,6 +26,8 @@ function ListProduct(props) {
     // search
     const [searchQuery, setSearchQuery] = useState('');
     const [succeSearch, setSucceSearch] = useState([]);
+    const [showSort, setShowSort] = useState(true);
+
     const VND = new Intl.NumberFormat('vi-VN', {
         style: 'currency',
         currency: 'VND',
@@ -71,14 +74,25 @@ function ListProduct(props) {
             HandleOnSubmit();
         }
     };
+    console.log(succeSearch);
     const filteredItems = products.filter((item) => {
         return item.TenSp.toLowerCase().includes(searchQuery.toLowerCase());
     });
 
     //phân trang
-    const currentProduct = products.slice(indeOfFirstProduct, indexOfLastProduct);
+    const paginationProduct = products.slice(indeOfFirstProduct, indexOfLastProduct);
     const currentProductSearch = succeSearch.slice(indeOfFirstProduct, indexOfLastProduct);
+    // sắp xếp
+    const hanldeSort = (sort, sortField) => {
+        const sortOrderBy = _.orderBy(products, [sortField], [sort]);
+        setProducts(sortOrderBy);
+        if (currentProductSearch.length > 0) {
+            setSucceSearch(sortOrderBy);
+        }
+        setShowSort(!showSort);
+    };
 
+    console.log(currentProductSearch.length, paginationProduct.length);
     return (
         <div className={clsx(styles.listProduct)}>
             <div className={clsx(styles.listProduct_header)}>
@@ -117,12 +131,12 @@ function ListProduct(props) {
                 <div className={clsx(styles.listProduct_title)}>
                     <div>
                         <h1>Danh sách sản phẩm</h1>
-                        {currentProduct && products ? (
+                        {paginationProduct && products ? (
                             <p>
                                 Hiển thị 1 đến{' '}
                                 {currentProductSearch.length !== 0
                                     ? currentProductSearch.length
-                                    : currentProduct.length}{' '}
+                                    : paginationProduct.length}{' '}
                                 trong {products.length} sản phẩm
                             </p>
                         ) : (
@@ -134,7 +148,7 @@ function ListProduct(props) {
                         Thêm sản phẩm
                     </Link>
                 </div>
-                {currentProduct.length === 0 ? (
+                {paginationProduct.length === 0 ? (
                     <Loading />
                 ) : (
                     <motion.table
@@ -148,7 +162,22 @@ function ListProduct(props) {
                     >
                         <thead>
                             <tr>
-                                <th>Tên sản phẩm</th>
+                                <th>
+                                    Tên sản phẩm
+                                    {showSort ? (
+                                        <i
+                                            style={{ marginLeft: 6, cursor: 'pointer' }}
+                                            onClick={() => hanldeSort('asc', 'TenSp')}
+                                            className="fa-solid fa-arrow-up-wide-short"
+                                        ></i>
+                                    ) : (
+                                        <i
+                                            style={{ marginLeft: 6, cursor: 'pointer' }}
+                                            onClick={() => hanldeSort('desc', 'TenSp')}
+                                            className="fa-solid fa-arrow-up-short-wide"
+                                        ></i>
+                                    )}
+                                </th>
                                 <th>Chất liệu</th>
                                 <th>Giá nhập</th>
                                 <th>Giá bán</th>
@@ -158,7 +187,7 @@ function ListProduct(props) {
                         </thead>
                         <tbody>
                             {currentProductSearch.length === 0
-                                ? currentProduct.map((product) => {
+                                ? paginationProduct.map((product) => {
                                       return (
                                           <tr key={product._id}>
                                               <td style={{ minWidth: 300 }}>{product.TenSp}</td>
@@ -223,7 +252,7 @@ function ListProduct(props) {
                         </tbody>
                     </motion.table>
                 )}
-                {currentProduct.length > 0 && (
+                {paginationProduct.length > 0 && (
                     <Pagination
                         productPerPage={productPerPage}
                         pagination={pagination}

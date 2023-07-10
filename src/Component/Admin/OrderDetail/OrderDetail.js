@@ -6,11 +6,8 @@ import styles from './OrderDetail.module.scss';
 import { Link } from 'react-router-dom';
 import { fetchUser } from '../../../services/UseServices';
 import Loading from '../../Loading/Loading';
-import Pagination from '../../Pagination/Pagination';
 
 function OrderDetail(props) {
-    const { indexOfLastProduct, indeOfFirstProduct, productPerPage, pagination, isActive, handleNext, handlePrevious } =
-        props;
     // format tiền
     const VND = new Intl.NumberFormat('vi-VN', {
         style: 'currency',
@@ -36,11 +33,11 @@ function OrderDetail(props) {
         setSearchQuery('');
     };
 
-    const currentOrders = orderDetail.slice(indeOfFirstProduct, indexOfLastProduct);
+    // const currentOrders = orderDetail.slice(indeOfFirstProduct, indexOfLastProduct);
 
     let tongOrder = 0;
-    for (let i = 0; i < currentOrders.length; i++) {
-        tongOrder += currentOrders[i].Product.length;
+    for (let i = 0; i < orderDetail.length; i++) {
+        tongOrder += orderDetail[i].Product.length;
     }
 
     return (
@@ -75,7 +72,7 @@ function OrderDetail(props) {
                 <div className={clsx(styles.orderDetail_title)}>
                     <div>
                         <h1>Chi tiết đơn hàng</h1>
-                        {orderDetail && currentOrders ? (
+                        {orderDetail ? (
                             <p style={{ marginBottom: 10 }}>
                                 Hiển thị 1 đến {tongOrder} trong {tongOrder} đơn hàng
                             </p>
@@ -106,8 +103,8 @@ function OrderDetail(props) {
                             </tr>
                         </thead>
                         <tbody>
-                            {currentOrders.map((order, index) => {
-                                return currentOrders[index].Product.map((orderSp) => {
+                            {orderDetail.map((order, index) => {
+                                return orderDetail[index].Product.map((orderSp) => {
                                     return (
                                         <tr key={orderSp._id}>
                                             <td>MDH{order.MaSp}</td>
@@ -127,16 +124,6 @@ function OrderDetail(props) {
                             })}
                         </tbody>
                     </motion.table>
-                )}
-                {currentOrders.length > 0 && (
-                    <Pagination
-                        productPerPage={productPerPage}
-                        pagination={pagination}
-                        totalProduct={orderDetail.length}
-                        isActive={isActive}
-                        handleNext={handleNext}
-                        handlePrevious={handlePrevious}
-                    />
                 )}
             </div>
         </div>
