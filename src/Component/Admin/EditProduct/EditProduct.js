@@ -37,14 +37,14 @@ function EditProduct(props) {
 
     const handleGetProduct = async (id) => {
         let res = await fetchUser(`/products/${id}`);
-        setTenSp(res.data.TenSp);
-        setChatLieu(res.data.ChatLieu);
-        setgNhap(res.data.GiaNhap);
-        setgBan(res.data.GiaBan);
-        setGiamGia(res.data.GiamGia);
-        setLoaiSp(res.data.ProducttypeId);
-        setImage(res.data.Image);
-        setKichThuoc(res.data.KichThuoc);
+        setTenSp(res.data.tenSp);
+        setChatLieu(res.data.chatLieu);
+        setgNhap(res.data.giaNhap);
+        setgBan(res.data.giaBan);
+        setGiamGia(res.data.giamGia);
+        setLoaiSp(res.data.loaiSp);
+        setImage(res.data.image);
+        setKichThuoc(res.data.kichThuoc);
     };
 
     const handleEdit = async (e) => {
@@ -52,14 +52,14 @@ function EditProduct(props) {
         setShow(!show);
         axios
             .put(`http://localhost:8080/products/${id}/edit`, {
-                TenSp: tenSp,
-                ChatLieu: chatLieu,
-                GiaBan: gBan,
-                GiaNhap: gnhap,
-                GiamGia: giamGia,
-                KichThuoc: kichThuoc,
-                Image: Image.name,
-                ProducttypeId: loaiSp,
+                tenSp: tenSp,
+                chatLieu: chatLieu,
+                giaBan: gBan,
+                giaNhap: gnhap,
+                giamGia: giamGia,
+                kichThuoc: kichThuoc,
+                image: Image.name,
+                loaiSp: loaiSp,
             })
             .then((res) => {
                 setTimeout(() => navigate('/admin/DSSP'), 1000);
@@ -195,8 +195,8 @@ function EditProduct(props) {
                                     {producttypes &&
                                         producttypes.map((producttype) => {
                                             return (
-                                                <option key={producttype._id} value={producttype._id}>
-                                                    {producttype.TenLoaiSp}
+                                                <option key={producttype.id} value={producttype.id}>
+                                                    {producttype.tenLoaiSp}
                                                 </option>
                                             );
                                         })}

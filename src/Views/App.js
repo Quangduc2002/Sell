@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
+import { motion, useScroll } from 'framer-motion';
 import 'react-toastify/dist/ReactToastify.css';
 import '../Views/App.css';
 import Home from '../Component/Home/Home';
@@ -20,19 +21,23 @@ import EditProduct from '../Component/Admin/EditProduct/EditProduct';
 import ListCustomer from '../Component/Admin/ListCustomer/ListCustomer';
 import ListOrderProduct from '../Component/Admin/ListOrderProduct/ListOrderProduct';
 import OrderDetail from '../Component/Admin/OrderDetail/OrderDetail';
+import Revenue from '../Component/Admin/Revenue/Revenue.js';
 
 function App() {
-    const [userName, setUserName] = useState();
     const [roleId, setRoleId] = useState();
+    const { scrollYProgress } = useScroll();
 
     return (
         <div className="App">
+            <motion.div
+                className="scroll"
+                style={{
+                    scaleX: scrollYProgress,
+                }}
+            ></motion.div>
             <Routes>
-                <Route
-                    path={path.Login}
-                    element={<Login toast={toast} setUserName={setUserName} setRoleId={setRoleId} />}
-                />
-                <Route path={path.Public} element={<Layout userName={userName} roleId={roleId} />}>
+                <Route path={path.Login} element={<Login toast={toast} setRoleId={setRoleId} />} />
+                <Route path={path.Public} element={<Layout roleId={roleId} />}>
                     <Route index element={<Home />} />
                     <Route path={path.LivingRoom} element={<LivingRoom />} />
                     <Route path={path.Kitchen} element={<Kitchen />} />
@@ -43,10 +48,8 @@ function App() {
                 </Route>
 
                 {/* Admin */}
-                <Route
-                    path={path.LayoutAdmin}
-                    element={<LayoutAdmin userName={userName} roleId={roleId} toast={toast} />}
-                >
+                <Route path={path.LayoutAdmin} element={<LayoutAdmin roleId={roleId} toast={toast} />}>
+                    <Route path={path.LayoutAdminRevenue} element={<Revenue />} />
                     <Route path={path.LayoutAdminDSDP} element={<ListProduct />} />
                     <Route path={path.LayoutAdminAdd} element={<AddProduct />} />
                     <Route path={path.LayoutAdminEdit} element={<EditProduct />} />

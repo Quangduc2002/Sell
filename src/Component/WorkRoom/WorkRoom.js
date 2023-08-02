@@ -24,8 +24,9 @@ function WorkRoom() {
     }, []);
 
     const getUsers = async () => {
-        let res = await fetchUser('/producttypes/3');
-        setTimeout(() => setProducts(res.data.Product), 1000);
+        let res = await fetchUser('/products/3/ProductType');
+        // let res = await fetchUser('http://localhost:8686/products/3/ProductType');
+        setTimeout(() => setProducts(res.data), 1000);
     };
 
     function handleFilterProducts() {
@@ -33,23 +34,24 @@ function WorkRoom() {
         if (selectedOption === '1') {
             newProducts.sort((a, b) => {
                 return (
-                    parseFloat(a.GiaBan - (a.GiaBan * a.GiamGia) / 100) -
-                    parseFloat(b.GiaBan - (b.GiaBan * b.GiamGia) / 100)
+                    parseFloat(a.giaBan - (a.giaBan * a.giamGia) / 100) -
+                    parseFloat(b.giaBan - (b.giaBan * b.giamGia) / 100)
                 );
             });
             setProducts(newProducts);
         }
         if (selectedOption === '2') {
-            setProducts(products);
             newProducts.sort((a, b) => {
                 return (
-                    parseFloat(b.GiaBan - (b.GiaBan * b.GiamGia) / 100) -
-                    parseFloat(a.GiaBan - (a.GiaBan * a.GiamGia) / 100)
+                    parseFloat(b.giaBan - (b.giaBan * b.giamGia) / 100) -
+                    parseFloat(a.giaBan - (a.giaBan * a.giamGia) / 100)
                 );
             });
             setProducts(newProducts);
         }
     }
+
+    console.log(newProducts);
 
     return (
         <div style={{ backgroundColor: '#f8f9fb', paddingBottom: 60 }}>

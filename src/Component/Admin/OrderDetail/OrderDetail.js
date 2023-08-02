@@ -6,6 +6,7 @@ import styles from './OrderDetail.module.scss';
 import { Link } from 'react-router-dom';
 import { fetchUser } from '../../../services/UseServices';
 import Loading from '../../Loading/Loading';
+import Pagination from '../../Pagination/Pagination';
 
 function OrderDetail(props) {
     // format tiền
@@ -13,6 +14,8 @@ function OrderDetail(props) {
         style: 'currency',
         currency: 'VND',
     });
+    const { indexOfLastProduct, indeOfFirstProduct, productPerPage, pagination, isActive, handleNext, handlePrevious } =
+        props;
 
     const [orderDetail, setOrderDetail] = useState([]);
     // search
@@ -33,13 +36,7 @@ function OrderDetail(props) {
         setSearchQuery('');
     };
 
-    // const currentOrders = orderDetail.slice(indeOfFirstProduct, indexOfLastProduct);
-
-    let tongOrder = 0;
-    for (let i = 0; i < orderDetail.length; i++) {
-        tongOrder += orderDetail[i].Product.length;
-    }
-
+    const currentListOrderDetail = orderDetail.slice(indeOfFirstProduct, indexOfLastProduct);
     return (
         <div className={clsx(styles.orderDetail)}>
             <div className={clsx(styles.orderDetail_header)}>
@@ -74,18 +71,17 @@ function OrderDetail(props) {
                         <h1>Chi tiết đơn hàng</h1>
                         {orderDetail ? (
                             <p style={{ marginBottom: 10 }}>
-                                Hiển thị 1 đến {tongOrder} trong {tongOrder} đơn hàng
+                                Hiển thị 1 đến {currentListOrderDetail.length} trong {orderDetail.length} đơn hàng
                             </p>
                         ) : (
                             ''
                         )}
                     </div>
                 </div>
-                {orderDetail.length === 0 ? (
+                {currentListOrderDetail.length === 0 ? (
                     <Loading />
                 ) : (
-                    <motion.table
-                        className={clsx(styles.table)}
+                    <motion.div
                         initial={{ y: '4rem', opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         transition={{
@@ -93,37 +89,49 @@ function OrderDetail(props) {
                             type: spring,
                         }}
                     >
-                        <thead>
-                            <tr>
-                                <th>Mã đơn hàng</th>
-                                <th>Ảnh sản phẩm</th>
-                                <th>Tên sản phẩm</th>
-                                <th>Số lượng</th>
-                                <th>tổng tiền</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {orderDetail.map((order, index) => {
-                                return orderDetail[index].Product.map((orderSp) => {
+                        <table className={clsx(styles.table)}>
+                            <thead>
+                                <tr>
+                                    <th>Mã đơn hàng</th>
+                                    <th>Mã sản phẩm</th>
+                                    <th>Ảnh sản phẩm</th>
+                                    <th>Tên sản phẩm</th>
+                                    <th>Số lượng</th>
+                                    <th>tổng tiền</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {currentListOrderDetail.map((order, index) => {
                                     return (
-                                        <tr key={orderSp._id}>
-                                            <td>MDH{order.MaSp}</td>
+                                        <tr key={order.ID}>
+                                            <td>MDH{order.maSp}</td>
+                                            <td>SP{order.idSanPham}</td>
                                             <td>
                                                 <img
                                                     className={clsx(styles.table_image)}
-                                                    src={`http://localhost:3000/Image/${orderSp.Image}`}
+                                                    src={`http://localhost:3000/Image/${order.image}`}
                                                     alt=""
                                                 />
                                             </td>
-                                            <td>{orderSp.TenSp}</td>
-                                            <td>{orderSp.qty}</td>
-                                            <td>{VND.format(orderSp.total)}</td>
+                                            <td>{order.tenSp}</td>
+                                            <td>{order.soLuong}</td>
+                                            <td>{VND.format(order.donGia)}</td>
                                         </tr>
                                     );
-                                });
-                            })}
-                        </tbody>
-                    </motion.table>
+                                })}
+                            </tbody>
+                        </table>
+                        {currentListOrderDetail.length > 0 && (
+                            <Pagination
+                                productPerPage={productPerPage}
+                                pagination={pagination}
+                                totalProduct={orderDetail.length}
+                                isActive={isActive}
+                                handleNext={handleNext}
+                                handlePrevious={handlePrevious}
+                            />
+                        )}
+                    </motion.div>
                 )}
             </div>
         </div>

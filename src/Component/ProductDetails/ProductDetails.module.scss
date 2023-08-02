@@ -48,7 +48,15 @@
 .describe {
     display: block;
     border-top: 1px solid #dcdcdc;
-    padding-top: 30px;
+    border-bottom: 1px solid #dcdcdc;
+    padding: 30px 0;
+
+    &_resultStar {
+        &::before {
+            color: #f8ce0b;
+        }
+    }
+
     &_ul {
         display: flex;
         margin-bottom: 20px;
@@ -82,6 +90,7 @@
     }
 
     &_star {
+        display: flex;
         margin-top: 10px;
     }
 }
@@ -285,6 +294,55 @@
     }
 }
 
+.inner {
+    margin-top: 40px;
+
+    &_container {
+        max-width: 1170px;
+        margin: 0 auto;
+    }
+    &_title {
+        position: relative;
+        width: max-content;
+        background: #ee4d2d;
+        margin: 0 auto 40px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        color: #fff;
+        padding: 0 10px;
+
+        &::after {
+            content: '';
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 23px 0 23px 16px;
+            border-color: transparent transparent transparent #ee4d2d;
+            position: absolute;
+            right: -16px;
+            top: 0px;
+        }
+
+        &::before {
+            content: '';
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 23px 16px 23px 0;
+            border-color: transparent #ee4d2d transparent transparent;
+            position: absolute;
+            left: -16px;
+            top: 0px;
+        }
+    }
+
+    &_slider {
+        overflow: hidden;
+        position: relative;
+    }
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 .room1 {
@@ -319,6 +377,11 @@
             width: 450px;
         }
     }
+
+    .describe {
+        padding: 30px 78px;
+        width: auto;
+    }
 }
 
 @media screen and (max-width: 922px) {
@@ -335,6 +398,11 @@
         img {
             width: 100%;
         }
+    }
+
+    .describe {
+        padding: 30px 60px;
+        width: auto;
     }
 }
 
@@ -372,6 +440,51 @@
         &_transport {
             align-items: center;
         }
+
+        &_btn {
+            text-align: center;
+        }
+
+        &_addcart,
+        &_cart {
+            min-width: 180px;
+            margin-right: 0;
+        }
+
+        &_evalua {
+            width: 100%;
+            min-width: max-content;
+        }
+    }
+
+    .describe {
+        &_Evaluate {
+            h2 {
+                font-size: 16px;
+            }
+        }
+
+        &_star {
+            display: block;
+            border-left: none;
+        }
+
+        &__star {
+            border-left: none;
+            padding: 0 10px !important;
+        }
+    }
+
+    .inner {
+        &_title {
+            font-size: 12px;
+        }
+    }
+
+    .images {
+        img {
+            height: 300px;
+        }
     }
 }
 
@@ -383,6 +496,18 @@
 
         &_priceRed {
             font-size: 24px;
+        }
+    }
+
+    .describe {
+        padding: 30px;
+
+        &_ul {
+            display: block;
+        }
+
+        &_p {
+            width: max-content;
         }
     }
 }

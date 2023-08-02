@@ -63,7 +63,7 @@ function ListOrderProduct(props) {
     };
 
     const filteredItems = listOrder.filter((item) => {
-        return item.TenKH.toLowerCase().includes(searchQuery.toLowerCase());
+        return item.tenKH.toLowerCase().includes(searchQuery.toLowerCase());
     });
 
     const currentListOrder = listOrder.slice(indeOfFirstProduct, indexOfLastProduct);
@@ -73,7 +73,7 @@ function ListOrderProduct(props) {
         axios
             .post('http://localhost:8080/order/Email', {
                 orderProduct: orderProduct,
-                TrangThaiDH: true,
+                trangThaiDH: true,
             })
             .then((res) => {
                 setStatus(true);
@@ -137,7 +137,7 @@ function ListOrderProduct(props) {
 
                                             <div className={clsx(styles.listOrderProduct_detailannouce1__inform)}>
                                                 <p>
-                                                    {annouce.TenKH} (MDH{annouce.orderItem})
+                                                    {annouce.tenKH} (MDH{annouce.ID})
                                                 </p>
                                             </div>
                                         </div>
@@ -166,8 +166,7 @@ function ListOrderProduct(props) {
                 {listOrder.length === 0 ? (
                     <Loading />
                 ) : (
-                    <motion.table
-                        className={clsx(styles.table)}
+                    <motion.div
                         initial={{ y: '4rem', opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         transition={{
@@ -175,80 +174,83 @@ function ListOrderProduct(props) {
                             type: spring,
                         }}
                     >
-                        <thead>
-                            <tr>
-                                <th>Mã ĐH</th>
-                                <th>Tên khách hàng</th>
-                                <th>Địa chỉ</th>
-                                <th>Số điện thoại</th>
-                                <th>Phương thức thanh toán</th>
-                                <th>Trạng thái đơn hàng</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {currentUserSearch.length === 0
-                                ? currentListOrder.map((user) => {
-                                      return (
-                                          <tr key={user._id}>
-                                              <td>MDH{user.orderItem}</td>
-                                              <td>{user.TenKH}</td>
-                                              <td>{user.DiaChi}</td>
-                                              <td>{user.SoDT}</td>
-                                              <td>{user.PhuongThucThanhToan}</td>
-                                              <td>
-                                                  {user.TrangThaiDH ? (
-                                                      <button className={clsx(styles.table_confirmed)}>
-                                                          Đã xác nhận
-                                                      </button>
-                                                  ) : (
-                                                      <button
-                                                          className={clsx(styles.table_status)}
-                                                          onClick={() => handleSendEmail(user)}
-                                                      >
-                                                          Xác nhận đơn hàng
-                                                      </button>
-                                                  )}
-                                              </td>
-                                          </tr>
-                                      );
-                                  })
-                                : currentUserSearch.map((user) => {
-                                      return (
-                                          <tr key={user._id}>
-                                              <td>MDH{user.orderItem}</td>
-                                              <td>{user.TenKH}</td>
-                                              <td>{user.DiaChi}</td>
-                                              <td>{user.SoDT}</td>
-                                              <td>{user.PhuongThucThanhToan}</td>
-                                              <td>
-                                                  {user.TrangThaiDH ? (
-                                                      <button className={clsx(styles.table_confirmed)}>
-                                                          Đã xác nhận
-                                                      </button>
-                                                  ) : (
-                                                      <button
-                                                          className={clsx(styles.table_status)}
-                                                          onClick={() => handleSendEmail(user)}
-                                                      >
-                                                          Xác nhận đơn hàng
-                                                      </button>
-                                                  )}
-                                              </td>
-                                          </tr>
-                                      );
-                                  })}
-                        </tbody>
-                    </motion.table>
-                )}
-                {currentListOrder.length > 0 && (
-                    <Pagination
-                        productPerPage={productPerPage}
-                        pagination={pagination}
-                        totalProduct={currentUserSearch.length !== 0 ? succeSearch.length : listOrder.length}
-                        isActive={isActive}
-                        handleNext={handleNext}
-                        handlePrevious={handlePrevious}
-                    />
+                        <table className={clsx(styles.table)}>
+                            <thead>
+                                <tr>
+                                    <th>Mã ĐH</th>
+                                    <th>Tên khách hàng</th>
+                                    <th>Địa chỉ</th>
+                                    <th>Số điện thoại</th>
+                                    <th>Phương thức thanh toán</th>
+                                    <th>Trạng thái đơn hàng</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {currentUserSearch.length === 0
+                                    ? currentListOrder.map((order) => {
+                                          console.log(order);
+                                          return (
+                                              <tr key={order.ID}>
+                                                  <td>MDH{order.ID}</td>
+                                                  <td>{order.tenKH}</td>
+                                                  <td>{order.diaChi}</td>
+                                                  <td>{order.soDT}</td>
+                                                  <td>{order.phuongThucTT}</td>
+                                                  <td>
+                                                      {order.trangThaiDH === 1 ? (
+                                                          <button className={clsx(styles.table_confirmed)}>
+                                                              Đã xác nhận
+                                                          </button>
+                                                      ) : (
+                                                          <button
+                                                              className={clsx(styles.table_status)}
+                                                              onClick={() => handleSendEmail(order)}
+                                                          >
+                                                              Xác nhận đơn hàng
+                                                          </button>
+                                                      )}
+                                                  </td>
+                                              </tr>
+                                          );
+                                      })
+                                    : currentUserSearch.map((order) => {
+                                          return (
+                                              <tr key={order.ID}>
+                                                  <td>MDH{order.ID}</td>
+                                                  <td>{order.tenKH}</td>
+                                                  <td>{order.diaChi}</td>
+                                                  <td>{order.soDT}</td>
+                                                  <td>{order.phuongThucTT}</td>
+                                                  <td>
+                                                      {order.trangThaiDH === 1 ? (
+                                                          <button className={clsx(styles.table_confirmed)}>
+                                                              Đã xác nhận
+                                                          </button>
+                                                      ) : (
+                                                          <button
+                                                              className={clsx(styles.table_status)}
+                                                              onClick={() => handleSendEmail(order)}
+                                                          >
+                                                              Xác nhận đơn hàng
+                                                          </button>
+                                                      )}
+                                                  </td>
+                                              </tr>
+                                          );
+                                      })}
+                            </tbody>
+                        </table>
+                        {currentListOrder.length > 0 && (
+                            <Pagination
+                                productPerPage={productPerPage}
+                                pagination={pagination}
+                                totalProduct={currentUserSearch.length !== 0 ? succeSearch.length : listOrder.length}
+                                isActive={isActive}
+                                handleNext={handleNext}
+                                handlePrevious={handlePrevious}
+                            />
+                        )}
+                    </motion.div>
                 )}
             </div>
         </div>

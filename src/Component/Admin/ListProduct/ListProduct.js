@@ -52,8 +52,8 @@ function ListProduct(props) {
         setShow(!show);
         let res = await fetchDelete(`/products/${id}/delete`);
         if (res && res.status === 200) {
-            setProducts(products.filter((product) => id !== product._id));
-            setSucceSearch(products.filter((product) => id !== product._id));
+            setProducts(products.filter((product) => id !== product.id));
+            setSucceSearch(products.filter((product) => id !== product.id));
             toast.success('Xóa sản phẩm thành công !');
         }
     };
@@ -74,9 +74,8 @@ function ListProduct(props) {
             HandleOnSubmit();
         }
     };
-    console.log(succeSearch);
     const filteredItems = products.filter((item) => {
-        return item.TenSp.toLowerCase().includes(searchQuery.toLowerCase());
+        return item.tenSp.toLowerCase().includes(searchQuery.toLowerCase());
     });
 
     //phân trang
@@ -92,7 +91,6 @@ function ListProduct(props) {
         setShowSort(!showSort);
     };
 
-    console.log(currentProductSearch.length, paginationProduct.length);
     return (
         <div className={clsx(styles.listProduct)}>
             <div className={clsx(styles.listProduct_header)}>
@@ -151,8 +149,7 @@ function ListProduct(props) {
                 {paginationProduct.length === 0 ? (
                     <Loading />
                 ) : (
-                    <motion.table
-                        className={clsx(styles.table)}
+                    <motion.div
                         initial={{ y: '4rem', opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         transition={{
@@ -160,107 +157,114 @@ function ListProduct(props) {
                             type: spring,
                         }}
                     >
-                        <thead>
-                            <tr>
-                                <th>
-                                    Tên sản phẩm
-                                    {showSort ? (
-                                        <i
-                                            style={{ marginLeft: 6, cursor: 'pointer' }}
-                                            onClick={() => hanldeSort('asc', 'TenSp')}
-                                            className="fa-solid fa-arrow-up-wide-short"
-                                        ></i>
-                                    ) : (
-                                        <i
-                                            style={{ marginLeft: 6, cursor: 'pointer' }}
-                                            onClick={() => hanldeSort('desc', 'TenSp')}
-                                            className="fa-solid fa-arrow-up-short-wide"
-                                        ></i>
-                                    )}
-                                </th>
-                                <th>Chất liệu</th>
-                                <th>Giá nhập</th>
-                                <th>Giá bán</th>
-                                <th style={{ textAlign: 'center' }}>Sửa </th>
-                                <th style={{ textAlign: 'center' }}>Xóa</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {currentProductSearch.length === 0
-                                ? paginationProduct.map((product) => {
-                                      return (
-                                          <tr key={product._id}>
-                                              <td style={{ minWidth: 300 }}>{product.TenSp}</td>
-                                              <td>{product.ChatLieu}</td>
-                                              <td>{VND.format(product.GiaNhap)}</td>
-                                              <td>{VND.format(product.GiaBan)}</td>
-                                              <td style={{ textAlign: 'center' }}>
-                                                  <button className={clsx(styles.table_button)}>
-                                                      <Link to={`/admin/DSSP/products/${product._id}/edit`}>
+                        <table className={clsx(styles.table)}>
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Tên sản phẩm
+                                        {showSort ? (
+                                            <i
+                                                style={{ marginLeft: 6, cursor: 'pointer' }}
+                                                onClick={() => hanldeSort('asc', 'tenSp')}
+                                                className="fa-solid fa-arrow-up-wide-short"
+                                            ></i>
+                                        ) : (
+                                            <i
+                                                style={{ marginLeft: 6, cursor: 'pointer' }}
+                                                onClick={() => hanldeSort('desc', 'tenSp')}
+                                                className="fa-solid fa-arrow-up-short-wide"
+                                            ></i>
+                                        )}
+                                    </th>
+                                    <th>Chất liệu</th>
+                                    <th>Giá nhập</th>
+                                    <th>Giá bán</th>
+                                    <th>Số lượng</th>
+                                    <th style={{ textAlign: 'center' }}>Sửa </th>
+                                    <th style={{ textAlign: 'center' }}>Xóa</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {currentProductSearch.length === 0
+                                    ? paginationProduct.map((product) => {
+                                          return (
+                                              <tr key={product.id}>
+                                                  <td style={{ minWidth: 300 }}>{product.tenSp}</td>
+                                                  <td>{product.chatLieu}</td>
+                                                  <td>{VND.format(product.giaNhap)}</td>
+                                                  <td>{VND.format(product.giaBan)}</td>
+                                                  <td>{product.soLuong}</td>
+
+                                                  <td style={{ textAlign: 'center' }}>
+                                                      <button className={clsx(styles.table_button)}>
+                                                          <Link to={`/admin/DSSP/products/${product.id}/edit`}>
+                                                              <i
+                                                                  style={{ color: '#0d6efd' }}
+                                                                  className={clsx('fa-solid fa-pen-to-square')}
+                                                              ></i>
+                                                          </Link>
+                                                      </button>
+                                                  </td>
+                                                  <td style={{ textAlign: 'center' }}>
+                                                      <button
+                                                          className={clsx(styles.table_button)}
+                                                          onClick={() => handleId(product.id)}
+                                                      >
                                                           <i
-                                                              style={{ color: '#0d6efd' }}
-                                                              className={clsx('fa-solid fa-pen-to-square')}
+                                                              style={{ color: '#eb1336' }}
+                                                              className={clsx('fas fa-trash')}
                                                           ></i>
-                                                      </Link>
-                                                  </button>
-                                              </td>
-                                              <td style={{ textAlign: 'center' }}>
-                                                  <button
-                                                      className={clsx(styles.table_button)}
-                                                      onClick={() => handleId(product._id)}
-                                                  >
-                                                      <i
-                                                          style={{ color: '#eb1336' }}
-                                                          className={clsx('fas fa-trash')}
-                                                      ></i>
-                                                  </button>
-                                              </td>
-                                          </tr>
-                                      );
-                                  })
-                                : currentProductSearch.map((product) => {
-                                      return (
-                                          <tr key={product._id}>
-                                              <td style={{ minWidth: 300 }}>{product.TenSp}</td>
-                                              <td>{product.ChatLieu}</td>
-                                              <td>{VND.format(product.GiaNhap)}</td>
-                                              <td>{VND.format(product.GiaBan)}</td>
-                                              <td style={{ textAlign: 'center' }}>
-                                                  <button className={clsx(styles.table_button)}>
-                                                      <Link to={`/admin/DSSP/products/${product._id}/edit`}>
+                                                      </button>
+                                                  </td>
+                                              </tr>
+                                          );
+                                      })
+                                    : currentProductSearch.map((product) => {
+                                          return (
+                                              <tr key={product.id}>
+                                                  <td style={{ minWidth: 300 }}>{product.tenSp}</td>
+                                                  <td>{product.chatLieu}</td>
+                                                  <td>{VND.format(product.giaNhap)}</td>
+                                                  <td>{VND.format(product.giaBan)}</td>
+                                                  <td>{product.soLuong}</td>
+                                                  <td style={{ textAlign: 'center' }}>
+                                                      <button className={clsx(styles.table_button)}>
+                                                          <Link to={`/admin/DSSP/products/${product.id}/edit`}>
+                                                              <i
+                                                                  style={{ color: '#0d6efd' }}
+                                                                  className={clsx('fa-solid fa-pen-to-square')}
+                                                              ></i>
+                                                          </Link>
+                                                      </button>
+                                                  </td>
+                                                  <td style={{ textAlign: 'center' }}>
+                                                      <button
+                                                          className={clsx(styles.table_button)}
+                                                          onClick={() => handleId(product.id)}
+                                                      >
                                                           <i
-                                                              style={{ color: '#0d6efd' }}
-                                                              className={clsx('fa-solid fa-pen-to-square')}
+                                                              style={{ color: '#eb1336' }}
+                                                              className={clsx('fas fa-trash')}
                                                           ></i>
-                                                      </Link>
-                                                  </button>
-                                              </td>
-                                              <td style={{ textAlign: 'center' }}>
-                                                  <button
-                                                      className={clsx(styles.table_button)}
-                                                      onClick={() => handleId(product._id)}
-                                                  >
-                                                      <i
-                                                          style={{ color: '#eb1336' }}
-                                                          className={clsx('fas fa-trash')}
-                                                      ></i>
-                                                  </button>
-                                              </td>
-                                          </tr>
-                                      );
-                                  })}
-                        </tbody>
-                    </motion.table>
-                )}
-                {paginationProduct.length > 0 && (
-                    <Pagination
-                        productPerPage={productPerPage}
-                        pagination={pagination}
-                        totalProduct={currentProductSearch.length !== 0 ? succeSearch.length : products.length}
-                        isActive={isActive}
-                        handleNext={handleNext}
-                        handlePrevious={handlePrevious}
-                    />
+                                                      </button>
+                                                  </td>
+                                              </tr>
+                                          );
+                                      })}
+                            </tbody>
+                        </table>
+
+                        {paginationProduct.length > 0 && (
+                            <Pagination
+                                productPerPage={productPerPage}
+                                pagination={pagination}
+                                totalProduct={currentProductSearch.length !== 0 ? succeSearch.length : products.length}
+                                isActive={isActive}
+                                handleNext={handleNext}
+                                handlePrevious={handlePrevious}
+                            />
+                        )}
+                    </motion.div>
                 )}
 
                 {show && (

@@ -14,6 +14,7 @@ function AddProduct(props) {
     const [gnhap, setgNhap] = useState();
     const [gBan, setgBan] = useState();
     const [loaiSp, setLoaiSp] = useState();
+    const [soLuong, setSoLuong] = useState();
     const [Image, setImage] = useState('');
     const [kichThuoc, setKichThuoc] = useState('');
     const [giamGia, setGiamGia] = useState('');
@@ -24,7 +25,6 @@ function AddProduct(props) {
     const handleImage = (e) => {
         // add image vào csdl
         setImage(e.target.files[0]);
-        // setFileImage(URL.createObjectURL(e.target.files[0]));
     };
 
     useEffect(() => {
@@ -68,6 +68,10 @@ function AddProduct(props) {
             errors.gBan = 'Please enter price !';
             isValid = false;
         }
+        if (!soLuong) {
+            errors.soLuong = 'Please enter quantity !';
+            isValid = false;
+        }
         if (!loaiSp) {
             errors.loaiSp = 'Select product type !';
             isValid = false;
@@ -85,14 +89,17 @@ function AddProduct(props) {
         e.preventDefault();
         if (handleValidation()) {
             const formData = new FormData();
-            formData.append('TenSp', tenSp);
-            formData.append('ChatLieu', chatLieu);
-            formData.append('GiaNhap', gnhap);
-            formData.append('GiaBan', gBan);
-            formData.append('ProducttypeId', loaiSp);
-            formData.append('Image', Image);
-            formData.append('GiamGia', giamGia);
-            formData.append('KichThuoc', kichThuoc);
+            formData.append('tenSp', tenSp);
+            formData.append('chatLieu', chatLieu);
+            formData.append('giaNhap', gnhap);
+            formData.append('giaBan', gBan);
+            formData.append('loaiSp', loaiSp);
+            formData.append('image', Image);
+            formData.append('giamGia', giamGia);
+            formData.append('kichThuoc', kichThuoc);
+            formData.append('soLuong', soLuong);
+            formData.append('soLuotDanhGia', 0);
+            formData.append('tongDanhGia', 0);
             axios
                 .post('http://localhost:8080/products/add', formData)
                 .then((res) => {
@@ -105,6 +112,7 @@ function AddProduct(props) {
                     setLoaiSp('');
                     setGiamGia('');
                     setKichThuoc('');
+                    setSoLuong('');
                 })
                 .catch((err) => {
                     toast.error(err);
@@ -115,6 +123,8 @@ function AddProduct(props) {
     const handleBack = () => {
         navigate('/admin/DSSP');
     };
+
+    console.log(soLuong);
 
     return (
         <div className={clsx(styles.addProduct)}>
@@ -217,6 +227,23 @@ function AddProduct(props) {
                                 </div>
                             </div>
                             <div className={clsx(styles.add_formGroup)}>
+                                <label htmlFor="level">Số lượng</label>
+                                <br />
+                                <input
+                                    placeholder="số lượng"
+                                    value={soLuong}
+                                    onChange={(e) => setSoLuong(e.target.value)}
+                                    type="number"
+                                    min={0}
+                                    className={clsx(styles.add_formControl)}
+                                />
+                                <div>
+                                    {formErrors.soLuong && (
+                                        <p className={clsx(styles.form_message)}>{formErrors.soLuong}</p>
+                                    )}
+                                </div>
+                            </div>
+                            <div className={clsx(styles.add_formGroup)}>
                                 <label htmlFor="level">Kích thước</label>
                                 <br />
                                 <input
@@ -253,14 +280,14 @@ function AddProduct(props) {
                                     onChange={(e) => setLoaiSp(e.target.value)}
                                     className={clsx(styles.add_formControl)}
                                 >
-                                    <option disabled style={{ display: 'none' }} value="0">
+                                    <option disabled style={{ display: 'none' }} value="0s">
                                         Loại sản phẩm
                                     </option>
                                     {producttypes &&
                                         producttypes.map((producttype) => {
                                             return (
-                                                <option key={producttype._id} value={producttype._id}>
-                                                    {producttype.TenLoaiSp}
+                                                <option key={producttype.id} value={producttype.id}>
+                                                    {producttype.tenLoaiSp}
                                                 </option>
                                             );
                                         })}

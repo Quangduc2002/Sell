@@ -45,9 +45,10 @@ function ListCustomer(props) {
     const handleDelete = async () => {
         let res = await fetchDelete(`/user/${id}/Customer`);
         if (res && res.status === 200) {
-            getUsers(users.filter((user) => id !== user._id));
-            setSucceSearch(users.filter((user) => id !== user._id));
-            toast.success('Xóa sản phẩm thành công !');
+            getUsers(users.filter((user) => id !== user.ID));
+            setSucceSearch(users.filter((user) => id !== user.ID));
+            setShow(!show);
+            toast.success('Xóa user thành công !');
         }
     };
 
@@ -69,7 +70,7 @@ function ListCustomer(props) {
     };
 
     const filteredItems = users.filter((item) => {
-        return item.Email.toLowerCase().includes(searchQuery.toLowerCase());
+        return item.email.toLowerCase().includes(searchQuery.toLowerCase());
     });
 
     const currentUsers = users.slice(indeOfFirstProduct, indexOfLastProduct);
@@ -148,14 +149,14 @@ function ListCustomer(props) {
                             {currentUserSearch.length === 0
                                 ? currentUsers.map((user) => {
                                       return (
-                                          <tr key={user._id}>
-                                              <td>{user.Name}</td>
-                                              <td style={{ minWidth: 300 }}>{user.Email}</td>
-                                              <td>{user.PassWord}</td>
+                                          <tr key={user.ID}>
+                                              <td>{user.name}</td>
+                                              <td style={{ minWidth: 300 }}>{user.email}</td>
+                                              <td>{user.password}</td>
                                               <td style={{ textAlign: 'center' }}>
                                                   <button
                                                       className={clsx(styles.table_button)}
-                                                      onClick={() => handleId(user._id)}
+                                                      onClick={() => handleId(user.ID)}
                                                   >
                                                       <i
                                                           style={{ color: '#eb1336' }}
@@ -169,9 +170,9 @@ function ListCustomer(props) {
                                 : currentUserSearch.map((user) => {
                                       return (
                                           <tr key={user._id}>
-                                              <td>{user.Name}</td>
-                                              <td style={{ minWidth: 300 }}>{user.Email}</td>
-                                              <td>{user.PassWord}</td>
+                                              <td>{user.name}</td>
+                                              <td style={{ minWidth: 300 }}>{user.email}</td>
+                                              <td>{user.password}</td>
                                               <td style={{ textAlign: 'center' }}>
                                                   <button
                                                       className={clsx(styles.table_button)}

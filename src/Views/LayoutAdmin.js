@@ -9,9 +9,10 @@ import ListCustomer from '../Component/Admin/ListCustomer/ListCustomer';
 import './Admin.css';
 import ListOrderProduct from '../Component/Admin/ListOrderProduct/ListOrderProduct';
 import OrderDetail from '../Component/Admin/OrderDetail/OrderDetail';
+import Revenue from '../Component/Admin/Revenue/Revenue.js';
 
 function LayoutAdmin(props) {
-    const { toast, userName } = props;
+    const { toast } = props;
     const [currentPage, setCurrentPage] = useState(1);
     const [productPerPage] = useState(12);
     const [isActive, setIsActive] = useState(1);
@@ -40,8 +41,23 @@ function LayoutAdmin(props) {
 
     return (
         <div className="admin">
-            <Sidebar userName={userName} />
+            <Sidebar />
             <Routes>
+                <Route
+                    path={path.LayoutAdminRevenue}
+                    element={
+                        <Revenue
+                            productPerPage={productPerPage}
+                            indexOfLastProduct={indexOfLastProduct}
+                            indeOfFirstProduct={indeOfFirstProduct}
+                            pagination={pagination}
+                            isActive={isActive}
+                            handleNext={handleNext}
+                            handlePrevious={handlePrevious}
+                            toast={toast}
+                        />
+                    }
+                />
                 <Route
                     path={path.LayoutAdminDSDP}
                     element={

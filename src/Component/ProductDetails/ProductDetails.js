@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Slider from 'react-slick';
 import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
 import clsx from 'clsx';
@@ -9,15 +10,66 @@ import Free from '../../assets/Image/free.png';
 import Loading from '../Loading/Loading';
 import '../Product/Product.css';
 import { fetchUser } from '../../services/UseServices';
+import Product from '../Product/Product';
 
 function ProductDetails(props) {
-    const { onAdd, count, handleProductreduction, handleIncreaseProduct, userName, toast } = props;
+    const { onAdd, count, handleProductreduction, handleIncreaseProduct, toast } = props;
     let { id } = useParams();
     const [product, setProduct] = useState([]);
+    // const [countRating, setCountRating] = useState([]);
+    const [similarProduct, setSimilarProduct] = useState([]);
     const [starID, setStarId] = useState('');
+    const [rating, setRating] = useState(false);
     const [showDescribetion, setShowDescribetion] = useState(true);
 
     const navigate = useNavigate();
+
+    const settings1 = {
+        speed: 1000,
+        infinite: false,
+        slidesToShow: 4,
+        slidesToScroll: 2,
+        autoplay: true,
+        autoplaySpeed: 3000,
+        prevArrow: (
+            <button className="slick-arrow slick-prev">
+                <i className="fa-solid fa-chevron-left"></i>
+            </button>
+        ),
+        nextArrow: (
+            <button className="slick-arrow slick-next">
+                <i className="fa-solid fa-chevron-right"></i>
+            </button>
+        ),
+        responsive: [
+            {
+                breakpoint: 1024,
+                settings: {
+                    slidesToShow: 4,
+                    slidesToScroll: 1,
+                    infinite: true,
+                },
+            },
+            {
+                breakpoint: 768,
+                settings: {
+                    slidesToShow: 3,
+                    slidesToScroll: 1,
+                    initialSlide: 1,
+                    arrows: false,
+                },
+            },
+            {
+                breakpoint: 576,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 1,
+                    initialSlide: 1,
+                    arrows: false,
+                },
+            },
+        ],
+    };
 
     const stars = [
         { id: 1, class: 'star-1' },
@@ -28,31 +80,55 @@ function ProductDetails(props) {
     ];
 
     useEffect(() => {
-        // axios
-        //     .get(`http://localhost:8080/products/${id}`)
-        //     .then((res) => {
-        //         setTimeout(() => setProduct(res.data), 1000);
-        //     })
-        //     .catch((err) => {
-        //         console.log(err);
-        //     });
         getUsers(id);
-    }, [id]);
+        // getRating(id);
+    }, [id, rating]);
+
+    useEffect(() => {
+        if (product.length !== 0) {
+            getSimilarProduct(product);
+        }
+    }, [product]);
 
     const getUsers = async (id) => {
         let res = await fetchUser(`/products/${id}`);
         setTimeout(() => setProduct(res.data), 1000);
     };
 
+    // const getRating = async (id) => {
+    //     let res = await fetchUser(`/products/${id}/getRating`);
+    //     setCountRating(res.data);
+    //     // await axios
+    //     //     .get(`http://localhost:8080/products/${id}/getRating`, {
+    //     //         numberRating: 5,
+    //     //     })
+    //     //     .then((res) => {
+    //     //         setCountRating(res.data);
+    //     //     })
+    //     //     .catch((err) => {
+    //     //         console.log(err);
+    //     //     });
+    // };
+
+    // console.log(countRating);
+
+    const getSimilarProduct = async (smlproduct) => {
+        let res = await fetchUser(`/products/${smlproduct.loaiSp}/ProductType`);
+        setSimilarProduct(res.data);
+    };
+
     const handleSubmitEvaluate = (e) => {
         e.preventDefault();
-        if (userName) {
+        if (localStorage.length !== 0) {
             axios
                 .put(`http://localhost:8080/products/${id}/rating`, {
-                    star: starID,
+                    userId: localStorage.Id,
+                    productId: id,
+                    numberRating: starID,
                 })
                 .then((res) => {
                     toast.success('Đánh giá thành công !');
+                    setRating(!rating);
                 })
                 .catch((err) => {
                     console.log(err);
@@ -70,15 +146,21 @@ function ProductDetails(props) {
     // đánh giá sản phẩm
     // khai báo 5 sao
     const starsTotal = 5;
-    const starPercentage = (product.TongDanhGia / starsTotal) * 100;
+    const starPercentage = (product.tongDanhGia / starsTotal) * 100;
     // Math.round làm tròn lên
     const starPercentageRounded = `${Math.round(starPercentage)}%`;
 
     // purchase products
     const handlePurchaseProduct = (product) => {
-        if (userName) {
-            onAdd(product);
-            navigate('/giohang');
+        if (localStorage.length !== 0) {
+            if (product.soLuong === 0) {
+                toast.error('Sản phẩm đã hết hàng !');
+            } else {
+                onAdd(product);
+                navigate('/giohang');
+            }
+        } else {
+            navigate('/Login');
         }
     };
 
@@ -101,7 +183,7 @@ function ProductDetails(props) {
                         <span className={clsx(styles.divider)}>
                             <i className="fa-solid fa-angle-right"></i>
                         </span>
-                        <span>{product.TenSp}</span>
+                        <span>{product.tenSp}</span>
                     </div>
                 </div>
             </div>
@@ -118,15 +200,15 @@ function ProductDetails(props) {
                 >
                     <div className={clsx(styles.productDetail)}>
                         <div className={clsx(styles.images)}>
-                            <img src={`http://localhost:3000/Image/${product.Image}`} alt="" />
+                            <img src={`http://localhost:3000/Image/${product.image}`} alt="" />
                         </div>
                         <div className={clsx(styles.right)}>
-                            <h1>{product.TenSp}</h1>
-                            {product.NumReview !== 0 ? (
+                            <h1>{product.tenSp}</h1>
+                            {product.soLuotDanhGia !== 0 ? (
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
                                     <div>
                                         <span style={{ borderBottom: '1px solid', color: '#f62d3e' }}>
-                                            {product.TongDanhGia.toFixed(1)}
+                                            {product.tongDanhGia.toFixed(1)}
                                         </span>
                                         &nbsp;
                                         <div className={clsx(styles.right_star, 'stars-outer')}>
@@ -137,7 +219,7 @@ function ProductDetails(props) {
                                         </div>
                                     </div>
                                     <div style={{ paddingLeft: 15 }}>
-                                        {product.NumReview} &nbsp;
+                                        {product.soLuotDanhGia} &nbsp;
                                         <span style={{ color: '#767676' }}>Đánh giá</span>
                                     </div>
                                 </div>
@@ -145,27 +227,29 @@ function ProductDetails(props) {
                                 ''
                             )}
                             <div className={clsx(styles.right_price)}>
-                                {product.GiamGia ? (
+                                {product.giamGia ? (
                                     <>
                                         <span className={clsx(styles.right_priceAmount)}>
-                                            {VND.format(product.GiaBan)}
+                                            {VND.format(product.giaBan)}
                                         </span>
                                         <span className={clsx(styles.right_priceRed)}>
-                                            {VND.format(product.GiaBan - (product.GiaBan * product.GiamGia) / 100)}
+                                            {VND.format(product.giaBan - (product.giaBan * product.giamGia) / 100)}
                                         </span>
                                     </>
                                 ) : (
-                                    <span className={clsx(styles.right_priceRed)}>{VND.format(product.GiaBan)}</span>
+                                    <span className={clsx(styles.right_priceRed)}>{VND.format(product.giaBan)}</span>
                                 )}
                             </div>
-                            {product.GiamGia !== '' ? (
+
+                            {product.giamGia !== '' ? (
                                 <div className={clsx(styles.right_discountCode)}>
                                     <p>Mã giảm giá của shop </p>
-                                    <span>-{product.GiamGia}%</span>
+                                    <span>-{product.giamGia}%</span>
                                 </div>
                             ) : (
                                 ''
                             )}
+
                             <div className={clsx(styles.right_transport)}>
                                 <p>Vận chuyển</p>
                                 <div className={clsx(styles.right_transport__free)}>
@@ -173,18 +257,21 @@ function ProductDetails(props) {
                                     <span>Miễn phí vận chuyển</span>
                                 </div>
                             </div>
+
                             <div className={clsx(styles.right_transport)}>
                                 <p>Chất liệu</p>
                                 <div className={clsx(styles.right_transport__free)}>
-                                    <span>{product.ChatLieu}</span>
+                                    <span>{product.chatLieu}</span>
                                 </div>
                             </div>
+
                             <div className={clsx(styles.right_transport)}>
                                 <p>Kích thước</p>
                                 <div className={clsx(styles.right_transport__free)}>
-                                    <span>{product.KichThuoc} cm</span>
+                                    <span>{product.kichThuoc} cm</span>
                                 </div>
                             </div>
+
                             <div className={clsx(styles.right_quantity)}>
                                 <div>
                                     <p>Số lượng</p>
@@ -217,7 +304,18 @@ function ProductDetails(props) {
                                 <div className={clsx(styles.right_quantity__available)}>Sản phẩm có sẵn </div>
                             </div>
 
-                            <div>
+                            <div className={clsx(styles.right_transport)}>
+                                <p>Trạng thái</p>
+                                <div className={clsx(styles.right_transport__free)}>
+                                    {product.soLuong !== 0 ? (
+                                        <span style={{ fontWeight: 700 }}>Còn hàng</span>
+                                    ) : (
+                                        <span style={{ color: ' #ee4d2d', fontWeight: 700 }}>Đã hết hàng</span>
+                                    )}
+                                </div>
+                            </div>
+
+                            <div className={clsx(styles.right_btn)}>
                                 <button onClick={() => onAdd(product)} className={clsx(styles.right_addcart)}>
                                     <span>Thêm vào giỏ hàng</span>
                                 </button>
@@ -247,14 +345,59 @@ function ProductDetails(props) {
                                     onClick={() => setShowDescribetion(false)}
                                     className={clsx(styles.describe_p, !showDescribetion ? styles.active : '')}
                                 >
-                                    Đánh giá({product.NumReview})
+                                    Đánh giá({product.soLuotDanhGia !== 0 ? product.soLuotDanhGia : 0})
                                 </p>
                             </li>
                         </ul>
-                        {showDescribetion && <div className={clsx(styles.describe_describe)}>Đang cập nhật...</div>}
+                        {showDescribetion && (
+                            <motion.div
+                                className={clsx(styles.describe_describe)}
+                                initial={{ y: '4rem', opacity: 0 }}
+                                animate={{ y: 0, opacity: 1 }}
+                                transition={{
+                                    duration: 1,
+                                    type: spring,
+                                }}
+                            >
+                                Đang cập nhật...
+                            </motion.div>
+                        )}
                         {!showDescribetion && (
-                            <div className={clsx(styles.describe_Evaluate)}>
-                                <h2>Bạn hãy nhận xét “{product.TenSp}” </h2>
+                            <motion.div
+                                className={clsx(styles.describe_Evaluate)}
+                                initial={{ y: '4rem', opacity: 0 }}
+                                animate={{ y: 0, opacity: 1 }}
+                                transition={{
+                                    duration: 1,
+                                    type: spring,
+                                }}
+                            >
+                                <h2>Bạn hãy nhận xét “{product.tenSp}” </h2>
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <div>
+                                        <span style={{ borderBottom: '1px solid', color: '#f8ce0b' }}>
+                                            {product.tongDanhGia.toFixed(1)}
+                                        </span>
+                                        &nbsp;
+                                        <div className={clsx('stars-outer')}>
+                                            <div
+                                                style={{ width: starPercentageRounded }}
+                                                className={clsx('stars-inner')}
+                                            ></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {/* <div className={clsx(styles.describe_resultstar)}>
+                                    {stars.map((star) => {
+                                        return (
+                                            <div
+                                                key={star.id}
+                                                className={clsx(`${star.class}`, styles.describe_resultStar)}
+                                            ></div>
+                                        );
+                                    })}
+                                </div> */}
+
                                 <p>
                                     Đánh giá của bạn <span>*</span>
                                 </p>
@@ -267,7 +410,7 @@ function ProductDetails(props) {
                                     <div className={clsx(styles.describe_star)}>
                                         {stars.map((star) => {
                                             return (
-                                                <span
+                                                <div
                                                     key={star.id}
                                                     className={clsx(
                                                         styles.describe__star,
@@ -276,7 +419,7 @@ function ProductDetails(props) {
                                                         starID === star.id ? 'active' : ' ',
                                                     )}
                                                     onClick={() => handleStar(star.id)}
-                                                ></span>
+                                                ></div>
                                             );
                                         })}
                                     </div>
@@ -284,15 +427,30 @@ function ProductDetails(props) {
                                         <button
                                             onClick={(e) => handleSubmitEvaluate(e)}
                                             style={{ height: 'auto', padding: 10 }}
-                                            className={clsx(styles.right_cart)}
+                                            className={clsx(styles.right_cart, styles.right_evalua)}
                                         >
                                             <span>Đánh giá</span>
                                         </button>
                                     </div>
                                 </form>
-                            </div>
+                            </motion.div>
                         )}
                     </div>
+
+                    {similarProduct.length !== 0 && (
+                        <div className={clsx(styles.inner)}>
+                            <div className={clsx(styles.inner_container)}>
+                                <h3 className={clsx(styles.inner_title)}>SẢN PHẨM TƯƠNG TỰ</h3>
+                                <div className={clsx(styles.inner_slider)}>
+                                    <Slider {...settings1}>
+                                        {similarProduct.map((smlProduct) => {
+                                            return <Product key={smlProduct._id} product={smlProduct} />;
+                                        })}
+                                    </Slider>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </motion.div>
             )}
         </div>

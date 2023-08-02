@@ -154,7 +154,7 @@ function Home(props) {
     const currentProductSearch = succeSearch.slice(indeOfFirstProduct, indexOfLastProduct);
 
     return (
-        <div className={clsx(styles.home, currentProduct.length === 0 ? styles.MG : '')}>
+        <div div className={clsx(styles.home, currentProduct.length === 0 ? styles.MG : '')}>
             {currentProduct.length !== 0 ? (
                 <>
                     <div className={clsx(styles.home1)}>

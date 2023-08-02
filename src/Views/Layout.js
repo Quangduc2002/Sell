@@ -16,7 +16,7 @@ import path from '../Component/Ultis/Path';
 import { fetchUser } from '../services/UseServices';
 
 function Layout(props) {
-    const { userName, roleId } = props;
+    const { roleId } = props;
     const [cartItems, setCartItems] = useState([]);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -40,46 +40,50 @@ function Layout(props) {
     };
 
     const onAdd = (product) => {
-        const exist = cartItems.find((cartItem) => {
-            return cartItem._id === product._id;
-        });
-
-        if (exist) {
-            setCartItems(
-                cartItems.map((cartItem) =>
-                    cartItem._id === product._id
-                        ? {
-                              ...exist,
-                              qty: count + cartItem.qty,
-                              total:
-                                  (count + cartItem.qty) *
-                                  parseFloat(cartItem.GiaBan - (cartItem.GiaBan * cartItem.GiamGia) / 100),
-                          }
-                        : cartItem,
-                ),
-            );
-            toast.success('Thêm sản phẩm thành công !');
+        if (product.soLuong === 0) {
+            toast.error('Sản phẩm đã hết hàng !');
         } else {
-            setCartItems([
-                ...cartItems,
-                {
-                    ...product,
-                    qty: count,
-                    total: count * parseFloat(product.GiaBan - (product.GiaBan * product.GiamGia) / 100),
-                },
-            ]);
-            toast.success('Thêm sản phẩm thành công !');
+            const exist = cartItems.find((cartItem) => {
+                return cartItem.id === product.id;
+            });
+
+            if (exist) {
+                setCartItems(
+                    cartItems.map((cartItem) =>
+                        cartItem.id === product.id
+                            ? {
+                                  ...exist,
+                                  qty: count + cartItem.qty,
+                                  total:
+                                      (count + cartItem.qty) *
+                                      parseFloat(cartItem.giaBan - (cartItem.giaBan * cartItem.giamGia) / 100),
+                              }
+                            : cartItem,
+                    ),
+                );
+                toast.success('Thêm sản phẩm thành công !');
+            } else {
+                setCartItems([
+                    ...cartItems,
+                    {
+                        ...product,
+                        qty: count,
+                        total: count * parseFloat(product.giaBan - (product.giaBan * product.giamGia) / 100),
+                    },
+                ]);
+                toast.success('Thêm sản phẩm thành công !');
+            }
+            setCount(1);
         }
-        setCount(1);
     };
 
     const onDelete = (product) => {
-        setCartItems(cartItems.filter((cartItem) => cartItem._id !== product._id));
+        setCartItems(cartItems.filter((cartItem) => cartItem.id !== product.id));
         toast.success('Xóa sản phẩm thành công !');
     };
 
     //Tính tổng tiền
-    const totalMoney = cartItems.reduce((a, c) => a + parseFloat(c.GiaBan - (c.GiaBan * c.GiamGia) / 100) * c.qty, 0);
+    const totalMoney = cartItems.reduce((a, c) => a + parseFloat(c.giaBan - (c.giaBan * c.giamGia) / 100) * c.qty, 0);
 
     // Pagination
     // chỉ mục cuối sản phẩm
@@ -129,7 +133,7 @@ function Layout(props) {
 
     //search
     const filteredItems = name.filter((item) => {
-        return item.TenSp.toLowerCase().includes(searchQuery.toLowerCase());
+        return item.tenSp.toLowerCase().includes(searchQuery.toLowerCase());
     });
 
     return (
@@ -146,7 +150,6 @@ function Layout(props) {
                 searchQuery={searchQuery}
                 setSearchQuery={setSearchQuery}
                 filteredItems={filteredItems}
-                userName={userName}
                 roleId={roleId}
             />
             <Routes>
@@ -176,7 +179,6 @@ function Layout(props) {
                     path={path.Cart}
                     element={
                         <Cart
-                            userName={userName}
                             count={count}
                             onAdd={onAdd}
                             cartItems={cartItems}
@@ -195,7 +197,6 @@ function Layout(props) {
                             handleProductreduction={handleProductreduction}
                             onAdd={onAdd}
                             toast={toast}
-                            userName={userName}
                         />
                     }
                 />

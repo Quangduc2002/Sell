@@ -7,7 +7,7 @@ import styles from '../Cart/Cart.module.scss';
 import CartIMG from '../../assets/Image/cart.png';
 
 function Cart(props) {
-    const { cartItems, onDelete, totalMoney, toast, userName } = props;
+    const { cartItems, onDelete, totalMoney, toast } = props;
     const navigate = useNavigate();
     const [showPay, setShowPay] = useState(false);
     const [tenKH, setTenKH] = useState('');
@@ -57,18 +57,18 @@ function Cart(props) {
 
     const handleOrder = (e) => {
         e.preventDefault();
-        if (userName) {
+        if (localStorage.length !== 0) {
             if (handleValidation()) {
                 axios
                     .post('http://localhost:8080/order', {
-                        TenKH: tenKH,
-                        SoDT: soDT,
-                        DiaChi: diaChi,
-                        Email: email,
-                        PhuongThucThanhToan: thanhToan,
                         Product: cartItems,
-                        Note: note,
-                        TrangThaiDH: false,
+                        tenKH: tenKH,
+                        soDT: soDT,
+                        diaChi: diaChi,
+                        email: email,
+                        phuongThucTT: thanhToan,
+                        note: note,
+                        trangThaiDH: false,
                     })
                     .then((res) => {
                         toast.success('Mua sản phẩm thành công ');
@@ -85,12 +85,20 @@ function Cart(props) {
     return (
         <div className={clsx(styles.cart)}>
             {cartItems.length === 0 && (
-                <div className={clsx(styles.product)}>
+                <motion.div
+                    className={clsx(styles.product)}
+                    initial={{ y: '4rem', opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{
+                        duration: 1,
+                        type: spring,
+                    }}
+                >
                     <div>
                         <img className={clsx(styles.product_img)} alt="" src={CartIMG} />
                         <p>Chưa có sản phẩm nào trong giỏ hàng.</p>
                     </div>
-                </div>
+                </motion.div>
             )}
 
             {cartItems.length !== 0 && (
@@ -125,14 +133,14 @@ function Cart(props) {
                                                 <img
                                                     className={clsx(styles.image)}
                                                     alt=""
-                                                    src={`http://localhost:3000/Image/${item.Image}`}
+                                                    src={`http://localhost:3000/Image/${item.image}`}
                                                 />
                                             </td>
                                             <td>
-                                                {item.TenSp}
+                                                {item.tenSp}
                                                 <p className={clsx(styles.quantity)}>
                                                     {item.qty} x{' '}
-                                                    {VND.format(item.GiaBan - (item.GiaBan * item.GiamGia) / 100)}
+                                                    {VND.format(item.giaBan - (item.giaBan * item.giamGia) / 100)}
                                                 </p>
                                                 {item.qty === 1 ? (
                                                     ''
@@ -144,7 +152,7 @@ function Cart(props) {
                                             </td>
                                             <td className={clsx(styles.price)}>
                                                 {' '}
-                                                {VND.format(item.GiaBan - (item.GiaBan * item.GiamGia) / 100)}
+                                                {VND.format(item.giaBan - (item.giaBan * item.giamGia) / 100)}
                                             </td>
                                             <td style={{ textAlign: 'center' }} className={clsx(styles.price)}>
                                                 x{item.qty}

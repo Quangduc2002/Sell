@@ -6,7 +6,6 @@ import { NavLink } from 'react-router-dom';
 import path from '../../Ultis/Path';
 
 function Sidebar(props) {
-    const { userName } = props;
     const [show, setShow] = useState(false);
     const [showPage, setShowPage] = useState(false);
     const [showOrder, setShowOrder] = useState(false);
@@ -27,7 +26,7 @@ function Sidebar(props) {
                                     src={`http://localhost:3000/Image/IMG_2002.jpg`}
                                     alt=""
                                 />
-                                <span style={{ color: '#fff' }}>{userName}</span>
+                                <span style={{ color: '#fff' }}>{localStorage.Name}</span>
                             </div>
                             <i
                                 style={{ color: 'rgba(255, 255, 255, 0.5)' }}
@@ -71,6 +70,9 @@ function Sidebar(props) {
 
                     {showPage && (
                         <ul className={clsx(styles.sidebar_user__ul)}>
+                            <NavLink to={path.LayoutAdminRevenue} className={clsx(styles.sidebar_user__link)}>
+                                <li className={clsx(styles.sidebar_user__li)}>Thống kê doanh thu</li>
+                            </NavLink>
                             <NavLink to={path.LayoutAdminDSDP} className={clsx(styles.sidebar_user__link)}>
                                 <li className={clsx(styles.sidebar_user__li)}>Quản lý sản phẩm</li>
                             </NavLink>

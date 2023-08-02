@@ -16,7 +16,7 @@ function Product(props) {
     // đánh giá sản phẩm
     // khai báo 5 sao
     const starsTotal = 5;
-    const starPercentage = (product.TongDanhGia / starsTotal) * 100;
+    const starPercentage = (product.tongDanhGia / starsTotal) * 100;
     // Math.round làm tròn lên
     const starPercentageRounded = `${Math.round(starPercentage)}%`;
 
@@ -30,27 +30,27 @@ function Product(props) {
                 type: spring,
             }}
         >
-            <Link to={`/Chitietsanpham/${product._id}`} className={clsx(styles.room_product1_link)}>
+            <Link to={`/Chitietsanpham/${product.id}`} className={clsx(styles.room_product1_link)}>
                 <div className={clsx(styles.room_image)}>
                     <div className={clsx(styles.room_badge)}>
-                        <img alt="" src={`http://localhost:3000/Image/${product.Image}`} />
-                        {product.GiamGia === '' ? (
+                        <img alt="" src={`http://localhost:3000/Image/${product.image}`} />
+                        {product.giamGia === '' ? (
                             ''
                         ) : (
-                            <span className={clsx(styles.room_pos)}>-{product.GiamGia}%</span>
+                            <span className={clsx(styles.room_pos)}>-{product.giamGia}%</span>
                         )}
                     </div>
                 </div>
                 <div className={clsx(styles.room_text)}>
-                    <p title={product.text}>{product.TenSp}</p>
+                    <p title={product.text}>{product.tenSp}</p>
                     <div className={clsx(styles.room_price)}>
-                        {product.GiamGia !== '' ? (
-                            <span className={clsx(styles.priceAmount)}>{VND.format(product.GiaBan)}</span>
+                        {product.giamGia !== '' ? (
+                            <span className={clsx(styles.priceAmount)}>{VND.format(product.giaBan)}</span>
                         ) : (
                             ''
                         )}
                         <span className={clsx(styles.priceRed)}>
-                            {VND.format(product.GiaBan - (product.GiaBan * product.GiamGia) / 100)}
+                            {VND.format(product.giaBan - (product.giaBan * product.giamGia) / 100)}
                         </span>
                     </div>
                     <div className="stars-outer">

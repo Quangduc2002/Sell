@@ -4,20 +4,10 @@ import { Link, NavLink } from 'react-router-dom';
 import styles from '../Header/Header.module.scss';
 import LogoTT from '../../assets/Image/Logo.png';
 import Phone from '../../assets/Image/telephone.png';
-import path from '../Ultis/Path';
 
 function Header(props) {
-    const {
-        cartItems,
-        handleKeyPress,
-        searchQuery,
-        setSearchQuery,
-        filteredItems,
-        HandleOnSubmit,
-        userName,
-        roleId,
-        date,
-    } = props;
+    const { cartItems, handleKeyPress, searchQuery, setSearchQuery, filteredItems, HandleOnSubmit, roleId, toast } =
+        props;
     const [show, setShow] = useState(false);
     const [show2, setShow2] = useState(false);
     const search = useRef();
@@ -30,6 +20,13 @@ function Header(props) {
         { path: '/phongngu', title: 'Phòng ngủ' },
     ];
 
+    const handleLogout = () => {
+        localStorage.removeItem('Id');
+        localStorage.removeItem('Name');
+        setShow(false);
+        toast.success('Đăng xuất thành công !');
+    };
+
     return (
         <div className={clsx(styles.wrapper)}>
             <div className={clsx(styles.top)}>
@@ -39,18 +36,8 @@ function Header(props) {
                     </div>
                     <div className={clsx(styles.wrapper1_medium)}>
                         <ul>
-                            {roleId === '0' ? (
-                                <li className={clsx(styles.wrapper1_medium__li)} style={{ marginRight: 12 }}>
-                                    <Link to="/admin/DSSP" style={{ textDecoration: 'none', color: '#000' }}>
-                                        <span>Danh sách sản phẩm</span>
-                                    </Link>
-                                </li>
-                            ) : (
-                                ''
-                            )}
-
                             <li
-                                className={roleId !== '0' ? clsx(styles.wrapper1_medium__li) : ''}
+                                className={clsx(styles.wrapper1_medium__li)}
                                 style={{ marginRight: 12, marginLeft: 12 }}
                             >
                                 <span>Tin tức</span>
@@ -59,7 +46,7 @@ function Header(props) {
                                 <span>Liên hệ</span>
                             </li>
                             <li style={{ marginLeft: 12 }}>
-                                {!userName ? (
+                                {localStorage.length === 0 ? (
                                     <Link to="/Login" style={{ textDecoration: 'none', color: '#000' }}>
                                         <span className={clsx(styles.show)}>Đăng nhập</span>
                                     </Link>
@@ -70,15 +57,14 @@ function Header(props) {
                                             setShow(!show);
                                         }}
                                     >
-                                        {userName}
-                                        {date}
+                                        {localStorage.Name}
                                         <i style={{ marginLeft: 6 }} className="fa-sharp fa-solid fa-caret-down"></i>
                                     </span>
                                 )}
                                 {show && (
                                     <div className={clsx(styles.wrapper1_user)}>
                                         <p>Hồ sơ cá nhân</p>
-                                        <Link to={path.Login} style={{ textDecoration: 'none', color: '#000' }}>
+                                        <Link onClick={handleLogout} style={{ textDecoration: 'none', color: '#000' }}>
                                             <p>Đăng xuất</p>
                                         </Link>
                                     </div>
@@ -193,6 +179,7 @@ function Header(props) {
                     )}
                 </div>
             </div>
+
             {show2 && (
                 <div className={clsx(styles.top2)}>
                     <div className={clsx(styles.wrapper3)}>
