@@ -9,7 +9,7 @@ const path = {
     // Admin
     LayoutAdmin: '/admin',
     LayoutAdminDSDP: 'DSSP',
-    LayoutAdminRevenue: 'Revenue',
+    LayoutAdminStatistic: 'Revenue',
     LayoutAdminAdd: 'ThemSp',
     LayoutAdminCustomers: 'Customer',
     LayoutAdminListOrders: 'ListOrders',

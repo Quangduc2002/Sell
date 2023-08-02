@@ -70,7 +70,7 @@ function Sidebar(props) {
 
                     {showPage && (
                         <ul className={clsx(styles.sidebar_user__ul)}>
-                            <NavLink to={path.LayoutAdminRevenue} className={clsx(styles.sidebar_user__link)}>
+                            <NavLink to={path.LayoutAdminStatistic} className={clsx(styles.sidebar_user__link)}>
                                 <li className={clsx(styles.sidebar_user__li)}>Thống kê doanh thu</li>
                             </NavLink>
                             <NavLink to={path.LayoutAdminDSDP} className={clsx(styles.sidebar_user__link)}>

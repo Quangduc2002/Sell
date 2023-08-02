@@ -9,7 +9,7 @@ import ListCustomer from '../Component/Admin/ListCustomer/ListCustomer';
 import './Admin.css';
 import ListOrderProduct from '../Component/Admin/ListOrderProduct/ListOrderProduct';
 import OrderDetail from '../Component/Admin/OrderDetail/OrderDetail';
-import Revenue from '../Component/Admin/Revenue/Revenue.js';
+import Statistic from '../Component/Admin/Statistic/Statistic';
 
 function LayoutAdmin(props) {
     const { toast } = props;
@@ -44,9 +44,9 @@ function LayoutAdmin(props) {
             <Sidebar />
             <Routes>
                 <Route
-                    path={path.LayoutAdminRevenue}
+                    path={path.LayoutAdminStatistic}
                     element={
-                        <Revenue
+                        <Statistic
                             productPerPage={productPerPage}
                             indexOfLastProduct={indexOfLastProduct}
                             indeOfFirstProduct={indeOfFirstProduct}

@@ -21,7 +21,7 @@ import EditProduct from '../Component/Admin/EditProduct/EditProduct';
 import ListCustomer from '../Component/Admin/ListCustomer/ListCustomer';
 import ListOrderProduct from '../Component/Admin/ListOrderProduct/ListOrderProduct';
 import OrderDetail from '../Component/Admin/OrderDetail/OrderDetail';
-import Revenue from '../Component/Admin/Revenue/Revenue.js';
+import Statistic from '../Component/Admin/Statistic/Statistic';
 
 function App() {
     const [roleId, setRoleId] = useState();
@@ -49,7 +49,7 @@ function App() {
 
                 {/* Admin */}
                 <Route path={path.LayoutAdmin} element={<LayoutAdmin roleId={roleId} toast={toast} />}>
-                    <Route path={path.LayoutAdminRevenue} element={<Revenue />} />
+                    <Route path={path.LayoutAdminStatistic} element={<Statistic />} />
                     <Route path={path.LayoutAdminDSDP} element={<ListProduct />} />
                     <Route path={path.LayoutAdminAdd} element={<AddProduct />} />
                     <Route path={path.LayoutAdminEdit} element={<EditProduct />} />

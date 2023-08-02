@@ -3,12 +3,12 @@ import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, spring } from 'framer-motion';
-import styles from './Revenue.module.scss';
+import styles from './Statistic.module.scss';
 import { fetchUser } from '../../../services/UseServices';
 import Pagination from '../../Pagination/Pagination';
 import Loading from '../../Loading/Loading';
 
-function Revenue(props) {
+function Statistic(props) {
     const { indexOfLastProduct, indeOfFirstProduct, productPerPage, pagination, isActive, handleNext, handlePrevious } =
         props;
 
@@ -63,7 +63,6 @@ function Revenue(props) {
     for (let i = 0; i < orderDetail.length; i++) {
         total += orderDetail[i].donGia;
     }
-
     return (
         <div className={clsx(styles.revenue)}>
             <div className={clsx(styles.revenue_header)}>
@@ -248,4 +247,4 @@ function Revenue(props) {
     );
 }
 
-export default Revenue;
+export default Statistic;
