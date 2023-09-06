@@ -16,7 +16,7 @@ function ProductDetails(props) {
     const { onAdd, count, handleProductreduction, handleIncreaseProduct, toast } = props;
     let { id } = useParams();
     const [product, setProduct] = useState([]);
-    // const [countRating, setCountRating] = useState([]);
+    const [ratings, setRatings] = useState([]);
     const [similarProduct, setSimilarProduct] = useState([]);
     const [starID, setStarId] = useState('');
     const [rating, setRating] = useState(false);
@@ -81,7 +81,7 @@ function ProductDetails(props) {
 
     useEffect(() => {
         getUsers(id);
-        // getRating(id);
+        getRating();
     }, [id, rating]);
 
     useEffect(() => {
@@ -95,44 +95,36 @@ function ProductDetails(props) {
         setTimeout(() => setProduct(res.data), 1000);
     };
 
-    // const getRating = async (id) => {
-    //     let res = await fetchUser(`/products/${id}/getRating`);
-    //     setCountRating(res.data);
-    //     // await axios
-    //     //     .get(`http://localhost:8080/products/${id}/getRating`, {
-    //     //         numberRating: 5,
-    //     //     })
-    //     //     .then((res) => {
-    //     //         setCountRating(res.data);
-    //     //     })
-    //     //     .catch((err) => {
-    //     //         console.log(err);
-    //     //     });
-    // };
-
-    // console.log(countRating);
+    const getRating = async () => {
+        let res = await fetchUser(`/products/${JSON.parse(localStorage.account).id}/getRating`);
+        setTimeout(() => setRatings(res.data), 1000);
+    };
 
     const getSimilarProduct = async (smlproduct) => {
-        let res = await fetchUser(`/products/${smlproduct.loaiSp}/ProductType`);
+        let res = await fetchUser(`/products/${smlproduct.producttypeId}/ProductType`);
         setSimilarProduct(res.data);
     };
 
     const handleSubmitEvaluate = (e) => {
         e.preventDefault();
         if (localStorage.length !== 0) {
-            axios
-                .put(`http://localhost:8080/products/${id}/rating`, {
-                    userId: localStorage.Id,
-                    productId: id,
-                    numberRating: starID,
-                })
-                .then((res) => {
-                    toast.success('Đánh giá thành công !');
-                    setRating(!rating);
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
+            if (JSON.parse(localStorage.account).roleId === 1) {
+                axios
+                    .put(`http://localhost:8080/products/${id}/rating`, {
+                        userId: JSON.parse(localStorage.account).id,
+                        productId: id,
+                        numberRating: starID,
+                    })
+                    .then((res) => {
+                        toast.success('Đánh giá thành công !');
+                        setRating(!rating);
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
+            } else {
+                toast.warn('Tài khoản này không thể đánh giá !');
+            }
         } else {
             navigate('/Login');
         }
@@ -153,11 +145,15 @@ function ProductDetails(props) {
     // purchase products
     const handlePurchaseProduct = (product) => {
         if (localStorage.length !== 0) {
-            if (product.soLuong === 0) {
-                toast.error('Sản phẩm đã hết hàng !');
+            if (JSON.parse(localStorage.account).roleId === 1) {
+                if (product.soLuong === 0) {
+                    toast.error('Sản phẩm đã hết hàng !');
+                } else {
+                    onAdd(product);
+                    navigate('/giohang');
+                }
             } else {
-                onAdd(product);
-                navigate('/giohang');
+                toast.warn('Tài khoản này không thể mua hàng !');
             }
         } else {
             navigate('/Login');
@@ -387,16 +383,6 @@ function ProductDetails(props) {
                                         </div>
                                     </div>
                                 </div>
-                                {/* <div className={clsx(styles.describe_resultstar)}>
-                                    {stars.map((star) => {
-                                        return (
-                                            <div
-                                                key={star.id}
-                                                className={clsx(`${star.class}`, styles.describe_resultStar)}
-                                            ></div>
-                                        );
-                                    })}
-                                </div> */}
 
                                 <p>
                                     Đánh giá của bạn <span>*</span>
@@ -416,7 +402,17 @@ function ProductDetails(props) {
                                                         styles.describe__star,
                                                         `${star.class}`,
                                                         'star',
-                                                        starID === star.id ? 'active' : ' ',
+                                                        starID
+                                                            ? starID === star.id
+                                                                ? 'active'
+                                                                : ' '
+                                                            : ratings.map((rating) => {
+                                                                  return product.ID === rating.productId
+                                                                      ? rating.numberRating === star.id
+                                                                          ? 'active'
+                                                                          : ''
+                                                                      : '';
+                                                              }),
                                                     )}
                                                     onClick={() => handleStar(star.id)}
                                                 ></div>
@@ -444,7 +440,7 @@ function ProductDetails(props) {
                                 <div className={clsx(styles.inner_slider)}>
                                     <Slider {...settings1}>
                                         {similarProduct.map((smlProduct) => {
-                                            return <Product key={smlProduct._id} product={smlProduct} />;
+                                            return <Product key={smlProduct.ID} product={smlProduct} />;
                                         })}
                                     </Slider>
                                 </div>

@@ -48,26 +48,31 @@ function EditProduct(props) {
     };
 
     const handleEdit = async (e) => {
-        e.preventDefault();
-        setShow(!show);
-        axios
-            .put(`http://localhost:8080/products/${id}/edit`, {
-                tenSp: tenSp,
-                chatLieu: chatLieu,
-                giaBan: gBan,
-                giaNhap: gnhap,
-                giamGia: giamGia,
-                kichThuoc: kichThuoc,
-                image: Image.name,
-                loaiSp: loaiSp,
-            })
-            .then((res) => {
-                setTimeout(() => navigate('/admin/DSSP'), 1000);
-                toast.success('Sửa sản phẩm thành công ');
-            })
-            .catch((err) => {
-                toast.error(err);
-            });
+        if (localStorage.RoleId === 3) {
+            e.preventDefault();
+            setShow(!show);
+            axios
+                .put(`http://localhost:8080/products/${id}/edit`, {
+                    tenSp: tenSp,
+                    chatLieu: chatLieu,
+                    giaBan: gBan,
+                    giaNhap: gnhap,
+                    giamGia: giamGia,
+                    kichThuoc: kichThuoc,
+                    image: Image.name,
+                    loaiSp: loaiSp,
+                })
+                .then((res) => {
+                    setTimeout(() => navigate('/admin/DSSP'), 1000);
+                    toast.success('Sửa sản phẩm thành công ');
+                })
+                .catch((err) => {
+                    toast.error(err);
+                });
+        } else {
+            setShow(!show);
+            toast.warn('Bạn không có quyền sửa sản phẩm');
+        }
     };
 
     const handleModal = (e) => {

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 import '../Views/App.css';
 import Header from '../Component/Header/Header';
@@ -14,12 +14,17 @@ import { toast } from 'react-toastify';
 import ProductDetails from '../Component/ProductDetails/ProductDetails.js';
 import path from '../Component/Ultis/Path';
 import { fetchUser } from '../services/UseServices';
+import OrderAll from '../Component/PurchaseOrder/OrderAll/OrderAll';
+import LayoutOrder from './LayoutOrder';
+import WaitConfirm from '../Component/PurchaseOrder/WaitConfirm/WaitConfirm';
+import Finish from '../Component/PurchaseOrder/Finish/Finish';
+import Deliver from '../Component/PurchaseOrder/Deliver/Deliver';
+import Cancel from '../Component/PurchaseOrder/Cancel/Cancel';
+import Profile from '../Component/Profile/Profile';
 
 function Layout(props) {
     const { roleId } = props;
     const [cartItems, setCartItems] = useState([]);
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [productPerPage] = useState(12);
     const [isActive, setIsActive] = useState(1);
@@ -29,6 +34,7 @@ function Layout(props) {
     const [allSp, setAllSp] = useState(true);
     //api
     const [name, setName] = useState([]);
+    const navigate = useNavigate();
     useEffect(() => {
         getUsers();
     }, []);
@@ -40,45 +46,55 @@ function Layout(props) {
     };
 
     const onAdd = (product) => {
+        console.log(product);
+
         if (product.soLuong === 0) {
             toast.error('Sản phẩm đã hết hàng !');
         } else {
-            const exist = cartItems.find((cartItem) => {
-                return cartItem.id === product.id;
-            });
+            if (localStorage.length !== 0) {
+                if (JSON.parse(localStorage.account).roleId === 1) {
+                    const exist = cartItems.find((cartItem) => {
+                        return cartItem.ID === product.ID;
+                    });
 
-            if (exist) {
-                setCartItems(
-                    cartItems.map((cartItem) =>
-                        cartItem.id === product.id
-                            ? {
-                                  ...exist,
-                                  qty: count + cartItem.qty,
-                                  total:
-                                      (count + cartItem.qty) *
-                                      parseFloat(cartItem.giaBan - (cartItem.giaBan * cartItem.giamGia) / 100),
-                              }
-                            : cartItem,
-                    ),
-                );
-                toast.success('Thêm sản phẩm thành công !');
+                    if (exist) {
+                        setCartItems(
+                            cartItems.map((cartItem) =>
+                                cartItem.ID === product.ID
+                                    ? {
+                                          ...exist,
+                                          qty: count + cartItem.qty,
+                                          total:
+                                              (count + cartItem.qty) *
+                                              parseFloat(cartItem.giaBan - (cartItem.giaBan * cartItem.giamGia) / 100),
+                                      }
+                                    : cartItem,
+                            ),
+                        );
+                        toast.success('Thêm sản phẩm thành công !');
+                    } else {
+                        setCartItems([
+                            ...cartItems,
+                            {
+                                ...product,
+                                qty: count,
+                                total: count * parseFloat(product.giaBan - (product.giaBan * product.giamGia) / 100),
+                            },
+                        ]);
+                        toast.success('Thêm sản phẩm thành công !');
+                    }
+                    setCount(1);
+                } else {
+                    toast.warn('Tài khoản này không thể mua hàng !');
+                }
             } else {
-                setCartItems([
-                    ...cartItems,
-                    {
-                        ...product,
-                        qty: count,
-                        total: count * parseFloat(product.giaBan - (product.giaBan * product.giamGia) / 100),
-                    },
-                ]);
-                toast.success('Thêm sản phẩm thành công !');
+                navigate('/Login');
             }
-            setCount(1);
         }
     };
 
     const onDelete = (product) => {
-        setCartItems(cartItems.filter((cartItem) => cartItem.id !== product.id));
+        setCartItems(cartItems.filter((cartItem) => cartItem.ID !== product.ID));
         toast.success('Xóa sản phẩm thành công !');
     };
 
@@ -141,10 +157,6 @@ function Layout(props) {
             <Header
                 cartItems={cartItems}
                 toast={toast}
-                email={email}
-                password={password}
-                setEmail={setEmail}
-                setPassword={setPassword}
                 HandleOnSubmit={HandleOnSubmit}
                 handleKeyPress={handleKeyPress}
                 searchQuery={searchQuery}
@@ -171,10 +183,70 @@ function Layout(props) {
                         />
                     }
                 />
-                <Route path={path.LivingRoom} element={<LivingRoom onAdd={onAdd} />} />
-                <Route path={path.Kitchen} element={<Kitchen onAdd={onAdd} />} />
-                <Route path={path.WorkRoom} element={<WorkRoom onAdd={onAdd} />} />
-                <Route path={path.Bedroom} element={<Bedroom onAdd={onAdd} />} />
+                <Route
+                    path={path.LivingRoom}
+                    element={
+                        <LivingRoom
+                            onAdd={onAdd}
+                            productPerPage={productPerPage}
+                            indexOfLastProduct={indexOfLastProduct}
+                            indeOfFirstProduct={indeOfFirstProduct}
+                            pagination={pagination}
+                            isActive={isActive}
+                            handleNext={handleNext}
+                            handlePrevious={handlePrevious}
+                            toast={toast}
+                        />
+                    }
+                />
+                <Route
+                    path={path.Kitchen}
+                    element={
+                        <Kitchen
+                            onAdd={onAdd}
+                            productPerPage={productPerPage}
+                            indexOfLastProduct={indexOfLastProduct}
+                            indeOfFirstProduct={indeOfFirstProduct}
+                            pagination={pagination}
+                            isActive={isActive}
+                            handleNext={handleNext}
+                            handlePrevious={handlePrevious}
+                            toast={toast}
+                        />
+                    }
+                />
+                <Route
+                    path={path.WorkRoom}
+                    element={
+                        <WorkRoom
+                            onAdd={onAdd}
+                            productPerPage={productPerPage}
+                            indexOfLastProduct={indexOfLastProduct}
+                            indeOfFirstProduct={indeOfFirstProduct}
+                            pagination={pagination}
+                            isActive={isActive}
+                            handleNext={handleNext}
+                            handlePrevious={handlePrevious}
+                            toast={toast}
+                        />
+                    }
+                />
+                <Route
+                    path={path.Bedroom}
+                    element={
+                        <Bedroom
+                            onAdd={onAdd}
+                            productPerPage={productPerPage}
+                            indexOfLastProduct={indexOfLastProduct}
+                            indeOfFirstProduct={indeOfFirstProduct}
+                            pagination={pagination}
+                            isActive={isActive}
+                            handleNext={handleNext}
+                            handlePrevious={handlePrevious}
+                            toast={toast}
+                        />
+                    }
+                />
                 <Route
                     path={path.Cart}
                     element={
@@ -200,6 +272,15 @@ function Layout(props) {
                         />
                     }
                 />
+                <Route path={path.LayoutOrder} element={<LayoutOrder onAdd={onAdd} toast={toast} />}>
+                    <Route path={path.LayoutOrderAll} element={<OrderAll toast={toast} />} />
+                    <Route path={path.LayoutOrderWaitConfirm} element={<WaitConfirm />} />
+                    <Route path={path.LayoutOrderFinish} element={<Finish />} />
+                    <Route path={path.LayoutOrderDeliver} element={<Deliver />} />
+                    <Route path={path.LayoutOrderCancel} element={<Cancel />} />
+                </Route>
+
+                <Route path={path.LayoutProfile} element={<Profile toast={toast} />} />
             </Routes>
             <Footer />
         </div>

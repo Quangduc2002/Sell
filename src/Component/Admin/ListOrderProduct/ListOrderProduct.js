@@ -73,7 +73,7 @@ function ListOrderProduct(props) {
         axios
             .post('http://localhost:8080/order/Email', {
                 orderProduct: orderProduct,
-                trangThaiDH: true,
+                trangThaiDH: 1,
             })
             .then((res) => {
                 setStatus(true);
@@ -188,7 +188,6 @@ function ListOrderProduct(props) {
                             <tbody>
                                 {currentUserSearch.length === 0
                                     ? currentListOrder.map((order) => {
-                                          console.log(order);
                                           return (
                                               <tr key={order.ID}>
                                                   <td>MDH{order.ID}</td>
@@ -201,13 +200,15 @@ function ListOrderProduct(props) {
                                                           <button className={clsx(styles.table_confirmed)}>
                                                               Đã xác nhận
                                                           </button>
-                                                      ) : (
+                                                      ) : order.trangThaiDH === 0 ? (
                                                           <button
                                                               className={clsx(styles.table_status)}
                                                               onClick={() => handleSendEmail(order)}
                                                           >
                                                               Xác nhận đơn hàng
                                                           </button>
+                                                      ) : (
+                                                          <button className={clsx(styles.table_cancel)}>Đã hủy</button>
                                                       )}
                                                   </td>
                                               </tr>
@@ -226,13 +227,15 @@ function ListOrderProduct(props) {
                                                           <button className={clsx(styles.table_confirmed)}>
                                                               Đã xác nhận
                                                           </button>
-                                                      ) : (
+                                                      ) : order.trangThaiDH === 0 ? (
                                                           <button
                                                               className={clsx(styles.table_status)}
                                                               onClick={() => handleSendEmail(order)}
                                                           >
                                                               Xác nhận đơn hàng
                                                           </button>
+                                                      ) : (
+                                                          <button className={clsx(styles.table_cancel)}>Đã hủy</button>
                                                       )}
                                                   </td>
                                               </tr>

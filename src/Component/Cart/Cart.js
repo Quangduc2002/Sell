@@ -68,7 +68,8 @@ function Cart(props) {
                         email: email,
                         phuongThucTT: thanhToan,
                         note: note,
-                        trangThaiDH: false,
+                        trangThaiDH: 0,
+                        maKH: localStorage.Id,
                     })
                     .then((res) => {
                         toast.success('Mua sản phẩm thành công ');
@@ -128,7 +129,7 @@ function Cart(props) {
                                 </tr>
                                 {cartItems.map((item) => {
                                     return (
-                                        <tr key={item._id}>
+                                        <tr key={item.ID}>
                                             <td>
                                                 <img
                                                     className={clsx(styles.image)}
@@ -146,12 +147,11 @@ function Cart(props) {
                                                     ''
                                                 ) : (
                                                     <p className={clsx(styles.quantity)}>
-                                                        total: {VND.format(item.total)}{' '}
+                                                        total: {VND.format(item.total)}
                                                     </p>
                                                 )}
                                             </td>
                                             <td className={clsx(styles.price)}>
-                                                {' '}
                                                 {VND.format(item.giaBan - (item.giaBan * item.giamGia) / 100)}
                                             </td>
                                             <td style={{ textAlign: 'center' }} className={clsx(styles.price)}>

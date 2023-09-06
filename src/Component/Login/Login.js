@@ -6,7 +6,7 @@ import styles from '../Login/Login.module.scss';
 
 function Login(props) {
     const [check, setCheck] = useState(false);
-    const { toast, setRoleId } = props;
+    const { toast } = props;
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [registerEmail, setRegisterEmail] = useState('');
@@ -249,25 +249,23 @@ function Login(props) {
         if (validateForm()) {
             axios
                 .post('http://localhost:8080/user/login', {
-                    // Email: email,
-                    // PassWord: password,
                     email: email,
                     password: password,
                 })
                 .then((res) => {
-                    console.log(res.data);
-                    // if (res.data.user.RoleId === '0') {
-                    if (res.data.user.roleId === 0) {
+                    if (res.data.user.roleId === 1) {
+                        navigate('/');
+                        toast.success('Đăng nhập thành công !');
+                    } else if (res.data.user.roleId === 2) {
                         navigate('/admin/Revenue');
                         toast.success('Đăng nhập thành công !');
-                    } else {
-                        navigate('/');
+                    } else if (res.data.user.roleId === 3) {
+                        navigate('/admin/Revenue');
                         toast.success('Đăng nhập thành công !');
                     }
                     //lấy tên người dùng
-                    setRoleId(res.data.user.RoleId);
-                    localStorage.setItem('Id', res.data.user.id);
-                    localStorage.setItem('Name', res.data.user.name);
+
+                    localStorage.setItem('account', JSON.stringify(res.data.user));
                 })
                 .catch((err) => {
                     toast.error('Tài khoản hoặc mật khẩu không chính xác !');
@@ -284,7 +282,10 @@ function Login(props) {
                     password: registerPassword,
                     name: surname + ' ' + name,
                     roleId: '1',
-                    ngaySinh: Day + '/' + Month + '/' + Year,
+                    ngaySinh: Day,
+                    thangSinh: Month,
+                    namSinh: Year,
+                    image: 'avt-default.jpg',
                 })
                 .then((res) => {
                     toast.success('Đăng kí thành công !');
@@ -297,8 +298,17 @@ function Login(props) {
                     setYear('');
                 })
                 .catch((err) => {
-                    toast.error('Đăng kí không thành công !');
+                    if (err.response.data.errCode === 1) {
+                        toast.error(err.response.data.message);
+                    }
                 });
+        }
+    };
+
+    const handlePressEnter = (event) => {
+        // event.preventDefault();
+        if (event.key === 'Enter') {
+            handleSubmit();
         }
     };
 
@@ -318,7 +328,7 @@ function Login(props) {
                                 value={email}
                                 type="text"
                                 name="email"
-                                className={clsx(styles.auth_input)}
+                                className={clsx(styles.auth_input, formErrors.email ? styles.auth_isValid : '')}
                                 placeholder="Nhập Email"
                                 onChange={(e) => setEmail(e.target.value)}
                             />
@@ -332,9 +342,10 @@ function Login(props) {
                                     value={password}
                                     type={check === true ? 'text' : 'password'}
                                     name="password"
-                                    className={clsx(styles.auth_input)}
+                                    className={clsx(styles.auth_input, formErrors.password ? styles.auth_isValid : '')}
                                     placeholder="Nhập mật khẩu"
                                     onChange={(e) => setPassword(e.target.value)}
+                                    onKeyPress={handlePressEnter}
                                 />
                                 <i
                                     onClick={() => {
@@ -354,15 +365,16 @@ function Login(props) {
                             </div>
                         </div>
                         <div className={clsx(styles.form_controls, styles.form_controls1)}>
-                            <Link className={clsx(styles.form_btn__link)} to="/">
-                                <button className={clsx(styles.form_btn)}>TRỞ LẠI</button>
-                            </Link>
                             <button
                                 onClick={(e) => handleSubmit(e)}
                                 className={clsx(styles.form_btn, styles.form_primary)}
                             >
                                 ĐĂNG NHẬP
                             </button>
+
+                            <Link className={clsx(styles.form_btn__link)} to="/">
+                                <button className={clsx(styles.form_btn)}>TRỞ LẠI</button>
+                            </Link>
                         </div>
                         <div className={clsx(styles.form_controls2)}>
                             <p className={clsx(styles.controls2_p)}>Quên mật khẩu</p>
@@ -384,14 +396,22 @@ function Login(props) {
                                 <input
                                     value={surname}
                                     type="text"
-                                    className={clsx(styles.auth_input, styles.auth_name)}
+                                    className={clsx(
+                                        styles.auth_input,
+                                        styles.auth_name,
+                                        formErrors.registerName ? styles.auth_isValid : '',
+                                    )}
                                     placeholder="Nhập Họ"
                                     onChange={(e) => setSurname(e.target.value)}
                                 />
                                 <input
                                     value={name}
                                     type="text"
-                                    className={clsx(styles.auth_input, styles.auth_name)}
+                                    className={clsx(
+                                        styles.auth_input,
+                                        styles.auth_name,
+                                        formErrors.registerName ? styles.auth_isValid : '',
+                                    )}
                                     placeholder="Nhập Tên"
                                     onChange={(e) => setName(e.target.value)}
                                 />
@@ -409,7 +429,7 @@ function Login(props) {
                                 value={registerEmail}
                                 type="text"
                                 name="email"
-                                className={clsx(styles.auth_input)}
+                                className={clsx(styles.auth_input, formErrors.registerEmail ? styles.auth_isValid : '')}
                                 placeholder="Nhập Email"
                                 onChange={(e) => setRegisterEmail(e.target.value)}
                             />
@@ -426,7 +446,10 @@ function Login(props) {
                                     value={registerPassword}
                                     type={check === true ? 'text' : 'password'}
                                     name="password"
-                                    className={clsx(styles.auth_input)}
+                                    className={clsx(
+                                        styles.auth_input,
+                                        formErrors.registerPassword ? styles.auth_isValid : '',
+                                    )}
                                     placeholder="Nhập mật khẩu"
                                     onChange={(e) => setRegisterPassword(e.target.value)}
                                 />
@@ -451,7 +474,11 @@ function Login(props) {
                         <div className={clsx(styles.auth_froup)}>
                             <p className={clsx(styles.auth_froup_p)}>Ngày sinh</p>
                             <div className={clsx(styles.auth_froup_date)}>
-                                <select value={Day} onChange={(e) => setDay(e.target.value)}>
+                                <select
+                                    className={clsx(formErrors.registerNS ? styles.auth_isValid : '')}
+                                    value={Day}
+                                    onChange={(e) => setDay(e.target.value)}
+                                >
                                     <option style={{ display: 'none' }}>{curDay}</option>
                                     {Days.map((day, index) => {
                                         return (
@@ -462,7 +489,11 @@ function Login(props) {
                                     })}
                                 </select>
 
-                                <select value={Month} onChange={(e) => setMonth(e.target.value)}>
+                                <select
+                                    className={clsx(formErrors.registerNS ? styles.auth_isValid : '')}
+                                    value={Month}
+                                    onChange={(e) => setMonth(e.target.value)}
+                                >
                                     <option style={{ display: 'none' }}>Tháng {curMonth}</option>
                                     {Months.map((month) => {
                                         return (
@@ -473,7 +504,11 @@ function Login(props) {
                                     })}
                                 </select>
 
-                                <select value={Year} onChange={(e) => setYear(e.target.value)}>
+                                <select
+                                    className={clsx(formErrors.registerNS ? styles.auth_isValid : '')}
+                                    value={Year}
+                                    onChange={(e) => setYear(e.target.value)}
+                                >
                                     <option style={{ display: 'none' }}>{curYear}</option>
                                     {Years.map((year) => {
                                         return (

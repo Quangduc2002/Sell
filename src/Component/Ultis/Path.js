@@ -11,10 +11,21 @@ const path = {
     LayoutAdminDSDP: 'DSSP',
     LayoutAdminStatistic: 'Revenue',
     LayoutAdminAdd: 'ThemSp',
+    LayoutAdminTrash: 'Trash',
     LayoutAdminCustomers: 'Customer',
     LayoutAdminListOrders: 'ListOrders',
     LayoutAdminOrderDetails: 'OrderDetails',
     LayoutAdminEdit: 'DSSP/products/:id/edit',
+
+    // Order
+    LayoutOrder: '/order',
+    LayoutOrderAll: 'all',
+    LayoutOrderWaitConfirm: 'waitconfirm',
+    LayoutOrderDeliver: 'deliver',
+    LayoutOrderFinish: 'finish',
+    LayoutOrderCancel: 'cancel',
+    // Profile
+    LayoutProfile: '/Profile',
     Login: '/Login',
 };
 

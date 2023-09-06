@@ -1,15 +1,18 @@
 import React, { useRef, useState } from 'react';
 import clsx from 'clsx';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import styles from '../Header/Header.module.scss';
 import LogoTT from '../../assets/Image/Logo.png';
 import Phone from '../../assets/Image/telephone.png';
+import path from '../Ultis/Path';
 
 function Header(props) {
     const { cartItems, handleKeyPress, searchQuery, setSearchQuery, filteredItems, HandleOnSubmit, roleId, toast } =
         props;
     const [show, setShow] = useState(false);
     const [show2, setShow2] = useState(false);
+    const [showPage, setShowPage] = useState(false);
+    const navigate = useNavigate();
     const search = useRef();
 
     const links = [
@@ -21,9 +24,16 @@ function Header(props) {
     ];
 
     const handleLogout = () => {
-        localStorage.removeItem('Id');
-        localStorage.removeItem('Name');
+        // localStorage.removeItem('Id');
+        // localStorage.removeItem('Name');
+        // localStorage.removeItem('RoleId');
+        // localStorage.removeItem('Image');
+        localStorage.removeItem('account');
+        sessionStorage.removeItem('account');
+
         setShow(false);
+        setShow2(false);
+        navigate('/');
         toast.success('Đăng xuất thành công !');
     };
 
@@ -57,16 +67,49 @@ function Header(props) {
                                             setShow(!show);
                                         }}
                                     >
-                                        {localStorage.Name}
+                                        {JSON.parse(localStorage.account).name}
                                         <i style={{ marginLeft: 6 }} className="fa-sharp fa-solid fa-caret-down"></i>
                                     </span>
                                 )}
                                 {show && (
                                     <div className={clsx(styles.wrapper1_user)}>
-                                        <p>Hồ sơ cá nhân</p>
-                                        <Link onClick={handleLogout} style={{ textDecoration: 'none', color: '#000' }}>
-                                            <p>Đăng xuất</p>
-                                        </Link>
+                                        {JSON.parse(localStorage.account).roleId !== 1 ? (
+                                            <Link
+                                                to={`admin/${path.LayoutAdminStatistic}`}
+                                                className={clsx(styles.wrapper1_menu)}
+                                            >
+                                                <i className="fa-solid fa-gear"></i>
+                                                <p>Quản lý sản phẩm</p>
+                                            </Link>
+                                        ) : (
+                                            ''
+                                        )}
+                                        <NavLink
+                                            className={clsx(styles.wrapper1_menu)}
+                                            to={`${path.LayoutProfile}`}
+                                            onClick={() => setShow(!show)}
+                                        >
+                                            <i className="fa-solid fa-user"></i>
+                                            <p>Hồ sơ cá nhân</p>
+                                        </NavLink>
+
+                                        {JSON.parse(localStorage.account).roleId === 1 ? (
+                                            <NavLink
+                                                className={clsx(styles.wrapper1_menu)}
+                                                to={`/order/${path.LayoutOrderAll}`}
+                                                onClick={() => setShow(!show)}
+                                            >
+                                                <i className="fa-solid fa-clipboard"></i>
+                                                <p>Đơn mua</p>
+                                            </NavLink>
+                                        ) : (
+                                            ''
+                                        )}
+
+                                        <div className={clsx(styles.wrapper1_menu)}>
+                                            <i className="fa-solid fa-right-from-bracket"></i>
+                                            <p onClick={handleLogout}>Đăng xuất</p>
+                                        </div>
                                     </div>
                                 )}
                             </li>
@@ -122,7 +165,7 @@ function Header(props) {
                                         <li
                                             key={index}
                                             onClick={() => {
-                                                setSearchQuery(product.TenSp);
+                                                setSearchQuery(product.tenSp);
                                                 search.current.focus();
                                             }}
                                         >
@@ -131,7 +174,7 @@ function Header(props) {
                                                     style={{ marginRight: 16, color: '#555' }}
                                                     className="fa-solid fa-magnifying-glass"
                                                 ></i>
-                                                {product.TenSp}
+                                                {product.tenSp}
                                             </div>
                                         </li>
                                     ))}
@@ -185,24 +228,83 @@ function Header(props) {
                     <div className={clsx(styles.wrapper3)}>
                         <ul>
                             <li>
-                                <i onClick={() => setShow2(!show2)} className="fa-solid fa-xmark"></i>
+                                <i
+                                    onClick={() => setShow2(!show2)}
+                                    className={clsx(styles.xmark, 'fa-solid fa-xmark')}
+                                ></i>
                                 <img alt="" src={LogoTT} />
                             </li>
-                            {links.map((link, index) => {
-                                return (
-                                    <li key={link.path}>
-                                        <NavLink
-                                            onClick={() => setShow2(!show2)}
-                                            key={link.path}
-                                            className={clsx(styles.wrapper3_link)}
-                                            to={link.path}
-                                        >
-                                            <span>{link.title}</span>
-                                        </NavLink>
-                                    </li>
-                                );
-                            })}
+
+                            <div>
+                                <li
+                                    onClick={() => setShowPage(!showPage)}
+                                    className={clsx(styles.wrapper3_link, styles.wrapper3_page)}
+                                >
+                                    <div className={clsx(styles.wrapper3_page1)}>
+                                        <i className={clsx(styles.image, 'fa-solid fa-image')}></i>
+                                        <span>Trang</span>
+                                    </div>
+                                    <i
+                                        className={clsx(
+                                            styles.chevronDown,
+                                            showPage ? styles.activeRotate : '',
+                                            'fa-solid fa-chevron-down',
+                                        )}
+                                    ></i>
+                                </li>
+                                {showPage && (
+                                    <ul>
+                                        {links.map((link, index) => {
+                                            return (
+                                                <li key={link.path}>
+                                                    <NavLink
+                                                        onClick={() => setShow2(!show2)}
+                                                        key={link.path}
+                                                        className={clsx(styles.wrapper3_link)}
+                                                        to={link.path}
+                                                    >
+                                                        <span>{link.title}</span>
+                                                    </NavLink>
+                                                </li>
+                                            );
+                                        })}
+
+                                        {localStorage.length !== 0 ? (
+                                            <li>
+                                                {JSON.parse(localStorage.account).roleId !== 1 ? (
+                                                    <Link
+                                                        to={`admin/${path.LayoutAdminStatistic}`}
+                                                        style={{ textDecoration: 'none' }}
+                                                        className={clsx(styles.wrapper3_link)}
+                                                    >
+                                                        <li>Quản lý sản phẩm</li>
+                                                    </Link>
+                                                ) : (
+                                                    ''
+                                                )}
+
+                                                <Link className={clsx(styles.wrapper3_link)}>Hồ sơ cá nhân</Link>
+                                            </li>
+                                        ) : (
+                                            ''
+                                        )}
+                                    </ul>
+                                )}
+                            </div>
+
+                            <div className={clsx(styles.wrapper3_btn)}>
+                                {localStorage.length === 0 ? (
+                                    <Link to="/Login" style={{ textDecoration: 'none', color: '#000' }}>
+                                        <button className={clsx(styles.wrapper3__btn)}>Đăng nhập</button>
+                                    </Link>
+                                ) : (
+                                    <button className={clsx(styles.wrapper3__btn)} onClick={handleLogout}>
+                                        Đăng xuất
+                                    </button>
+                                )}
+                            </div>
                         </ul>
+
                         <NavLink to="/giohang" className={clsx(styles.cart)}>
                             <>
                                 <span>Giỏ hàng</span>

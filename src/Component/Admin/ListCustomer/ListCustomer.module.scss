@@ -104,6 +104,21 @@ th {
         justify-content: space-between;
     }
 
+    &_user {
+        color: #fff;
+        background-color: #ee4d2d;
+        border-radius: 4px;
+        cursor: pointer;
+        padding: 10px;
+        border: none;
+        min-width: 160px;
+
+        &:hover {
+            transition: all 0.3s linear;
+            background-color: #c52432;
+        }
+    }
+
     &_add {
         display: flex;
         align-items: center;

@@ -107,6 +107,20 @@
         padding: 4px;
     }
 
+    &_cancel {
+        min-width: 110px;
+        display: flex;
+        border: none;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        color: #fff;
+        background-color: #ee4d2d;
+        border-radius: 4px;
+        padding: 4px;
+        opacity: 0.6;
+    }
+
     &_confirmed {
         display: flex;
         justify-content: center;

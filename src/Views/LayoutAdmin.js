@@ -6,10 +6,11 @@ import AddProduct from '../Component/Admin/AddProduct/AddProduct';
 import EditProduct from '../Component/Admin/EditProduct/EditProduct';
 import Sidebar from '../Component/Admin/Sidebar/Sidebar';
 import ListCustomer from '../Component/Admin/ListCustomer/ListCustomer';
-import './Admin.css';
 import ListOrderProduct from '../Component/Admin/ListOrderProduct/ListOrderProduct';
 import OrderDetail from '../Component/Admin/OrderDetail/OrderDetail';
 import Statistic from '../Component/Admin/Statistic/Statistic';
+import './Admin.css';
+import Trash from '../Component/Admin/Trash/Trash';
 
 function LayoutAdmin(props) {
     const { toast } = props;
@@ -75,6 +76,21 @@ function LayoutAdmin(props) {
                 />
                 <Route path={path.LayoutAdminAdd} element={<AddProduct toast={toast} />} />
                 <Route path={path.LayoutAdminEdit} element={<EditProduct toast={toast} />} />
+                <Route
+                    path={path.LayoutAdminTrash}
+                    element={
+                        <Trash
+                            productPerPage={productPerPage}
+                            indexOfLastProduct={indexOfLastProduct}
+                            indeOfFirstProduct={indeOfFirstProduct}
+                            pagination={pagination}
+                            isActive={isActive}
+                            handleNext={handleNext}
+                            handlePrevious={handlePrevious}
+                            toast={toast}
+                        />
+                    }
+                />
                 <Route
                     path={path.LayoutAdminCustomers}
                     element={

@@ -7,6 +7,7 @@ import styles from './Statistic.module.scss';
 import { fetchUser } from '../../../services/UseServices';
 import Pagination from '../../Pagination/Pagination';
 import Loading from '../../Loading/Loading';
+import CountUp from 'react-countup';
 
 function Statistic(props) {
     const { indexOfLastProduct, indeOfFirstProduct, productPerPage, pagination, isActive, handleNext, handlePrevious } =
@@ -22,7 +23,6 @@ function Statistic(props) {
     const [incomes, setIncomes] = useState([]);
     const [orderDetail, setOrderDetail] = useState([]);
     const [show, setShow] = useState(false);
-    let income = 0;
 
     useEffect(() => {
         getOrder();
@@ -32,24 +32,18 @@ function Statistic(props) {
 
     const getOrder = async () => {
         let res = await fetchUser('/order/listOrder');
-        setTimeout(() => setListOrder(res.data), 1000);
+        setTimeout(() => setListOrder(res.data), 500);
     };
 
     const getBill = async () => {
         let res = await fetchUser('/order/bill');
-        setTimeout(() => setBill(res.data), 1000);
+        setTimeout(() => setBill(res.data), 500);
     };
 
     const getIncome = async () => {
         let res = await fetchUser('/order/income');
-        setTimeout(() => setIncomes(res.data), 1000);
+        setTimeout(() => setIncomes(res.data), 500);
     };
-
-    for (let i = 0; i < incomes.length; i++) {
-        for (let j = 0; j < incomes[i].length; j++) {
-            income += incomes[i][j].donGia;
-        }
-    }
 
     const currentListOrder = listOrder.slice(indeOfFirstProduct, indexOfLastProduct);
 
@@ -63,6 +57,13 @@ function Statistic(props) {
     for (let i = 0; i < orderDetail.length; i++) {
         total += orderDetail[i].donGia;
     }
+
+    // thống kê tổng tiền
+    let income = 0;
+    for (let i = 0; i < incomes.length; i++) {
+        income += incomes[i].orderitems.donGia;
+    }
+
     return (
         <div className={clsx(styles.revenue)}>
             <div className={clsx(styles.revenue_header)}>
@@ -90,7 +91,12 @@ function Statistic(props) {
                         <div className={clsx(styles.revenue_card__body)}>
                             <div>
                                 <p className={clsx(styles.revenue_card__title)}>Thu nhập</p>
-                                <p className={clsx(styles.revenue_card__number)}>{VND.format(income)} </p>
+                                <CountUp
+                                    start={0}
+                                    end={income}
+                                    suffix=" VND"
+                                    className={clsx(styles.revenue_card__number)}
+                                ></CountUp>
                             </div>
                             <div>
                                 <i className="fa-solid fa-calendar" style={{ color: '#6777ef' }}></i>
@@ -100,7 +106,11 @@ function Statistic(props) {
                         <div className={clsx(styles.revenue_card__body)}>
                             <div>
                                 <p className={clsx(styles.revenue_card__title)}>Bán hàng</p>
-                                <p className={clsx(styles.revenue_card__number)}>{bill.length}</p>
+                                <CountUp
+                                    start={0}
+                                    end={bill.length}
+                                    className={clsx(styles.revenue_card__number)}
+                                ></CountUp>
                             </div>
                             <div>
                                 <i style={{ color: '#66bb6a' }} className="fa-solid fa-cart-shopping"></i>
@@ -110,7 +120,7 @@ function Statistic(props) {
                         <div className={clsx(styles.revenue_card__body)}>
                             <div>
                                 <p className={clsx(styles.revenue_card__title)}>Người dùng mới</p>
-                                <p className={clsx(styles.revenue_card__number)}>500</p>
+                                <CountUp start={0} end={500} className={clsx(styles.revenue_card__number)}></CountUp>
                             </div>
                             <div>
                                 <i style={{ color: '#3abaf4' }} className="fa-solid fa-users"></i>
@@ -120,7 +130,11 @@ function Statistic(props) {
                         <div className={clsx(styles.revenue_card__body)}>
                             <div>
                                 <p className={clsx(styles.revenue_card__title)}>Chờ giải quyết</p>
-                                <p className={clsx(styles.revenue_card__number)}>{listOrder.length - bill.length}</p>
+                                <CountUp
+                                    start={0}
+                                    end={listOrder.length - bill.length}
+                                    className={clsx(styles.revenue_card__number)}
+                                ></CountUp>
                             </div>
                             <div>
                                 <i style={{ color: '#ffa426' }} className="fa-solid fa-comments"></i>
@@ -154,8 +168,10 @@ function Statistic(props) {
                                                     <button className={clsx(styles.table_confirmed)}>
                                                         Đã giao hàng
                                                     </button>
-                                                ) : (
+                                                ) : order.trangThaiDH === 0 ? (
                                                     <button className={clsx(styles.table_status)}>Đang xử lý</button>
+                                                ) : (
+                                                    <button className={clsx(styles.table_cancel)}>Đã hủy</button>
                                                 )}
                                             </td>
                                             <td>
@@ -219,8 +235,8 @@ function Statistic(props) {
                                 {orderDetail.map((order, index) => {
                                     return (
                                         <tr key={order.ID}>
-                                            <td>MDH{order.maSp}</td>
-                                            <td>SP{order.idSanPham}</td>
+                                            <td>MDH{order.orderID}</td>
+                                            <td>SP{order.productID}</td>
                                             <td>
                                                 <img
                                                     className={clsx(styles.table_image)}

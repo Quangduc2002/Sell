@@ -6,9 +6,15 @@ import { NavLink } from 'react-router-dom';
 import path from '../../Ultis/Path';
 
 function Sidebar(props) {
+    const { toast } = props;
     const [show, setShow] = useState(false);
     const [showPage, setShowPage] = useState(false);
     const [showOrder, setShowOrder] = useState(false);
+
+    const handleLogout = () => {
+        localStorage.removeItem('account');
+        toast.success('Đăng xuất thành công !');
+    };
 
     return (
         <div className={clsx(styles.sidebar)}>
@@ -23,10 +29,10 @@ function Sidebar(props) {
                             <div className={clsx(styles.sidebar_user__name)}>
                                 <img
                                     style={{ width: 40, height: 40, borderRadius: 50, marginRight: 10 }}
-                                    src={`http://localhost:3000/Image/IMG_2002.jpg`}
+                                    src={`http://localhost:3000/Image/${JSON.parse(localStorage.account).image}`}
                                     alt=""
                                 />
-                                <span style={{ color: '#fff' }}>{localStorage.Name}</span>
+                                <span style={{ color: '#fff' }}>{JSON.parse(localStorage.account).name}</span>
                             </div>
                             <i
                                 style={{ color: 'rgba(255, 255, 255, 0.5)' }}
@@ -43,7 +49,7 @@ function Sidebar(props) {
                             <NavLink to="setting" className={clsx(styles.sidebar_user__link)}>
                                 <li className={clsx(styles.sidebar_user__li)}>Cài đặt</li>
                             </NavLink>
-                            <NavLink to={path.Login} className={clsx(styles.sidebar_user__link)}>
+                            <NavLink onClick={handleLogout} to={path.Login} className={clsx(styles.sidebar_user__link)}>
                                 <li className={clsx(styles.sidebar_user__li, styles.btn)}>Đăng xuất</li>
                             </NavLink>
                         </ul>
@@ -79,9 +85,20 @@ function Sidebar(props) {
                             <NavLink to={path.LayoutAdminAdd} className={clsx(styles.sidebar_user__link)}>
                                 <li className={clsx(styles.sidebar_user__li)}>Thêm mặt sản phẩm</li>
                             </NavLink>
-                            <NavLink to={path.LayoutAdminCustomers} className={clsx(styles.sidebar_user__link)}>
-                                <li className={clsx(styles.sidebar_user__li)}>Quản lý khách hàng</li>
-                            </NavLink>
+                            {JSON.parse(localStorage.account).roleId === 3 ? (
+                                <NavLink to={path.LayoutAdminCustomers} className={clsx(styles.sidebar_user__link)}>
+                                    <li className={clsx(styles.sidebar_user__li)}>Quản lý người dùng</li>
+                                </NavLink>
+                            ) : (
+                                ''
+                            )}
+                            {JSON.parse(localStorage.account).roleId === 3 ? (
+                                <NavLink to={path.LayoutAdminTrash} className={clsx(styles.sidebar_user__link)}>
+                                    <li className={clsx(styles.sidebar_user__li)}>Thùng rác</li>
+                                </NavLink>
+                            ) : (
+                                ''
+                            )}
                         </ul>
                     )}
                 </div>

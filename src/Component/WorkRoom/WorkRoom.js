@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { motion, spring } from 'framer-motion';
 import clsx from 'clsx';
 import styles from '../WorkRoom/WorkRoom.module.scss';
 import IconTop from '../IconTop/IconTop';
@@ -6,8 +7,11 @@ import Product from '../Product/Product';
 import { Link } from 'react-router-dom';
 import Loading from '../Loading/Loading';
 import { fetchUser } from '../../services/UseServices';
+import Pagination from '../Pagination/Pagination';
 
-function WorkRoom() {
+function WorkRoom(props) {
+    const { indexOfLastProduct, indeOfFirstProduct, productPerPage, pagination, isActive, handleNext, handlePrevious } =
+        props;
     const [products, setProducts] = useState([]);
     let newProducts = [];
     newProducts = products.slice(0);
@@ -25,9 +29,10 @@ function WorkRoom() {
 
     const getUsers = async () => {
         let res = await fetchUser('/products/3/ProductType');
-        // let res = await fetchUser('http://localhost:8686/products/3/ProductType');
         setTimeout(() => setProducts(res.data), 1000);
     };
+
+    const listWorkRoom = products.slice(indeOfFirstProduct, indexOfLastProduct);
 
     function handleFilterProducts() {
         var selectedOption = document.querySelector('select').value;
@@ -50,8 +55,6 @@ function WorkRoom() {
             setProducts(newProducts);
         }
     }
-
-    console.log(newProducts);
 
     return (
         <div style={{ backgroundColor: '#f8f9fb', paddingBottom: 60 }}>
@@ -84,11 +87,29 @@ function WorkRoom() {
                 {newProducts.length === 0 ? (
                     <Loading />
                 ) : (
-                    <div className={clsx(styles.room_product)}>
-                        {products.map((product) => {
-                            return <Product key={product._id} product={product} />;
-                        })}
-                    </div>
+                    <motion.div
+                        className={clsx(styles.home__product)}
+                        initial={{ y: '4rem', opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{
+                            duration: 1,
+                            type: spring,
+                        }}
+                    >
+                        <div className={clsx(styles.room_product)}>
+                            {listWorkRoom.map((product) => {
+                                return <Product key={product.ID} product={product} />;
+                            })}
+                        </div>
+                        <Pagination
+                            productPerPage={productPerPage}
+                            totalProduct={products.length}
+                            pagination={pagination}
+                            isActive={isActive}
+                            handleNext={handleNext}
+                            handlePrevious={handlePrevious}
+                        />
+                    </motion.div>
                 )}
             </div>
 

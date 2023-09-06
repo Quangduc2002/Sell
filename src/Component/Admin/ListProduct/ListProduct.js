@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
+import axios from 'axios';
 import { motion, spring } from 'framer-motion';
 import _ from 'lodash';
 import styles from '../ListProduct/ListProduct.module.scss';
-import { fetchUser, fetchDelete } from '../../../services/UseServices';
+import { fetchUser } from '../../../services/UseServices';
 import Pagination from '../../Pagination/Pagination';
 import Loading from '../../Loading/Loading';
 
@@ -22,10 +23,13 @@ function ListProduct(props) {
     const search = useRef();
     const [products, setProducts] = useState([]);
     const [show, setShow] = useState(false);
+    const [delAll, setDelAll] = useState(false);
     const [id, setId] = useState('');
     // search
     const [searchQuery, setSearchQuery] = useState('');
     const [succeSearch, setSucceSearch] = useState([]);
+    const [isChecked, setIsChecked] = useState([]);
+
     const [showSort, setShowSort] = useState(true);
 
     const VND = new Intl.NumberFormat('vi-VN', {
@@ -35,11 +39,11 @@ function ListProduct(props) {
 
     useEffect(() => {
         getUsers();
-    }, []);
+    }, [delAll]);
 
     const getUsers = async () => {
         let res = await fetchUser('/products');
-        setTimeout(() => setProducts(res.data), 1000);
+        setTimeout(() => setProducts(res.data), 500);
     };
 
     const handleId = (_id) => {
@@ -49,12 +53,50 @@ function ListProduct(props) {
 
     // [DELETE] /products/:id/delete
     const handleDeleteProduct = async () => {
-        setShow(!show);
-        let res = await fetchDelete(`/products/${id}/delete`);
-        if (res && res.status === 200) {
-            setProducts(products.filter((product) => id !== product.id));
-            setSucceSearch(products.filter((product) => id !== product.id));
-            toast.success('Xóa sản phẩm thành công !');
+        if (JSON.parse(localStorage.account).roleId === 3) {
+            setShow(!show);
+            axios
+                .put(`http://localhost:8080/products/${id}/delete`, {
+                    trangThai: 0,
+                })
+                .then((res) => {
+                    setProducts(products.filter((product) => id !== product.ID));
+                    setSucceSearch(products.filter((product) => id !== product.ID));
+                    toast.success('Xóa sản phẩm thành công !');
+                })
+                .catch((err) => {
+                    toast.error(err);
+                });
+        } else {
+            setShow(!show);
+            toast.warn('Bạn không có quyền xóa sản phẩm !');
+        }
+    };
+
+    const handleDeleteAllProduct = async () => {
+        var selectedOption = document.querySelector('select').value;
+        if (JSON.parse(localStorage.account).roleId === 3) {
+            if (isChecked.length > 0) {
+                if (selectedOption === '') {
+                    toast.warn('Vui lòng chọn hành động !');
+                } else {
+                    axios
+                        .put(`http://localhost:8080/products/deleteAll`, {
+                            trangThai: 0,
+                            isChecked: isChecked,
+                            action: selectedOption,
+                        })
+                        .then((res) => {
+                            setDelAll(!delAll);
+                            toast.success('Xóa sản phẩm thành công !');
+                        })
+                        .catch((err) => {
+                            toast.error(err);
+                        });
+                }
+            }
+        } else {
+            toast.warn('Bạn không có quyền xóa sản phẩm !');
         }
     };
 
@@ -91,6 +133,28 @@ function ListProduct(props) {
         setShowSort(!showSort);
     };
 
+    // checkALL Products
+    const handleCheckboxChange = (e) => {
+        const checked = e.target.checked;
+        const value = parseInt(e.target.value);
+        if (checked) {
+            setIsChecked([...isChecked, value]);
+        } else {
+            setIsChecked(isChecked.filter((check) => value !== check));
+        }
+    };
+
+    const handleSelectAll = () => {
+        if (products.length === isChecked.length) {
+            setIsChecked([]);
+        } else {
+            const postId = products.map((product) => {
+                return product.ID;
+            });
+            setIsChecked(postId);
+        }
+    };
+
     return (
         <div className={clsx(styles.listProduct)}>
             <div className={clsx(styles.listProduct_header)}>
@@ -125,6 +189,7 @@ function ListProduct(props) {
                     </div>
                 </div>
             </div>
+
             <div className={clsx(styles.listProduct_PD)}>
                 <div className={clsx(styles.listProduct_title)}>
                     <div>
@@ -140,11 +205,40 @@ function ListProduct(props) {
                         ) : (
                             ''
                         )}
+                        <div className={clsx(styles.listProduct_action)}>
+                            <div className={clsx(styles.listProduct_action__checkAll)}>
+                                <input
+                                    id="checkAll"
+                                    type="checkbox"
+                                    name="chekAll"
+                                    checked={products.length === isChecked.length}
+                                    onChange={handleSelectAll}
+                                />
+                                <label htmlFor="checkAll" style={{ marginLeft: 4 }}>
+                                    Chọn tất cả
+                                </label>
+                            </div>
+                            <select className={clsx(styles.listProduct_action__select)} required>
+                                <option value="">--Chọn hành động--</option>
+                                <option value="delete">Xóa</option>
+                            </select>
+                            <button
+                                className={clsx(
+                                    styles.listProduct_action__btnDelAll,
+                                    isChecked.length === 0 ? styles.listProduct_action__btnDelAll__active : '',
+                                )}
+                                onClick={handleDeleteAllProduct}
+                            >
+                                Thực hiện
+                            </button>
+                        </div>
                     </div>
-                    <Link to="/admin/ThemSp" className={clsx(styles.listProduct_add)}>
-                        <i className="fa-regular fa-square-plus" style={{ style: '#fff', marginRight: 6 }}></i>
-                        Thêm sản phẩm
-                    </Link>
+                    <div>
+                        <Link to="/admin/ThemSp" className={clsx(styles.listProduct_add)}>
+                            <i className="fa-regular fa-square-plus" style={{ style: '#fff', marginRight: 6 }}></i>
+                            Thêm sản phẩm
+                        </Link>
+                    </div>
                 </div>
                 {paginationProduct.length === 0 ? (
                     <Loading />
@@ -160,6 +254,8 @@ function ListProduct(props) {
                         <table className={clsx(styles.table)}>
                             <thead>
                                 <tr>
+                                    <th></th>
+                                    <th>STT</th>
                                     <th>
                                         Tên sản phẩm
                                         {showSort ? (
@@ -188,16 +284,24 @@ function ListProduct(props) {
                                 {currentProductSearch.length === 0
                                     ? paginationProduct.map((product) => {
                                           return (
-                                              <tr key={product.id}>
+                                              <tr key={product.ID}>
+                                                  <td>
+                                                      <input
+                                                          checked={isChecked.includes(product.ID)}
+                                                          value={product.ID}
+                                                          type="checkbox"
+                                                          onChange={handleCheckboxChange}
+                                                      />
+                                                  </td>
+                                                  <td>{product.ID}</td>
                                                   <td style={{ minWidth: 300 }}>{product.tenSp}</td>
                                                   <td>{product.chatLieu}</td>
                                                   <td>{VND.format(product.giaNhap)}</td>
                                                   <td>{VND.format(product.giaBan)}</td>
                                                   <td>{product.soLuong}</td>
-
                                                   <td style={{ textAlign: 'center' }}>
                                                       <button className={clsx(styles.table_button)}>
-                                                          <Link to={`/admin/DSSP/products/${product.id}/edit`}>
+                                                          <Link to={`/admin/DSSP/products/${product.ID}/edit`}>
                                                               <i
                                                                   style={{ color: '#0d6efd' }}
                                                                   className={clsx('fa-solid fa-pen-to-square')}
@@ -208,7 +312,7 @@ function ListProduct(props) {
                                                   <td style={{ textAlign: 'center' }}>
                                                       <button
                                                           className={clsx(styles.table_button)}
-                                                          onClick={() => handleId(product.id)}
+                                                          onClick={() => handleId(product.ID)}
                                                       >
                                                           <i
                                                               style={{ color: '#eb1336' }}
@@ -221,7 +325,16 @@ function ListProduct(props) {
                                       })
                                     : currentProductSearch.map((product) => {
                                           return (
-                                              <tr key={product.id}>
+                                              <tr key={product.ID}>
+                                                  <td>
+                                                      <input
+                                                          checked={isChecked.includes(product.ID)}
+                                                          value={product.ID}
+                                                          type="checkbox"
+                                                          onChange={handleCheckboxChange}
+                                                      />
+                                                  </td>
+                                                  <td>{product.ID}</td>
                                                   <td style={{ minWidth: 300 }}>{product.tenSp}</td>
                                                   <td>{product.chatLieu}</td>
                                                   <td>{VND.format(product.giaNhap)}</td>
@@ -229,7 +342,7 @@ function ListProduct(props) {
                                                   <td>{product.soLuong}</td>
                                                   <td style={{ textAlign: 'center' }}>
                                                       <button className={clsx(styles.table_button)}>
-                                                          <Link to={`/admin/DSSP/products/${product.id}/edit`}>
+                                                          <Link to={`/admin/DSSP/products/${product.ID}/edit`}>
                                                               <i
                                                                   style={{ color: '#0d6efd' }}
                                                                   className={clsx('fa-solid fa-pen-to-square')}
@@ -240,7 +353,7 @@ function ListProduct(props) {
                                                   <td style={{ textAlign: 'center' }}>
                                                       <button
                                                           className={clsx(styles.table_button)}
-                                                          onClick={() => handleId(product.id)}
+                                                          onClick={() => handleId(product.ID)}
                                                       >
                                                           <i
                                                               style={{ color: '#eb1336' }}

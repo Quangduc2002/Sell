@@ -138,6 +138,10 @@
             }
         }
     }
+
+    &_isValid {
+        border: 1px solid #eb1336 !important;
+    }
 }
 
 .form {
@@ -206,6 +210,7 @@
         background-color: #ccc;
         border-radius: 4px;
         cursor: pointer;
+        margin-left: 10px;
 
         &:hover {
             background-color: #555;
@@ -214,7 +219,6 @@
     }
 
     &_primary {
-        margin-left: 10px;
         color: #fff;
         background: linear-gradient(135deg, rgba(34, 193, 195, 1) 0%, rgba(253, 187, 45, 1) 100%);
 

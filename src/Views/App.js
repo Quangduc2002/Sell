@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import { motion, useScroll } from 'framer-motion';
@@ -22,9 +22,16 @@ import ListCustomer from '../Component/Admin/ListCustomer/ListCustomer';
 import ListOrderProduct from '../Component/Admin/ListOrderProduct/ListOrderProduct';
 import OrderDetail from '../Component/Admin/OrderDetail/OrderDetail';
 import Statistic from '../Component/Admin/Statistic/Statistic';
+import LayoutOrder from './LayoutOrder';
+import OrderAll from '../Component/PurchaseOrder/OrderAll/OrderAll';
+import WaitConfirm from '../Component/PurchaseOrder/WaitConfirm/WaitConfirm';
+import Finish from '../Component/PurchaseOrder/Finish/Finish';
+import Deliver from '../Component/PurchaseOrder/Deliver/Deliver';
+import Cancel from '../Component/PurchaseOrder/Cancel/Cancel';
+import Profile from '../Component/Profile/Profile';
+import Trash from '../Component/Admin/Trash/Trash';
 
 function App() {
-    const [roleId, setRoleId] = useState();
     const { scrollYProgress } = useScroll();
 
     return (
@@ -36,8 +43,8 @@ function App() {
                 }}
             ></motion.div>
             <Routes>
-                <Route path={path.Login} element={<Login toast={toast} setRoleId={setRoleId} />} />
-                <Route path={path.Public} element={<Layout roleId={roleId} />}>
+                <Route path={path.Login} element={<Login toast={toast} />} />
+                <Route path={path.Public} element={<Layout />}>
                     <Route index element={<Home />} />
                     <Route path={path.LivingRoom} element={<LivingRoom />} />
                     <Route path={path.Kitchen} element={<Kitchen />} />
@@ -45,12 +52,24 @@ function App() {
                     <Route path={path.Bedroom} element={<Bedroom />} />
                     <Route path={path.Cart} element={<Cart />} />
                     <Route path={path.ProductDetails} element={<ProductDetails />} />
+                    <Route path={path.LayoutOrderAll} element={<OrderAll />} />
+                    {/* Order */}
+                    <Route path={path.LayoutOrder} element={<LayoutOrder toast={toast} />}>
+                        <Route path={path.LayoutOrderAll} element={<OrderAll />} />
+                        <Route path={path.LayoutOrderWaitConfirm} element={<WaitConfirm />} />
+                        <Route path={path.LayoutOrderFinish} element={<Finish />} />
+                        <Route path={path.LayoutOrderDeliver} element={<Deliver />} />
+                        <Route path={path.LayoutOrderCancel} element={<Cancel />} />
+                    </Route>
+
+                    <Route path={path.LayoutProfile} element={<Profile toast={toast} />} />
                 </Route>
 
                 {/* Admin */}
-                <Route path={path.LayoutAdmin} element={<LayoutAdmin roleId={roleId} toast={toast} />}>
+                <Route path={path.LayoutAdmin} element={<LayoutAdmin toast={toast} />}>
                     <Route path={path.LayoutAdminStatistic} element={<Statistic />} />
                     <Route path={path.LayoutAdminDSDP} element={<ListProduct />} />
+                    <Route path={path.LayoutAdminTrash} element={<Trash />} />
                     <Route path={path.LayoutAdminAdd} element={<AddProduct />} />
                     <Route path={path.LayoutAdminEdit} element={<EditProduct />} />
                     <Route path={path.LayoutAdminCustomers} element={<ListCustomer />} />

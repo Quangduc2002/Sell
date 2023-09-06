@@ -104,8 +104,8 @@ function OrderDetail(props) {
                                 {currentListOrderDetail.map((order, index) => {
                                     return (
                                         <tr key={order.ID}>
-                                            <td>MDH{order.maSp}</td>
-                                            <td>SP{order.idSanPham}</td>
+                                            <td>MDH{order.orderID}</td>
+                                            <td>SP{order.productID}</td>
                                             <td>
                                                 <img
                                                     className={clsx(styles.table_image)}

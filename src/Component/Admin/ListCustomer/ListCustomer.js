@@ -20,7 +20,8 @@ function ListCustomer(props) {
         handleNext,
         handlePrevious,
     } = props;
-    const [users, getUsers] = useState([]);
+    const [users, setUsers] = useState([]);
+    const [showUsers, setShowUsers] = useState(true);
     const [show, setShow] = useState(false);
     const [id, setId] = useState('');
 
@@ -29,12 +30,12 @@ function ListCustomer(props) {
     const [searchQuery, setSearchQuery] = useState('');
     const [succeSearch, setSucceSearch] = useState([]);
     useEffect(() => {
-        getUser();
-    }, []);
+        getUser(showUsers);
+    }, [showUsers]);
 
-    const getUser = async () => {
-        let res = await fetchUser('/user/Customer');
-        setTimeout(() => getUsers(res.data), 1000);
+    const getUser = async (showUsers) => {
+        let res = await fetchUser(`/user/${showUsers ? 'Customer' : 'Staff'}`);
+        setUsers(res.data);
     };
 
     const handleId = (_id) => {
@@ -43,12 +44,18 @@ function ListCustomer(props) {
     };
 
     const handleDelete = async () => {
-        let res = await fetchDelete(`/user/${id}/Customer`);
-        if (res && res.status === 200) {
-            getUsers(users.filter((user) => id !== user.ID));
-            setSucceSearch(users.filter((user) => id !== user.ID));
+        if (localStorage.RoleId === '3') {
             setShow(!show);
-            toast.success('Xóa user thành công !');
+            let res = await fetchDelete(`/user/${id}/Customer`);
+            if (res && res.status === 200) {
+                setUsers(users.filter((user) => id !== user.ID));
+                setSucceSearch(users.filter((user) => id !== user.ID));
+                setShow(!show);
+                toast.success('Xóa khách hàng thành công !');
+            }
+        } else {
+            setShow(!show);
+            toast.warn('Bạn không có quyền xóa khách hàng ');
         }
     };
 
@@ -84,7 +91,7 @@ function ListCustomer(props) {
                         Trang
                     </Link>
                     <span className={clsx(styles.divider)}>/</span>
-                    <span>Quản lý khách hàng</span>
+                    <span>Quản lý người dùng</span>
                 </div>
                 <div style={{ display: 'flex' }}>
                     <div className={clsx(styles.listProduct_header__search)}>
@@ -113,16 +120,22 @@ function ListCustomer(props) {
             <div className={clsx(styles.listProduct_PD)}>
                 <div className={clsx(styles.listProduct_title)}>
                     <div>
-                        <h1>Danh sách khách hàng</h1>
+                        <h1>{showUsers ? 'Danh sách khách hàng' : 'Danh sách nhân viên'} </h1>
                         {users && currentUsers ? (
                             <p style={{ marginBottom: 10 }}>
                                 Hiển thị 1 đến{' '}
                                 {currentUserSearch.length !== 0 ? currentUserSearch.length : currentUsers.length} trong{' '}
-                                {users.length} khách hàng
+                                {users.length} {showUsers ? 'khách hàng' : 'nhân viên'}
                             </p>
                         ) : (
                             ''
                         )}
+                    </div>
+
+                    <div>
+                        <button onClick={() => setShowUsers(!showUsers)} className={clsx(styles.listProduct_user)}>
+                            {showUsers ? 'Danh sách nhân viên' : 'Danh sách khách hàng'}
+                        </button>
                     </div>
                 </div>
                 {currentUsers.length === 0 ? (
@@ -139,9 +152,9 @@ function ListCustomer(props) {
                     >
                         <thead>
                             <tr>
-                                <th>Tên khách hàng</th>
                                 <th>Email</th>
                                 <th>Mật khẩu</th>
+                                <th>{showUsers ? 'Tên khách hàng' : 'Tên nhân viên'}</th>
                                 <th style={{ textAlign: 'center' }}>Xóa</th>
                             </tr>
                         </thead>
@@ -150,9 +163,9 @@ function ListCustomer(props) {
                                 ? currentUsers.map((user) => {
                                       return (
                                           <tr key={user.ID}>
-                                              <td>{user.name}</td>
                                               <td style={{ minWidth: 300 }}>{user.email}</td>
                                               <td>{user.password}</td>
+                                              <td>{user.name}</td>
                                               <td style={{ textAlign: 'center' }}>
                                                   <button
                                                       className={clsx(styles.table_button)}
@@ -169,14 +182,14 @@ function ListCustomer(props) {
                                   })
                                 : currentUserSearch.map((user) => {
                                       return (
-                                          <tr key={user._id}>
+                                          <tr key={user.ID}>
                                               <td>{user.name}</td>
                                               <td style={{ minWidth: 300 }}>{user.email}</td>
                                               <td>{user.password}</td>
                                               <td style={{ textAlign: 'center' }}>
                                                   <button
                                                       className={clsx(styles.table_button)}
-                                                      onClick={() => handleId(user._id)}
+                                                      onClick={() => handleId(user.ID)}
                                                   >
                                                       <i
                                                           style={{ color: '#eb1336' }}

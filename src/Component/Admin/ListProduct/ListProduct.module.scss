@@ -95,12 +95,15 @@ th {
 
     p {
         padding: 0 10px;
+        margin: 10px 0;
     }
 
     &_title {
         display: flex;
         align-items: center;
         justify-content: space-between;
+        margin-bottom: 20px;
+        padding-top: 20px;
     }
 
     &_add {
@@ -138,6 +141,40 @@ th {
 
         i {
             color: rgb(123, 128, 154);
+        }
+    }
+
+    &_action {
+        display: flex;
+        align-items: center;
+        padding-left: 10px;
+
+        &__select {
+            margin: 0 16px;
+            padding: 6px 8px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            outline: none;
+
+            &:focus {
+                border: 1px solid #6a5a9f;
+            }
+        }
+
+        &__btnDelAll {
+            display: flex;
+            align-items: center;
+            color: #fff;
+            background-color: #ee4d2d;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 10px;
+            border: none;
+
+            &__active {
+                opacity: 0.6;
+                cursor: not-allowed;
+            }
         }
     }
 }

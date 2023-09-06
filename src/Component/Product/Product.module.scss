@@ -21,8 +21,8 @@
 
         &:hover {
             border: 1px solid #ee4d2d;
-            transform: translateY(-8px);
-            transition: all 0.2s ease-in-out;
+            // transform: translateY(-8px);
+            transition: all 0.5s ease-in-out;
         }
 
         &_link {
@@ -222,6 +222,10 @@
     .room {
         &_badge {
             height: 100px;
+        }
+
+        &_text {
+            margin: 0 10px;
         }
     }
 }

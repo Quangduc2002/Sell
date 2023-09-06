@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
+import { motion, spring } from 'framer-motion';
 import styles from '../Kitchen/Kitchen.module.scss';
 import IconTop from '../IconTop/IconTop';
 import Product from '../Product/Product';
 import { Link } from 'react-router-dom';
 import Loading from '../Loading/Loading';
 import { fetchUser } from '../../services/UseServices';
+import Pagination from '../Pagination/Pagination';
 
-function Kitchen() {
+function Kitchen(props) {
+    const { indexOfLastProduct, indeOfFirstProduct, productPerPage, pagination, isActive, handleNext, handlePrevious } =
+        props;
     const [products, setProducts] = useState([]);
     let newProducts = [];
     newProducts = products.slice(0);
@@ -29,6 +33,7 @@ function Kitchen() {
         setTimeout(() => setProducts(res.data), 1000);
     };
 
+    const listkitchen = products.slice(indeOfFirstProduct, indexOfLastProduct);
     function handleFilterProducts() {
         var selectedOption = document.querySelector('select').value;
         if (selectedOption === '1') {
@@ -82,11 +87,29 @@ function Kitchen() {
                 {products.length === 0 ? (
                     <Loading />
                 ) : (
-                    <div className={clsx(styles.room_product)}>
-                        {products.map((product) => {
-                            return <Product key={product._id} product={product} />;
-                        })}
-                    </div>
+                    <motion.div
+                        className={clsx(styles.home__product)}
+                        initial={{ y: '4rem', opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{
+                            duration: 1,
+                            type: spring,
+                        }}
+                    >
+                        <div className={clsx(styles.room_product)}>
+                            {listkitchen.map((product) => {
+                                return <Product key={product.ID} product={product} />;
+                            })}
+                        </div>
+                        <Pagination
+                            productPerPage={productPerPage}
+                            totalProduct={products.length}
+                            pagination={pagination}
+                            isActive={isActive}
+                            handleNext={handleNext}
+                            handlePrevious={handlePrevious}
+                        />
+                    </motion.div>
                 )}
             </div>
             <IconTop />

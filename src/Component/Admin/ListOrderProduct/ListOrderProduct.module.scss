@@ -229,6 +229,21 @@ th {
         }
     }
 
+    &_cancel {
+        min-width: 140px;
+        display: flex;
+        border: none;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        color: #fff;
+        background-color: #ee4d2d;
+        border-radius: 4px;
+        cursor: not-allowed;
+        padding: 10px;
+        opacity: 0.6;
+    }
+
     &_confirmed {
         display: flex;
         justify-content: center;

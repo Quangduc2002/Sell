@@ -100,6 +100,7 @@ function AddProduct(props) {
             formData.append('soLuong', soLuong);
             formData.append('soLuotDanhGia', 0);
             formData.append('tongDanhGia', 0);
+            formData.append('trangThai', 1);
             axios
                 .post('http://localhost:8080/products/add', formData)
                 .then((res) => {
@@ -123,8 +124,6 @@ function AddProduct(props) {
     const handleBack = () => {
         navigate('/admin/DSSP');
     };
-
-    console.log(soLuong);
 
     return (
         <div className={clsx(styles.addProduct)}>

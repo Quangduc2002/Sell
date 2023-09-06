@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Slider from 'react-slick';
 import clsx from 'clsx';
+import { motion, spring } from 'framer-motion';
 import IconTop from '../IconTop/IconTop';
 import Product from '../Product/Product';
 import Slider1 from '../../assets/Image/slider_1.jpg';
@@ -182,14 +183,22 @@ function Home(props) {
                         </ul>
                     </div>
 
-                    <div className={clsx(styles.home__product)}>
+                    <motion.div
+                        className={clsx(styles.home__product)}
+                        initial={{ y: '4rem', opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{
+                            duration: 1,
+                            type: spring,
+                        }}
+                    >
                         <div className={clsx(styles.home_product)}>
                             {allSp === true
                                 ? currentProduct.map((product) => {
-                                      return <Product key={product._id} product={product} />;
+                                      return <Product key={product.ID} product={product} />;
                                   })
                                 : currentProductSearch.map((product) => {
-                                      return <Product key={product._id} product={product} />;
+                                      return <Product key={product.ID} product={product} />;
                                   })}
                         </div>
                         <Pagination
@@ -200,7 +209,7 @@ function Home(props) {
                             handleNext={handleNext}
                             handlePrevious={handlePrevious}
                         />
-                    </div>
+                    </motion.div>
 
                     <div className={clsx(styles.box)}>
                         <div className={clsx(styles.box_dark)}>
@@ -217,7 +226,7 @@ function Home(props) {
                             <div className={clsx(styles.inner_slider)}>
                                 <Slider {...settings1}>
                                     {products.map((product) => {
-                                        return <Product key={product._id} product={product} />;
+                                        return <Product key={product.ID} product={product} />;
                                     })}
                                 </Slider>
                             </div>
