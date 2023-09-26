@@ -129,15 +129,6 @@ function Home(props) {
     ];
     const [products, setProducts] = useState([]);
     useEffect(() => {
-        // axios
-        //     .get('http://localhost:8080/products')
-        //     .then((res) => {
-        //         setProducts(res.data);
-        //     })
-        //     .catch((err) => {
-        //         console.log(err);
-        //     });
-
         getUsers();
     }, []);
 
@@ -145,12 +136,7 @@ function Home(props) {
         let res = await fetchUser('/products');
         setTimeout(() => setProducts(res.data), 1000);
     };
-    //Xử lý xem thêm sản phẩm
-    // const [seeMore, setSeeMore] = useState(8);
-    // const handleSeeMore = () => {
-    //     setSeeMore(seeMore + 4);
-    // };
-    // const slice = products.slice(0, seeMore);
+
     const currentProduct = products.slice(indeOfFirstProduct, indexOfLastProduct);
     const currentProductSearch = succeSearch.slice(indeOfFirstProduct, indexOfLastProduct);
 
