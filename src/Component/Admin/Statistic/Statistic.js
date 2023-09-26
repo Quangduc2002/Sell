@@ -22,17 +22,25 @@ function Statistic(props) {
     const [bill, setBill] = useState([]);
     const [incomes, setIncomes] = useState([]);
     const [orderDetail, setOrderDetail] = useState([]);
+    const [customers, setCustomers] = useState([]);
+
     const [show, setShow] = useState(false);
 
     useEffect(() => {
         getOrder();
         getBill();
         getIncome();
+        getCustomer();
     }, []);
 
     const getOrder = async () => {
         let res = await fetchUser('/order/listOrder');
         setTimeout(() => setListOrder(res.data), 500);
+    };
+
+    const getCustomer = async () => {
+        let res = await fetchUser('user/Customer');
+        setCustomers(res.data);
     };
 
     const getBill = async () => {
@@ -119,8 +127,12 @@ function Statistic(props) {
 
                         <div className={clsx(styles.revenue_card__body)}>
                             <div>
-                                <p className={clsx(styles.revenue_card__title)}>Người dùng mới</p>
-                                <CountUp start={0} end={500} className={clsx(styles.revenue_card__number)}></CountUp>
+                                <p className={clsx(styles.revenue_card__title)}>Khách hàng</p>
+                                <CountUp
+                                    start={0}
+                                    end={customers.length}
+                                    className={clsx(styles.revenue_card__number)}
+                                ></CountUp>
                             </div>
                             <div>
                                 <i style={{ color: '#3abaf4' }} className="fa-solid fa-users"></i>

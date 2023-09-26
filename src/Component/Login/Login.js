@@ -15,6 +15,7 @@ function Login(props) {
     const [name, setName] = useState('');
     const [Day, setDay] = useState('');
     const [Month, setMonth] = useState('');
+    const [gioiTinh, setGioiTinh] = useState('');
     const [Year, setYear] = useState('');
     const [showLogin, setShowLogin] = useState(true);
     const [formErrors, setFormErrors] = useState({});
@@ -186,6 +187,12 @@ function Login(props) {
     // Lấy năm hiện tại
     var curYear = curDate.getFullYear();
 
+    const Sexs = [
+        { id: 0, name: 'nam' },
+        { id: 1, name: 'nữ' },
+        { id: 2, name: 'khác' },
+    ];
+
     const validateForm = () => {
         let errors = {};
         let isValid = true;
@@ -215,11 +222,13 @@ function Login(props) {
         let isValid = true;
 
         const regex = /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/;
+
         if (!registerEmail) {
             errors.registerEmail = 'Please enter Email !';
             isValid = false;
         } else if (!regex.test(registerEmail)) {
             errors.registerEmail = 'Please enter correct email format !';
+            toast.error('Vui lòng nhập đúng định dạng email !');
             isValid = false;
         }
 
@@ -228,16 +237,27 @@ function Login(props) {
             isValid = false;
         } else if (registerPassword.length < 6) {
             errors.registerPassword = 'Please enter at least 6 characters !';
+            toast.error('Vui lòng nhập mật khẩu ít nhất 6 ký tự !');
             isValid = false;
         }
 
-        if (!surname || !name) {
+        if (!surname) {
+            errors.registerSurName = 'Please enter full name !';
+            isValid = false;
+        }
+
+        if (!name) {
             errors.registerName = 'Please enter full name !';
             isValid = false;
         }
 
         if (!Day || !Month || !Year) {
             errors.registerNS = 'Please enter DateOfBirth !';
+            isValid = false;
+        }
+
+        if (!gioiTinh) {
+            errors.gioiTinh = 'Please enter sex !';
             isValid = false;
         }
         setFormErrors(errors);
@@ -393,55 +413,81 @@ function Login(props) {
                     <form method="POST" action="/user/register" className={clsx(styles.auth_form)}>
                         <div className={clsx(styles.auth_froup)}>
                             <div className={clsx(styles.auth_froup__name)}>
-                                <input
-                                    value={surname}
-                                    type="text"
-                                    className={clsx(
-                                        styles.auth_input,
-                                        styles.auth_name,
-                                        formErrors.registerName ? styles.auth_isValid : '',
+                                <div className={clsx(styles.auth_froup__emptyInput)} style={{ marginRight: 10 }}>
+                                    <input
+                                        value={surname}
+                                        type="text"
+                                        className={clsx(
+                                            styles.auth_input,
+                                            formErrors.registerSurName ? styles.auth_isValid : '',
+                                        )}
+                                        placeholder="Nhập Họ"
+                                        onChange={(e) => setSurname(e.target.value)}
+                                    />
+                                    {formErrors.registerSurName ? (
+                                        <i
+                                            className={clsx(
+                                                styles.auth_froup__emptyIcon,
+                                                styles.auth_froup__emptyIconName,
+                                                'fa-solid fa-circle-exclamation',
+                                            )}
+                                        ></i>
+                                    ) : (
+                                        ''
                                     )}
-                                    placeholder="Nhập Họ"
-                                    onChange={(e) => setSurname(e.target.value)}
-                                />
-                                <input
-                                    value={name}
-                                    type="text"
-                                    className={clsx(
-                                        styles.auth_input,
-                                        styles.auth_name,
-                                        formErrors.registerName ? styles.auth_isValid : '',
-                                    )}
-                                    placeholder="Nhập Tên"
-                                    onChange={(e) => setName(e.target.value)}
-                                />
-                            </div>
+                                </div>
 
-                            <div>
-                                {formErrors.registerName && (
-                                    <p className={clsx(styles.form_message)}>{formErrors.registerName}</p>
+                                <div className={clsx(styles.auth_froup__emptyInput)} style={{ marginLeft: 10 }}>
+                                    <input
+                                        value={name}
+                                        type="text"
+                                        className={clsx(
+                                            styles.auth_input,
+                                            formErrors.registerName ? styles.auth_isValid : '',
+                                        )}
+                                        placeholder="Nhập Tên"
+                                        onChange={(e) => setName(e.target.value)}
+                                    />
+                                    {formErrors.registerName ? (
+                                        <i
+                                            className={clsx(
+                                                styles.auth_froup__emptyIcon,
+                                                styles.auth_froup__emptyIconName,
+                                                'fa-solid fa-circle-exclamation',
+                                            )}
+                                        ></i>
+                                    ) : (
+                                        ''
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className={clsx(styles.auth_froup)}>
+                            <div className={clsx(styles.auth_froup__emptyInput)}>
+                                <input
+                                    value={registerEmail}
+                                    type="text"
+                                    name="email"
+                                    className={clsx(
+                                        styles.auth_input,
+                                        formErrors.registerEmail ? styles.auth_isValid : '',
+                                    )}
+                                    placeholder="Nhập Email"
+                                    onChange={(e) => setRegisterEmail(e.target.value)}
+                                />
+                                {formErrors.registerEmail ? (
+                                    <i
+                                        className={clsx(styles.auth_froup__emptyIcon, 'fa-solid fa-circle-exclamation')}
+                                    ></i>
+                                ) : (
+                                    ''
                                 )}
                             </div>
                         </div>
 
                         <div className={clsx(styles.auth_froup)}>
-                            <input
-                                value={registerEmail}
-                                type="text"
-                                name="email"
-                                className={clsx(styles.auth_input, formErrors.registerEmail ? styles.auth_isValid : '')}
-                                placeholder="Nhập Email"
-                                onChange={(e) => setRegisterEmail(e.target.value)}
-                            />
-                            <div>
-                                {formErrors.registerEmail && (
-                                    <p className={clsx(styles.form_message)}>{formErrors.registerEmail}</p>
-                                )}
-                            </div>
-                        </div>
-
-                        <div style={{ position: 'relative' }} className={clsx(styles.auth_froup)}>
-                            <div style={{ position: 'relative' }}>
+                            <div className={clsx(styles.auth_froup__emptyInput)}>
                                 <input
                                     value={registerPassword}
                                     type={check === true ? 'text' : 'password'}
@@ -453,26 +499,40 @@ function Login(props) {
                                     placeholder="Nhập mật khẩu"
                                     onChange={(e) => setRegisterPassword(e.target.value)}
                                 />
-                                <i
-                                    onClick={() => {
-                                        setCheck(!check);
-                                    }}
-                                    className={clsx(
-                                        styles.auth_froup__eye,
-                                        'fa-regular ',
-                                        check === true ? 'fa-eye' : 'fa-eye-slash',
-                                    )}
-                                ></i>
-                            </div>
-                            <div>
-                                {formErrors.registerPassword && (
-                                    <p className={clsx(styles.form_message)}>{formErrors.registerPassword}</p>
+                                {formErrors.registerPassword ? (
+                                    <i
+                                        className={clsx(styles.auth_froup__emptyIcon, 'fa-solid fa-circle-exclamation')}
+                                    ></i>
+                                ) : (
+                                    <i
+                                        onClick={() => {
+                                            setCheck(!check);
+                                        }}
+                                        className={clsx(
+                                            styles.auth_froup__eye,
+                                            'fa-regular ',
+                                            check === true ? 'fa-eye' : 'fa-eye-slash',
+                                        )}
+                                    ></i>
                                 )}
                             </div>
                         </div>
 
                         <div className={clsx(styles.auth_froup)}>
-                            <p className={clsx(styles.auth_froup_p)}>Ngày sinh</p>
+                            <div className={clsx(styles.auth_froup__emptySelect)}>
+                                <p className={clsx(styles.auth_froup_p)}>Ngày sinh</p>
+                                {formErrors.registerNS ? (
+                                    <i
+                                        className={clsx(
+                                            styles.auth_froup__emptyIconSelect,
+                                            'fa-solid fa-circle-exclamation',
+                                        )}
+                                    ></i>
+                                ) : (
+                                    ''
+                                )}
+                            </div>
+
                             <div className={clsx(styles.auth_froup_date)}>
                                 <select
                                     className={clsx(formErrors.registerNS ? styles.auth_isValid : '')}
@@ -519,11 +579,48 @@ function Login(props) {
                                     })}
                                 </select>
                             </div>
+                        </div>
 
-                            <div>
-                                {formErrors.registerNS && (
-                                    <p className={clsx(styles.form_message)}>{formErrors.registerNS}</p>
+                        <div className={clsx(styles.auth_froup)}>
+                            <div className={clsx(styles.auth_froup__emptySelect)}>
+                                <p className={clsx(styles.auth_froup_p)}>Giới tính</p>
+                                {formErrors.gioiTinh ? (
+                                    <i
+                                        className={clsx(
+                                            styles.auth_froup__emptyIconSelect,
+                                            'fa-solid fa-circle-exclamation',
+                                        )}
+                                    ></i>
+                                ) : (
+                                    ''
                                 )}
+                            </div>
+
+                            <div className={clsx(styles.auth_froup__sex)}>
+                                {Sexs.map((sex) => {
+                                    return (
+                                        <div
+                                            key={sex.id}
+                                            className={clsx(
+                                                styles.auth_froup__sex__container,
+                                                formErrors.gioiTinh ? styles.auth_isValid : '',
+                                            )}
+                                        >
+                                            <label style={{ width: '100%' }} htmlFor={sex.id}>
+                                                {sex.name}
+                                            </label>
+                                            <input
+                                                id={sex.id}
+                                                type="radio"
+                                                name="gioitinh"
+                                                value={sex.id}
+                                                onChange={(e) => setGioiTinh(e.target.value)}
+                                                // dấu + ép thành kiểu số nguyên
+                                                checked={gioiTinh ? (sex.id === +gioiTinh ? true : false) : ''}
+                                            />
+                                        </div>
+                                    );
+                                })}
                             </div>
                         </div>
 

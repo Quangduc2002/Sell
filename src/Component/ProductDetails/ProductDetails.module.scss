@@ -93,6 +93,13 @@
         display: flex;
         margin-top: 10px;
     }
+
+    &_evaluation {
+        margin-top: 10px;
+        &__star {
+            display: flex;
+        }
+    }
 }
 
 .active {

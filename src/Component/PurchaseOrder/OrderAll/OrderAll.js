@@ -9,22 +9,51 @@ import Free from '../../../assets/Image/free.png';
 import ImageOrder from '../../../assets/Image/hoaDon.png';
 
 function OrderAll(props) {
-    const { onAdd, toast } = props;
+    const { onAdd, toast, handleStar, checkStar, setCheckStar, show, setShow, show1, setShow1 } = props;
     const [orders, setOrders] = useState([]);
     const [cancel, setCancel] = useState(false);
+    const [ratings, setRatings] = useState([]);
+    const [orderDetails, setOrderDetails] = useState([]);
+    const [changeRating, setChangeRating] = useState(false);
 
     const VND = new Intl.NumberFormat('vi-VN', {
         style: 'currency',
         currency: 'VND',
     });
 
+    const stars = [
+        { id: 1, class: 'star-1' },
+        { id: 2, class: 'star-2' },
+        { id: 3, class: 'star-3' },
+        { id: 4, class: 'star-4' },
+        { id: 5, class: 'star-5' },
+    ];
+
     useEffect(() => {
         getUsers();
-    }, [cancel]);
+        getRating();
+    }, [cancel, changeRating]);
 
     const getUsers = async () => {
         let res = await fetchUser(`/order/${JSON.parse(localStorage.account).id}/getOrder`);
         setOrders(res.data);
+    };
+
+    const getRating = async () => {
+        let res = await fetchUser(`/products/${JSON.parse(localStorage.account).id}/getRating`);
+        setTimeout(() => setRatings(res.data), 1000);
+    };
+
+    const hanldeEvaluate = async (id) => {
+        setShow(!show);
+        let res = await fetchUser(`/orderItem/${id}/orderFinish`);
+        setOrderDetails(res.data);
+    };
+
+    const hanldeSeeEvaluate = async (id) => {
+        setShow1(!show1);
+        let res = await fetchUser(`/orderItem/${id}/orderFinish`);
+        setOrderDetails(res.data);
     };
 
     const cancelOrder = (ID) => {
@@ -35,6 +64,23 @@ function OrderAll(props) {
             .then((res) => {
                 setCancel(!cancel);
                 toast.success('Hủy đơn hàng thành công !');
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
+
+    const handleSubmitEvaluate = (e) => {
+        e.preventDefault();
+        axios
+            .put(`http://localhost:8080/products/rating`, {
+                userId: JSON.parse(localStorage.account).id,
+                checkStar: checkStar,
+            })
+            .then((res) => {
+                toast.success('Đánh giá thành công !');
+                setChangeRating(!changeRating);
+                setCheckStar([]);
             })
             .catch((err) => {
                 console.log(err);
@@ -78,10 +124,20 @@ function OrderAll(props) {
                                         ) : order[0].order.trangThaiDH === 3 ? (
                                             <p className={clsx(styles.order_status__waitConfirm)}>Đã hủy</p>
                                         ) : (
-                                            <>
-                                                <img className={clsx(styles.order_status__img)} alt="" src={Free} />
-                                                <p>Giao hàng thành công</p>
-                                            </>
+                                            <div className={clsx(styles.order_header__right)}>
+                                                <div className={clsx(styles.order_status)}>
+                                                    <img className={clsx(styles.order_status__img)} alt="" src={Free} />
+                                                    <p className={clsx(styles.order_header__right__p)}>
+                                                        Giao hàng thành công
+                                                    </p>
+                                                </div>
+                                                <p
+                                                    onClick={() => hanldeEvaluate(order[0].orderID)}
+                                                    className={clsx(styles.order_header__right__review)}
+                                                >
+                                                    Đánh giá
+                                                </p>
+                                            </div>
                                         )}
                                     </div>
                                 </div>
@@ -142,12 +198,20 @@ function OrderAll(props) {
                                                 Hủy đơn hàng
                                             </button>
                                         ) : order[0].order.trangThaiDH === 1 ? (
-                                            <button
-                                                onClick={() => onAdd(order)}
-                                                className={clsx(styles.order_purchase__btn)}
-                                            >
-                                                Mua lại
-                                            </button>
+                                            <>
+                                                <button
+                                                    onClick={() => onAdd(order)}
+                                                    className={clsx(styles.order_purchase__btn)}
+                                                >
+                                                    Mua lại
+                                                </button>
+                                                <button
+                                                    onClick={() => hanldeSeeEvaluate(order[0].orderID)}
+                                                    className={clsx(styles.order_purchase__btnContact)}
+                                                >
+                                                    Xem đánh giá shop
+                                                </button>
+                                            </>
                                         ) : (
                                             <button className={clsx(styles.order_cancel__btn)}>Đơn hàng đã hủy</button>
                                         )}
@@ -160,6 +224,162 @@ function OrderAll(props) {
                         </div>
                     );
                 })
+            )}
+
+            {show && (
+                <>
+                    <div onClick={() => setShow(!show)} className={clsx(styles.modal1)}></div>
+
+                    <div className={clsx(styles.modal_container)}>
+                        <div className={clsx(styles.modal_header)}>
+                            <h5 className="modal-title">Đánh giá sản phẩm</h5>
+                            <button
+                                type="button"
+                                className={clsx(styles.modal_close)}
+                                data-dismiss="modal"
+                                aria-label="Close"
+                            >
+                                <span onClick={() => setShow(!show)} aria-hidden="true">
+                                    &times;
+                                </span>
+                            </button>
+                        </div>
+
+                        <div className={clsx(styles.table)}>
+                            {orderDetails.map((orderDetails) => {
+                                return (
+                                    <div key={orderDetails.ID} className={clsx(styles.table__evaluate)}>
+                                        <div className={clsx(styles.table__sp)}>
+                                            <img
+                                                className={clsx(styles.table_image)}
+                                                src={`http://localhost:3000/Image/${orderDetails.image}`}
+                                                alt=""
+                                            />
+                                            <p style={{ fontSize: 20 }}>{orderDetails.tenSp}</p>
+                                        </div>
+                                        <div className={clsx(styles.table__quality)}>
+                                            <p>Chất lượng sản phẩm:</p>
+                                            <form method="PUT" className={clsx(styles.right_formstar)}>
+                                                <div className={clsx(styles.describe_star)}>
+                                                    {stars.map((star) => {
+                                                        return (
+                                                            <div
+                                                                key={star.id}
+                                                                className={clsx(
+                                                                    styles.describe__star,
+                                                                    `${star.class}`,
+                                                                    'star',
+                                                                    checkStar.map((checked) => {
+                                                                        return orderDetails.ID === checked.orderID
+                                                                            ? checked.numberRating === star.id
+                                                                                ? 'active'
+                                                                                : ' '
+                                                                            : '';
+                                                                    }),
+                                                                )}
+                                                                onClick={() =>
+                                                                    handleStar(
+                                                                        star.id,
+                                                                        orderDetails.ID,
+                                                                        orderDetails.productID,
+                                                                    )
+                                                                }
+                                                            ></div>
+                                                        );
+                                                    })}
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+
+                        <div className={clsx(styles.modal_footer)}>
+                            <button
+                                onClick={(e) => handleSubmitEvaluate(e)}
+                                className={clsx(styles.order_purchase__btn)}
+                            >
+                                Đánh giá
+                            </button>
+                            <button onClick={() => setShow(!show)} className={clsx(styles.order_purchase__btnContact)}>
+                                Trở lại
+                            </button>
+                        </div>
+                    </div>
+                </>
+            )}
+
+            {show1 && (
+                <>
+                    <div onClick={() => setShow1(!show1)} className={clsx(styles.modal1)}></div>
+
+                    <div className={clsx(styles.modal_container)}>
+                        <div className={clsx(styles.modal_header)}>
+                            <h5 className="modal-title">Đánh giá của bạn</h5>
+                            <button
+                                type="button"
+                                className={clsx(styles.modal_close)}
+                                data-dismiss="modal"
+                                aria-label="Close"
+                            >
+                                <span onClick={() => setShow1(!show1)} aria-hidden="true">
+                                    &times;
+                                </span>
+                            </button>
+                        </div>
+
+                        <div className={clsx(styles.table)}>
+                            {orderDetails.map((orderDetails) => {
+                                return (
+                                    <div key={orderDetails.ID} className={clsx(styles.table__evaluate)}>
+                                        <div className={clsx(styles.table__sp)}>
+                                            <img
+                                                className={clsx(styles.table_image)}
+                                                src={`http://localhost:3000/Image/${orderDetails.image}`}
+                                                alt=""
+                                            />
+                                            <p style={{ fontSize: 20 }}>{orderDetails.tenSp}</p>
+                                        </div>
+                                        <div className={clsx(styles.table__quality)}>
+                                            <p>Chất lượng sản phẩm:</p>
+                                            <form method="PUT" className={clsx(styles.right_formstar)}>
+                                                <div className={clsx(styles.describe_star)}>
+                                                    {stars.map((star) => {
+                                                        return (
+                                                            <div
+                                                                key={star.id}
+                                                                className={clsx(
+                                                                    styles.describe__star,
+                                                                    `${star.class}`,
+
+                                                                    ratings.map((rating) => {
+                                                                        return orderDetails.productID ===
+                                                                            rating.productId
+                                                                            ? rating.numberRating === star.id
+                                                                                ? 'active'
+                                                                                : ''
+                                                                            : '';
+                                                                    }),
+                                                                )}
+                                                            ></div>
+                                                        );
+                                                    })}
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+
+                        <div className={clsx(styles.modal_footer)}>
+                            <button onClick={() => setShow1(!show1)} className={clsx(styles.order_purchase__btn)}>
+                                OK
+                            </button>
+                        </div>
+                    </div>
+                </>
             )}
         </motion.div>
     );

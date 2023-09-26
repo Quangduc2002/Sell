@@ -163,10 +163,11 @@
     position: fixed;
     min-width: 900px;
     height: 360px;
-    transform: translateY(-50%);
+    transform: translate(-50%, -50%);
     background-color: #fff;
     border: 1px solid rgba(0, 0, 0, 0.2);
     border-radius: 4px;
+    left: 50%;
     top: 50%;
     z-index: 4;
     overflow: hidden;

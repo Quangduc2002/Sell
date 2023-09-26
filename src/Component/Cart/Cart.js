@@ -69,7 +69,7 @@ function Cart(props) {
                         phuongThucTT: thanhToan,
                         note: note,
                         trangThaiDH: 0,
-                        maKH: localStorage.Id,
+                        maKH: JSON.parse(localStorage.account).id,
                     })
                     .then((res) => {
                         toast.success('Mua sản phẩm thành công ');

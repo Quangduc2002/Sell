@@ -31,6 +31,7 @@ function ListProduct(props) {
     const [isChecked, setIsChecked] = useState([]);
 
     const [showSort, setShowSort] = useState(true);
+    const [showSortPrice, setShowSortPrice] = useState(true);
 
     const VND = new Intl.NumberFormat('vi-VN', {
         style: 'currency',
@@ -123,7 +124,8 @@ function ListProduct(props) {
     //phân trang
     const paginationProduct = products.slice(indeOfFirstProduct, indexOfLastProduct);
     const currentProductSearch = succeSearch.slice(indeOfFirstProduct, indexOfLastProduct);
-    // sắp xếp
+
+    // sắp xếp tên sản phẩm
     const hanldeSort = (sort, sortField) => {
         const sortOrderBy = _.orderBy(products, [sortField], [sort]);
         setProducts(sortOrderBy);
@@ -131,6 +133,17 @@ function ListProduct(props) {
             setSucceSearch(sortOrderBy);
         }
         setShowSort(!showSort);
+    };
+
+    // sắp xếp tên sản phẩm
+    const hanldeSortPrice = (sort, sortField) => {
+        console.log(sort, sortField);
+        const sortOrderByPrice = _.orderBy(products, [sortField], [sort]);
+        setProducts(sortOrderByPrice);
+        if (currentProductSearch.length > 0) {
+            setSucceSearch(sortOrderByPrice);
+        }
+        setShowSortPrice(!showSortPrice);
     };
 
     // checkALL Products
@@ -272,10 +285,25 @@ function ListProduct(props) {
                                             ></i>
                                         )}
                                     </th>
-                                    <th>Chất liệu</th>
+                                    <th style={{ minWidth: 150 }}>Chất liệu</th>
                                     <th>Giá nhập</th>
-                                    <th>Giá bán</th>
-                                    <th>Số lượng</th>
+                                    <th>
+                                        Giá bán
+                                        {showSortPrice ? (
+                                            <i
+                                                style={{ marginLeft: 6, cursor: 'pointer' }}
+                                                onClick={() => hanldeSortPrice('asc', 'giaBan')}
+                                                className="fa-solid fa-arrow-up-wide-short"
+                                            ></i>
+                                        ) : (
+                                            <i
+                                                style={{ marginLeft: 6, cursor: 'pointer' }}
+                                                onClick={() => hanldeSortPrice('desc', 'giaBan')}
+                                                className="fa-solid fa-arrow-up-short-wide"
+                                            ></i>
+                                        )}
+                                    </th>
+                                    <th style={{ textAlign: 'center' }}>Số lượng</th>
                                     <th style={{ textAlign: 'center' }}>Sửa </th>
                                     <th style={{ textAlign: 'center' }}>Xóa</th>
                                 </tr>
@@ -298,7 +326,7 @@ function ListProduct(props) {
                                                   <td>{product.chatLieu}</td>
                                                   <td>{VND.format(product.giaNhap)}</td>
                                                   <td>{VND.format(product.giaBan)}</td>
-                                                  <td>{product.soLuong}</td>
+                                                  <td style={{ textAlign: 'center' }}>{product.soLuong}</td>
                                                   <td style={{ textAlign: 'center' }}>
                                                       <button className={clsx(styles.table_button)}>
                                                           <Link to={`/admin/DSSP/products/${product.ID}/edit`}>
@@ -339,7 +367,7 @@ function ListProduct(props) {
                                                   <td>{product.chatLieu}</td>
                                                   <td>{VND.format(product.giaNhap)}</td>
                                                   <td>{VND.format(product.giaBan)}</td>
-                                                  <td>{product.soLuong}</td>
+                                                  <td style={{ textAlign: 'center' }}>{product.soLuong}</td>
                                                   <td style={{ textAlign: 'center' }}>
                                                       <button className={clsx(styles.table_button)}>
                                                           <Link to={`/admin/DSSP/products/${product.ID}/edit`}>

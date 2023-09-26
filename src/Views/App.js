@@ -57,7 +57,7 @@ function App() {
                     <Route path={path.LayoutOrder} element={<LayoutOrder toast={toast} />}>
                         <Route path={path.LayoutOrderAll} element={<OrderAll />} />
                         <Route path={path.LayoutOrderWaitConfirm} element={<WaitConfirm />} />
-                        <Route path={path.LayoutOrderFinish} element={<Finish />} />
+                        <Route path={path.LayoutOrderFinish} element={<Finish toast={toast} />} />
                         <Route path={path.LayoutOrderDeliver} element={<Deliver />} />
                         <Route path={path.LayoutOrderCancel} element={<Cancel />} />
                     </Route>

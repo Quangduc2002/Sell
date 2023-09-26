@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 import clsx from 'clsx';
 import { motion, spring } from 'framer-motion';
 import styles from './Finish.module.scss';
@@ -8,7 +9,20 @@ import Free from '../../../assets/Image/free.png';
 import ImageOrder from '../../../assets/Image/hoaDon.png';
 
 function Finish(props) {
+    const { toast, handleStar, checkStar, setCheckStar, show, setShow, show1, setShow1 } = props;
     const [orders, setOrders] = useState([]);
+    const [orderDetails, setOrderDetails] = useState([]);
+    const [ratings, setRatings] = useState([]);
+    const [changeRating, setChangeRating] = useState(false);
+
+    const stars = [
+        { id: 1, class: 'star-1' },
+        { id: 2, class: 'star-2' },
+        { id: 3, class: 'star-3' },
+        { id: 4, class: 'star-4' },
+        { id: 5, class: 'star-5' },
+    ];
+
     const VND = new Intl.NumberFormat('vi-VN', {
         style: 'currency',
         currency: 'VND',
@@ -16,12 +30,48 @@ function Finish(props) {
 
     useEffect(() => {
         getUsers();
-    }, []);
+        getRating();
+    }, [changeRating]);
 
     const getUsers = async () => {
         let res = await fetchUser(`/order/${JSON.parse(localStorage.account).id}/finish`);
         setOrders(res.data);
     };
+
+    const hanldeEvaluate = async (id) => {
+        setShow(!show);
+        let res = await fetchUser(`/orderItem/${id}/orderFinish`);
+        setOrderDetails(res.data);
+    };
+
+    const hanldeSeeEvaluate = async (id) => {
+        setShow1(!show1);
+        let res = await fetchUser(`/orderItem/${id}/orderFinish`);
+        setOrderDetails(res.data);
+    };
+
+    const getRating = async () => {
+        let res = await fetchUser(`/products/${JSON.parse(localStorage.account).id}/getRating`);
+        setTimeout(() => setRatings(res.data), 1000);
+    };
+
+    const handleSubmitEvaluate = (e) => {
+        e.preventDefault();
+        axios
+            .put(`http://localhost:8080/products/rating`, {
+                userId: JSON.parse(localStorage.account).id,
+                checkStar: checkStar,
+            })
+            .then((res) => {
+                toast.success('Đánh giá thành công !');
+                setChangeRating(!changeRating);
+                setCheckStar([]);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
+
     return (
         <motion.div
             className={clsx(styles.order)}
@@ -53,9 +103,17 @@ function Finish(props) {
                                         <p className={clsx(styles.order_header__left__favourite)}>Yêu thích</p>
                                         <p className={clsx(styles.order_header__left__shop)}>QuangDucShop</p>
                                     </div>
-                                    <div className={clsx(styles.order_status)}>
-                                        <img className={clsx(styles.order_status__img)} alt="" src={Free} />
-                                        <p>Giao hàng thành công</p>
+                                    <div className={clsx(styles.order_header__right)}>
+                                        <div className={clsx(styles.order_status)}>
+                                            <img className={clsx(styles.order_status__img)} alt="" src={Free} />
+                                            <p>Giao hàng thành công</p>
+                                        </div>
+                                        <p
+                                            onClick={() => hanldeEvaluate(order[0].orderID)}
+                                            className={clsx(styles.order_header__right__review)}
+                                        >
+                                            Đánh giá
+                                        </p>
                                     </div>
                                 </div>
 
@@ -115,12 +173,174 @@ function Finish(props) {
                                         <button className={clsx(styles.order_purchase__btnContact)}>
                                             Liên hệ người bán
                                         </button>
+                                        <button
+                                            onClick={() => hanldeSeeEvaluate(order[0].orderID)}
+                                            className={clsx(styles.order_purchase__btnContact)}
+                                        >
+                                            Xem đánh giá shop
+                                        </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     );
                 })
+            )}
+
+            {show && (
+                <>
+                    <div onClick={() => setShow(!show)} className={clsx(styles.modal1)}></div>
+
+                    <div className={clsx(styles.modal_container)}>
+                        <div className={clsx(styles.modal_header)}>
+                            <h5 className="modal-title">Đánh giá sản phẩm</h5>
+                            <button
+                                type="button"
+                                className={clsx(styles.modal_close)}
+                                data-dismiss="modal"
+                                aria-label="Close"
+                            >
+                                <span onClick={() => setShow(!show)} aria-hidden="true">
+                                    &times;
+                                </span>
+                            </button>
+                        </div>
+
+                        <div className={clsx(styles.table)}>
+                            {orderDetails.map((orderDetails) => {
+                                return (
+                                    <div key={orderDetails.ID} className={clsx(styles.table__evaluate)}>
+                                        <div className={clsx(styles.table__sp)}>
+                                            <img
+                                                className={clsx(styles.table_image)}
+                                                src={`http://localhost:3000/Image/${orderDetails.image}`}
+                                                alt=""
+                                            />
+                                            <p style={{ fontSize: 20 }}>{orderDetails.tenSp}</p>
+                                        </div>
+                                        <div className={clsx(styles.table__quality)}>
+                                            <p>Chất lượng sản phẩm:</p>
+                                            <form method="PUT" className={clsx(styles.right_formstar)}>
+                                                <div className={clsx(styles.describe_star)}>
+                                                    {stars.map((star) => {
+                                                        return (
+                                                            <div
+                                                                key={star.id}
+                                                                className={clsx(
+                                                                    styles.describe__star,
+                                                                    `${star.class}`,
+                                                                    'star',
+                                                                    checkStar.map((checked) => {
+                                                                        return orderDetails.ID === checked.orderID
+                                                                            ? checked.numberRating === star.id
+                                                                                ? 'active'
+                                                                                : ' '
+                                                                            : '';
+                                                                    }),
+                                                                )}
+                                                                onClick={() =>
+                                                                    handleStar(
+                                                                        star.id,
+                                                                        orderDetails.ID,
+                                                                        orderDetails.productID,
+                                                                    )
+                                                                }
+                                                            ></div>
+                                                        );
+                                                    })}
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+
+                        <div className={clsx(styles.modal_footer)}>
+                            <button
+                                onClick={(e) => handleSubmitEvaluate(e)}
+                                className={clsx(styles.order_purchase__btn)}
+                            >
+                                Đánh giá
+                            </button>
+                            <button onClick={() => setShow(!show)} className={clsx(styles.order_purchase__btnContact)}>
+                                Trở lại
+                            </button>
+                        </div>
+                    </div>
+                </>
+            )}
+
+            {show1 && (
+                <>
+                    <div onClick={() => setShow1(!show1)} className={clsx(styles.modal1)}></div>
+
+                    <div className={clsx(styles.modal_container)}>
+                        <div className={clsx(styles.modal_header)}>
+                            <h5 className="modal-title">Đánh giá của bạn</h5>
+                            <button
+                                type="button"
+                                className={clsx(styles.modal_close)}
+                                data-dismiss="modal"
+                                aria-label="Close"
+                            >
+                                <span onClick={() => setShow1(!show1)} aria-hidden="true">
+                                    &times;
+                                </span>
+                            </button>
+                        </div>
+
+                        <div className={clsx(styles.table)}>
+                            {orderDetails.map((orderDetails) => {
+                                return (
+                                    <div key={orderDetails.ID} className={clsx(styles.table__evaluate)}>
+                                        <div className={clsx(styles.table__sp)}>
+                                            <img
+                                                className={clsx(styles.table_image)}
+                                                src={`http://localhost:3000/Image/${orderDetails.image}`}
+                                                alt=""
+                                            />
+                                            <p style={{ fontSize: 20 }}>{orderDetails.tenSp}</p>
+                                        </div>
+                                        <div className={clsx(styles.table__quality)}>
+                                            <p>Chất lượng sản phẩm:</p>
+                                            <form method="PUT" className={clsx(styles.right_formstar)}>
+                                                <div className={clsx(styles.describe_star)}>
+                                                    {stars.map((star) => {
+                                                        return (
+                                                            <div
+                                                                key={star.id}
+                                                                className={clsx(
+                                                                    styles.describe__star,
+                                                                    `${star.class}`,
+
+                                                                    ratings.map((rating) => {
+                                                                        return orderDetails.productID ===
+                                                                            rating.productId
+                                                                            ? rating.numberRating === star.id
+                                                                                ? 'active'
+                                                                                : ''
+                                                                            : '';
+                                                                    }),
+                                                                )}
+                                                            ></div>
+                                                        );
+                                                    })}
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+
+                        <div className={clsx(styles.modal_footer)}>
+                            <button onClick={() => setShow1(!show1)} className={clsx(styles.order_purchase__btn)}>
+                                OK
+                            </button>
+                        </div>
+                    </div>
+                </>
             )}
         </motion.div>
     );

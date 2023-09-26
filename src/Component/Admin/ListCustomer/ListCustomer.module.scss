@@ -1,5 +1,6 @@
 ::placeholder {
-    color: rgb(144 149 171);
+    // color: rgb(144 149 171);
+    color: #555 !important;
 }
 
 th {
@@ -112,6 +113,7 @@ th {
         padding: 10px;
         border: none;
         min-width: 160px;
+        margin: 0 4px;
 
         &:hover {
             transition: all 0.3s linear;
@@ -244,4 +246,217 @@ tr:nth-child(even) {
             background-color: #c52432;
         }
     }
+}
+
+//modal
+.modalAdd {
+    &_container {
+        position: fixed;
+        min-width: 900px;
+        height: 420px;
+        transform: translate(-50%, -50%);
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        border-radius: 4px;
+        top: 50%;
+        left: 50%;
+        z-index: 4;
+        animation: slipModel 1s ease-in-out;
+        overflow: hidden;
+        background-color: #fff;
+        padding: 20px 40px;
+    }
+
+    &_header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 70px;
+        padding: 0 20px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 5;
+        background-color: #fff;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.09);
+
+        h5 {
+            font-size: 24px;
+        }
+    }
+
+    &_close {
+        border: none;
+        background-color: #fff;
+
+        span {
+            font-size: 24px;
+            color: #6c757d;
+
+            &:hover {
+                cursor: pointer;
+                color: #000;
+            }
+        }
+    }
+
+    &_inform {
+        background-color: #fff;
+        margin-top: 60px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    &_body {
+        padding: 20px;
+        border-top: 1px solid #e9ecef;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    &_footer {
+        padding: 0 20px;
+        text-align: right;
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #fff;
+        border-top: 1px solid rgba(0, 0, 0, 0.09);
+        height: 70px;
+        line-height: 70px;
+
+        button {
+            padding: 10px 12px;
+            background-color: #e5e5e5;
+            font-size: 16px;
+        }
+    }
+
+    &__btn {
+        font-size: 16px;
+        background-color: #ee4d2d !important;
+        padding: 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        border: none;
+        color: #fff;
+        min-width: 150px;
+
+        &:hover {
+            transition: all 0.3s linear;
+            background-color: #c52432 !important;
+        }
+
+        &__cancel {
+            color: #555 !important;
+            border-radius: 4px;
+            border: 1px solid rgba(0, 0, 0, 0.09) !important;
+            min-width: 150px;
+            margin-left: 10px;
+            background-color: #e5e5e5 !important;
+            cursor: pointer;
+
+            &:hover {
+                transition: all 0.3s linear;
+                background-color: rgba(0, 0, 0, 0.05) !important;
+            }
+        }
+    }
+}
+
+.modal1 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    animation: model 0.5s linear;
+    z-index: 3;
+}
+
+@keyframes model {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slipModel {
+    from {
+        top: 0;
+        opacity: 0;
+    }
+    to {
+        top: 50%;
+        opacity: 1;
+    }
+}
+
+.auth {
+    &_froup {
+        width: 350px;
+        min-height: 85px;
+
+        &_date {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        &_name {
+            display: flex;
+            justify-content: space-between;
+        }
+    }
+
+    &_input,
+    &_select {
+        height: 40px;
+        border: 1px solid #dbdbdb;
+        outline: none;
+        border-radius: 4px;
+        width: 100%;
+        padding-left: 8px;
+        font-size: 14px;
+        margin-top: 4px;
+
+        &:focus {
+            border: 1px solid #6a5a9f;
+        }
+    }
+
+    &_input {
+        &__name {
+            width: 45%;
+        }
+    }
+
+    &_selectDate {
+        height: 40px;
+        border: 1px solid #dbdbdb;
+        outline: none;
+        border-radius: 4px;
+        width: 30%;
+        padding-left: 8px;
+
+        &:focus {
+            border: 1px solid #6a5a9f;
+        }
+    }
+
+    &_label {
+        margin-left: 8px;
+    }
+
+    &_isValid {
+        border: 1px solid #eb1336 !important;
+    }
+}
+
+.form_message {
+    letter-spacing: 1px;
+    color: #eb1336;
 }

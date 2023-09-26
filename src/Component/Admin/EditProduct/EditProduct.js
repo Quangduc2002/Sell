@@ -48,7 +48,7 @@ function EditProduct(props) {
     };
 
     const handleEdit = async (e) => {
-        if (localStorage.RoleId === 3) {
+        if (JSON.parse(localStorage.account).roleId === 3) {
             e.preventDefault();
             setShow(!show);
             axios

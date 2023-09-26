@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import Slider from 'react-slick';
-import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
 import clsx from 'clsx';
 import { motion, spring } from 'framer-motion';
@@ -17,9 +16,8 @@ function ProductDetails(props) {
     let { id } = useParams();
     const [product, setProduct] = useState([]);
     const [ratings, setRatings] = useState([]);
+    const [evaluations, setEvaluations] = useState([]);
     const [similarProduct, setSimilarProduct] = useState([]);
-    const [starID, setStarId] = useState('');
-    const [rating, setRating] = useState(false);
     const [showDescribetion, setShowDescribetion] = useState(true);
 
     const navigate = useNavigate();
@@ -81,8 +79,9 @@ function ProductDetails(props) {
 
     useEffect(() => {
         getUsers(id);
+        getEvaluation(id);
         getRating();
-    }, [id, rating]);
+    }, [id]);
 
     useEffect(() => {
         if (product.length !== 0) {
@@ -100,35 +99,40 @@ function ProductDetails(props) {
         setTimeout(() => setRatings(res.data), 1000);
     };
 
+    const getEvaluation = async (id) => {
+        let res = await fetchUser(`/products/${id}/evaluation`);
+        setEvaluations(res.data);
+    };
+
     const getSimilarProduct = async (smlproduct) => {
         let res = await fetchUser(`/products/${smlproduct.producttypeId}/ProductType`);
         setSimilarProduct(res.data);
     };
 
-    const handleSubmitEvaluate = (e) => {
-        e.preventDefault();
-        if (localStorage.length !== 0) {
-            if (JSON.parse(localStorage.account).roleId === 1) {
-                axios
-                    .put(`http://localhost:8080/products/${id}/rating`, {
-                        userId: JSON.parse(localStorage.account).id,
-                        productId: id,
-                        numberRating: starID,
-                    })
-                    .then((res) => {
-                        toast.success('Đánh giá thành công !');
-                        setRating(!rating);
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                    });
-            } else {
-                toast.warn('Tài khoản này không thể đánh giá !');
-            }
-        } else {
-            navigate('/Login');
-        }
-    };
+    // const handleSubmitEvaluate = (e) => {
+    //     e.preventDefault();
+    //     if (localStorage.length !== 0) {
+    //         if (JSON.parse(localStorage.account).roleId === 1) {
+    //             axios
+    //                 .put(`http://localhost:8080/products/${id}/rating`, {
+    //                     userId: JSON.parse(localStorage.account).id,
+    //                     productId: id,
+    //                     numberRating: starID,
+    //                 })
+    //                 .then((res) => {
+    //                     toast.success('Đánh giá thành công !');
+    //                     setChangeRating(!changeRating);
+    //                 })
+    //                 .catch((err) => {
+    //                     console.log(err);
+    //                 });
+    //         } else {
+    //             toast.warn('Tài khoản này không thể đánh giá !');
+    //         }
+    //     } else {
+    //         navigate('/Login');
+    //     }
+    // };
 
     const VND = new Intl.NumberFormat('vi-VN', {
         style: 'currency',
@@ -158,10 +162,6 @@ function ProductDetails(props) {
         } else {
             navigate('/Login');
         }
-    };
-
-    const handleStar = (id) => {
-        setStarId(id);
     };
 
     return (
@@ -401,25 +401,19 @@ function ProductDetails(props) {
                                                     className={clsx(
                                                         styles.describe__star,
                                                         `${star.class}`,
-                                                        'star',
-                                                        starID
-                                                            ? starID === star.id
-                                                                ? 'active'
-                                                                : ' '
-                                                            : ratings.map((rating) => {
-                                                                  return product.ID === rating.productId
-                                                                      ? rating.numberRating === star.id
-                                                                          ? 'active'
-                                                                          : ''
-                                                                      : '';
-                                                              }),
+                                                        ratings.map((rating) => {
+                                                            return product.ID === rating.productId
+                                                                ? rating.numberRating === star.id
+                                                                    ? 'active'
+                                                                    : ''
+                                                                : '';
+                                                        }),
                                                     )}
-                                                    onClick={() => handleStar(star.id)}
                                                 ></div>
                                             );
                                         })}
                                     </div>
-                                    <div>
+                                    {/* <div>
                                         <button
                                             onClick={(e) => handleSubmitEvaluate(e)}
                                             style={{ height: 'auto', padding: 10 }}
@@ -427,8 +421,32 @@ function ProductDetails(props) {
                                         >
                                             <span>Đánh giá</span>
                                         </button>
-                                    </div>
+                                    </div> */}
                                 </form>
+
+                                <div>
+                                    <p>Đánh giá sản phẩm</p>
+                                    <div className={clsx(styles.describe_evaluation)}>
+                                        {stars.map((star, index) => {
+                                            return (
+                                                <div className={clsx(styles.describe_evaluation__star)}>
+                                                    <span style={{ color: 'rgb(248, 206, 11)' }}>
+                                                        ({evaluations[index].count} vote)
+                                                    </span>
+                                                    &nbsp;
+                                                    <div
+                                                        key={star.id}
+                                                        className={clsx(
+                                                            `${star.class}`,
+                                                            'star',
+                                                            index + 1 === star.id ? 'active' : ' ',
+                                                        )}
+                                                    ></div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
                             </motion.div>
                         )}
                     </div>

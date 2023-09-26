@@ -72,7 +72,6 @@
 
     &_form {
         width: 400px;
-        // height: 500px;
         padding: 0 32px;
         background-color: #fff;
         border-radius: 25px;
@@ -89,11 +88,7 @@
         border: 1px solid #dbdbdb;
         border-radius: 4px;
         outline: none;
-        font-size: 16px;
-    }
-
-    &_name {
-        width: 48%;
+        font-size: 14px;
     }
 
     &_froup {
@@ -103,8 +98,6 @@
         }
 
         &_p {
-            margin-top: 10px;
-            margin-bottom: 4px;
             color: #8790b3;
             font-size: 12px;
             padding-left: 4px;
@@ -136,6 +129,51 @@
                 outline: none;
                 font-size: 14px;
             }
+        }
+
+        &__sex {
+            display: flex;
+            justify-content: space-between;
+
+            &__container {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                border-radius: 4px;
+                height: 40px;
+                width: 30%;
+                border: 1px solid #dbdbdb;
+                padding: 0 10px;
+            }
+        }
+
+        &__emptyInput {
+            position: relative;
+        }
+
+        &__emptySelect {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            margin-bottom: 4px;
+        }
+
+        &__emptyIcon {
+            position: absolute;
+            right: 3%;
+            top: 50%;
+            color: #eb1336;
+        }
+
+        &__emptyIconSelect {
+            position: absolute;
+            right: 3%;
+            color: #eb1336;
+        }
+
+        &__emptyIconName {
+            right: 6%;
         }
     }
 
