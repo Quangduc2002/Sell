@@ -15,7 +15,6 @@ import SRV3 from '../../assets/Image/srv_3.png';
 import { fetchUser } from '../../services/UseServices';
 import Pagination from '../Pagination/Pagination';
 import Loading from '../Loading/Loading';
-import FacebookMsg from '../FacebookMsg/FacebookMsg';
 
 function Home(props) {
     const {
@@ -250,7 +249,6 @@ function Home(props) {
                         </div>
                     </div>
                     <IconTop />
-                    <FacebookMsg />
                 </>
             ) : (
                 <Loading />
