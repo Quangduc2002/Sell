@@ -422,8 +422,9 @@ function ListCustomer(props) {
                         <thead>
                             <tr>
                                 <th>Email</th>
-                                <th>Mật khẩu</th>
                                 <th>{showUsers ? 'Tên khách hàng' : 'Tên nhân viên'}</th>
+                                <th>Ngày sinh</th>
+                                <th style={{ textAlign: 'center' }}>Giới tính</th>
                                 <th style={{ textAlign: 'center' }}>Xóa</th>
                             </tr>
                         </thead>
@@ -433,8 +434,13 @@ function ListCustomer(props) {
                                       return (
                                           <tr key={user.ID}>
                                               <td style={{ minWidth: 300 }}>{user.email}</td>
-                                              <td>{user.password}</td>
                                               <td>{user.name}</td>
+                                              <td>{user.ngaySinh + '/' + user.thangSinh + '/' + user.namSinh}</td>
+                                              <td style={{ textAlign: 'center' }}>
+                                                  {Sexs.map((sex) => {
+                                                      return sex.id === user.gioiTinh ? sex.name : '';
+                                                  })}
+                                              </td>
                                               <td style={{ textAlign: 'center' }}>
                                                   <button
                                                       className={clsx(styles.table_button)}
@@ -452,9 +458,14 @@ function ListCustomer(props) {
                                 : currentUserSearch.map((user) => {
                                       return (
                                           <tr key={user.ID}>
-                                              <td>{user.name}</td>
                                               <td style={{ minWidth: 300 }}>{user.email}</td>
-                                              <td>{user.password}</td>
+                                              <td>{user.name}</td>
+                                              <td>{user.ngaySinh + '/' + user.thangSinh + '/' + user.namSinh}</td>
+                                              <td style={{ textAlign: 'center' }}>
+                                                  {Sexs.map((sex) => {
+                                                      return sex.id === user.gioiTinh ? sex.name : '';
+                                                  })}
+                                              </td>
                                               <td style={{ textAlign: 'center' }}>
                                                   <button
                                                       className={clsx(styles.table_button)}

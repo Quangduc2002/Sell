@@ -300,5 +300,12 @@
 .controls2 {
     &_p {
         margin-right: 20px;
+        text-decoration: none;
+        color: blue;
+        cursor: pointer;
+
+        &:hover {
+            color: #ee4d2d;
+        }
     }
 }

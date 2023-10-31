@@ -30,6 +30,11 @@ import Deliver from '../Component/PurchaseOrder/Deliver/Deliver';
 import Cancel from '../Component/PurchaseOrder/Cancel/Cancel';
 import Profile from '../Component/Profile/Profile';
 import Trash from '../Component/Admin/Trash/Trash';
+import LayoutLogin from './LayoutLogin';
+import Recover from '../Component/ForgotPassword/Recover/Recover';
+import FindAccounts from '../Component/ForgotPassword/FindAcounts/FindAcounts';
+import EnterCode from '../Component/ForgotPassword/EnterCode/EnterCode';
+import PasswordNew from '../Component/ForgotPassword/PasswordNew/PasswordNew';
 
 function App() {
     const { scrollYProgress } = useScroll();
@@ -43,8 +48,14 @@ function App() {
                 }}
             ></motion.div>
             <Routes>
-                <Route path={path.Login} element={<Login toast={toast} />} />
-                <Route path={path.Public} element={<Layout />}>
+                <Route path={path.LayoutLogin} element={<LayoutLogin toast={toast} />}>
+                    <Route path={path.Login} element={<Login />} />
+                    <Route path={path.FindAccounts} element={<FindAccounts />} />
+                    <Route path={path.Recover} element={<Recover />} />
+                    <Route path={path.EnterCode} element={<EnterCode />} />
+                    <Route path={path.PassWordNew} element={<PasswordNew />} />
+                </Route>
+                <Route path={path.Public} element={<Layout toast={toast} />}>
                     <Route index element={<Home />} />
                     <Route path={path.LivingRoom} element={<LivingRoom />} />
                     <Route path={path.Kitchen} element={<Kitchen />} />

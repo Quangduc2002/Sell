@@ -46,8 +46,6 @@ function Layout(props) {
     };
 
     const onAdd = (product) => {
-        console.log(product);
-
         if (product.soLuong === 0) {
             toast.error('Sản phẩm đã hết hàng !');
         } else {

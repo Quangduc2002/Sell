@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styles from '../Login/Login.module.scss';
+import FindAccounts from '../ForgotPassword/FindAcounts/FindAcounts';
 
 function Login(props) {
     const [check, setCheck] = useState(false);
@@ -18,6 +19,7 @@ function Login(props) {
     const [gioiTinh, setGioiTinh] = useState('');
     const [Year, setYear] = useState('');
     const [showLogin, setShowLogin] = useState(true);
+    const [showForgotPass, setShowForgotPass] = useState(true);
     const [formErrors, setFormErrors] = useState({});
     const navigate = useNavigate();
     const Days = [
@@ -273,6 +275,8 @@ function Login(props) {
                     password: password,
                 })
                 .then((res) => {
+                    //lấy tên người dùng
+                    localStorage.setItem('account', JSON.stringify(res.data.user));
                     if (res.data.user.roleId === 1) {
                         navigate('/');
                         toast.success('Đăng nhập thành công !');
@@ -283,9 +287,6 @@ function Login(props) {
                         navigate('/admin/Revenue');
                         toast.success('Đăng nhập thành công !');
                     }
-                    //lấy tên người dùng
-
-                    localStorage.setItem('account', JSON.stringify(res.data.user));
                 })
                 .catch((err) => {
                     toast.error('Tài khoản hoặc mật khẩu không chính xác !');
@@ -305,6 +306,7 @@ function Login(props) {
                     ngaySinh: Day,
                     thangSinh: Month,
                     namSinh: Year,
+                    gioiTinh: gioiTinh,
                     image: 'avt-default.jpg',
                 })
                 .then((res) => {
@@ -316,6 +318,7 @@ function Login(props) {
                     setDay('');
                     setMonth('');
                     setYear('');
+                    setGioiTinh('');
                 })
                 .catch((err) => {
                     if (err.response.data.errCode === 1) {
@@ -333,75 +336,87 @@ function Login(props) {
     };
 
     return (
-        <div className={clsx(styles.nav2)}>
+        <>
+            {/* <div className={clsx(styles.nav2)}> */}
             {showLogin ? (
-                <div className={clsx(styles.nav2_form)}>
-                    <div className={clsx(styles.form_header)}>
-                        <h3 className={clsx(styles.form_heading)}>Đăng Nhập</h3>
-                        <h4 onClick={() => setShowLogin(false)} className={clsx(styles.form_heading__h4)}>
-                            Đăng Kí
-                        </h4>
-                    </div>
-                    <form method="POST" action="/user/login" className={clsx(styles.auth_form)}>
-                        <div className={clsx(styles.auth_froup)}>
-                            <input
-                                value={email}
-                                type="text"
-                                name="email"
-                                className={clsx(styles.auth_input, formErrors.email ? styles.auth_isValid : '')}
-                                placeholder="Nhập Email"
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                            <div>
-                                {formErrors.email && <p className={clsx(styles.form_message)}>{formErrors.email}</p>}
-                            </div>
+                showForgotPass ? (
+                    <div className={clsx(styles.nav2_form)}>
+                        <div className={clsx(styles.form_header)}>
+                            <h3 className={clsx(styles.form_heading)}>Đăng Nhập</h3>
+                            <h4 onClick={() => setShowLogin(false)} className={clsx(styles.form_heading__h4)}>
+                                Đăng Kí
+                            </h4>
                         </div>
-                        <div style={{ position: 'relative' }} className={clsx(styles.auth_froup)}>
-                            <div style={{ position: 'relative' }}>
+                        <form method="POST" action="/user/login" className={clsx(styles.auth_form)}>
+                            <div className={clsx(styles.auth_froup)}>
                                 <input
-                                    value={password}
-                                    type={check === true ? 'text' : 'password'}
-                                    name="password"
-                                    className={clsx(styles.auth_input, formErrors.password ? styles.auth_isValid : '')}
-                                    placeholder="Nhập mật khẩu"
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    onKeyPress={handlePressEnter}
+                                    value={email}
+                                    type="text"
+                                    name="email"
+                                    className={clsx(styles.auth_input, formErrors.email ? styles.auth_isValid : '')}
+                                    placeholder="Nhập Email"
+                                    onChange={(e) => setEmail(e.target.value)}
                                 />
-                                <i
-                                    onClick={() => {
-                                        setCheck(!check);
-                                    }}
-                                    className={clsx(
-                                        styles.auth_froup__eye,
-                                        'fa-regular ',
-                                        check === true ? 'fa-eye' : 'fa-eye-slash',
+                                <div>
+                                    {formErrors.email && (
+                                        <p className={clsx(styles.form_message)}>{formErrors.email}</p>
                                     )}
-                                ></i>
+                                </div>
                             </div>
-                            <div>
-                                {formErrors.password && (
-                                    <p className={clsx(styles.form_message)}>{formErrors.password}</p>
-                                )}
+                            <div style={{ position: 'relative' }} className={clsx(styles.auth_froup)}>
+                                <div style={{ position: 'relative' }}>
+                                    <input
+                                        value={password}
+                                        type={check === true ? 'text' : 'password'}
+                                        name="password"
+                                        className={clsx(
+                                            styles.auth_input,
+                                            formErrors.password ? styles.auth_isValid : '',
+                                        )}
+                                        placeholder="Nhập mật khẩu"
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        onKeyPress={handlePressEnter}
+                                    />
+                                    <i
+                                        onClick={() => {
+                                            setCheck(!check);
+                                        }}
+                                        className={clsx(
+                                            styles.auth_froup__eye,
+                                            'fa-regular ',
+                                            check === true ? 'fa-eye' : 'fa-eye-slash',
+                                        )}
+                                    ></i>
+                                </div>
+                                <div>
+                                    {formErrors.password && (
+                                        <p className={clsx(styles.form_message)}>{formErrors.password}</p>
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                        <div className={clsx(styles.form_controls, styles.form_controls1)}>
-                            <button
-                                onClick={(e) => handleSubmit(e)}
-                                className={clsx(styles.form_btn, styles.form_primary)}
-                            >
-                                ĐĂNG NHẬP
-                            </button>
+                            <div className={clsx(styles.form_controls, styles.form_controls1)}>
+                                <button
+                                    onClick={(e) => handleSubmit(e)}
+                                    className={clsx(styles.form_btn, styles.form_primary)}
+                                >
+                                    ĐĂNG NHẬP
+                                </button>
 
-                            <Link className={clsx(styles.form_btn__link)} to="/">
-                                <button className={clsx(styles.form_btn)}>TRỞ LẠI</button>
-                            </Link>
-                        </div>
-                        <div className={clsx(styles.form_controls2)}>
-                            <p className={clsx(styles.controls2_p)}>Quên mật khẩu</p>
-                            <p>Cần trợ giúp</p>
-                        </div>
-                    </form>
-                </div>
+                                <Link className={clsx(styles.form_btn__link)} to="/">
+                                    <button className={clsx(styles.form_btn)}>TRỞ LẠI</button>
+                                </Link>
+                            </div>
+                            <div className={clsx(styles.form_controls2)}>
+                                <NavLink to={'/Login/FindAccounts'} className={clsx(styles.controls2_p)}>
+                                    Quên mật khẩu
+                                </NavLink>
+                                <p>Cần trợ giúp</p>
+                            </div>
+                        </form>
+                    </div>
+                ) : (
+                    <FindAccounts setShowForgotPass={setShowForgotPass} showForgotPass={showForgotPass} />
+                )
             ) : (
                 <div className={clsx(styles.nav2_form)}>
                     <div className={clsx(styles.form_header)}>
@@ -642,7 +657,7 @@ function Login(props) {
                     </form>
                 </div>
             )}
-        </div>
+        </>
     );
 }
 

@@ -67,7 +67,7 @@ function Header(props) {
                                             setShow(!show);
                                         }}
                                     >
-                                        {/* {JSON.parse(localStorage.account).name} */}
+                                        {JSON.parse(localStorage.account).name}
                                         <i style={{ marginLeft: 6 }} className="fa-sharp fa-solid fa-caret-down"></i>
                                     </span>
                                 )}

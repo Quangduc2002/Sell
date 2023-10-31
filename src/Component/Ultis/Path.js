@@ -26,7 +26,13 @@ const path = {
     LayoutOrderCancel: 'cancel',
     // Profile
     LayoutProfile: '/Profile',
-    Login: '/Login',
+    // Login
+    LayoutLogin: '/Login',
+    Login: '',
+    FindAccounts: 'FindAccounts',
+    Recover: 'Recover',
+    EnterCode: 'EnterCode',
+    PassWordNew: 'PassWordNew',
 };
 
 export default path;

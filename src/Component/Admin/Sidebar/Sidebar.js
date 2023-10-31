@@ -49,7 +49,11 @@ function Sidebar(props) {
                             <NavLink to="setting" className={clsx(styles.sidebar_user__link)}>
                                 <li className={clsx(styles.sidebar_user__li)}>Cài đặt</li>
                             </NavLink>
-                            <NavLink onClick={handleLogout} to={path.Login} className={clsx(styles.sidebar_user__link)}>
+                            <NavLink
+                                onClick={handleLogout}
+                                to={path.LayoutLogin}
+                                className={clsx(styles.sidebar_user__link)}
+                            >
                                 <li className={clsx(styles.sidebar_user__li, styles.btn)}>Đăng xuất</li>
                             </NavLink>
                         </ul>
