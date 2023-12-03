@@ -15,7 +15,7 @@ import Trash from '../Component/Admin/Trash/Trash';
 function LayoutAdmin(props) {
     const { toast } = props;
     const [currentPage, setCurrentPage] = useState(1);
-    const [productPerPage] = useState(12);
+    const [productPerPage, setProductPerPage] = useState(12);
     const [isActive, setIsActive] = useState(1);
 
     // Pagination
@@ -71,6 +71,7 @@ function LayoutAdmin(props) {
                             handleNext={handleNext}
                             handlePrevious={handlePrevious}
                             toast={toast}
+                            setProductPerPage={setProductPerPage}
                         />
                     }
                 />

@@ -24,10 +24,6 @@ function Header(props) {
     ];
 
     const handleLogout = () => {
-        // localStorage.removeItem('Id');
-        // localStorage.removeItem('Name');
-        // localStorage.removeItem('RoleId');
-        // localStorage.removeItem('Image');
         localStorage.removeItem('account');
         sessionStorage.removeItem('account');
 
@@ -143,7 +139,7 @@ function Header(props) {
                     )}
 
                     <div className={clsx(styles.wrapper2_search)}>
-                        <>
+                        <div>
                             <input
                                 className={clsx(styles.input)}
                                 ref={search}
@@ -171,7 +167,7 @@ function Header(props) {
                                         >
                                             <div>
                                                 <i
-                                                    style={{ marginRight: 16, color: '#555' }}
+                                                    style={{ marginRight: 16, color: '#555', fontSize: '14px' }}
                                                     className="fa-solid fa-magnifying-glass"
                                                 ></i>
                                                 {product.tenSp}
@@ -183,7 +179,7 @@ function Header(props) {
                             <button onClick={HandleOnSubmit}>
                                 <i className="fa-sharp fa-solid fa-magnifying-glass"></i>
                             </button>
-                        </>
+                        </div>
                     </div>
 
                     <div className={clsx(styles.wrapper2_phone)}>

@@ -119,9 +119,9 @@ function OrderAll(props) {
                                         <p className={clsx(styles.order_header__left__shop)}>QuangDucShop</p>
                                     </div>
                                     <div className={clsx(styles.order_status)}>
-                                        {order[0].order.trangThaiDH === 0 ? (
+                                        {order[0].Order.trangThaiDH === 0 ? (
                                             <p className={clsx(styles.order_status__waitConfirm)}>Chờ xác nhận</p>
-                                        ) : order[0].order.trangThaiDH === 3 ? (
+                                        ) : order[0].Order.trangThaiDH === 3 ? (
                                             <p className={clsx(styles.order_status__waitConfirm)}>Đã hủy</p>
                                         ) : (
                                             <div className={clsx(styles.order_header__right)}>
@@ -190,14 +190,14 @@ function OrderAll(props) {
                                         </span>
                                     </div>
                                     <div className={clsx(styles.order_purchase)}>
-                                        {order[0].order.trangThaiDH === 0 ? (
+                                        {order[0].Order.trangThaiDH === 0 ? (
                                             <button
-                                                onClick={() => cancelOrder(order[0].order.ID)}
+                                                onClick={() => cancelOrder(order[0].Order.ID)}
                                                 className={clsx(styles.order_purchase__btn)}
                                             >
                                                 Hủy đơn hàng
                                             </button>
-                                        ) : order[0].order.trangThaiDH === 1 ? (
+                                        ) : order[0].Order.trangThaiDH === 1 ? (
                                             <>
                                                 <button
                                                     onClick={() => onAdd(order)}

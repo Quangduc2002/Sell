@@ -425,6 +425,7 @@ function ListCustomer(props) {
                                 <th>{showUsers ? 'Tên khách hàng' : 'Tên nhân viên'}</th>
                                 <th>Ngày sinh</th>
                                 <th style={{ textAlign: 'center' }}>Giới tính</th>
+                                <th>Tiền hàng</th>
                                 <th style={{ textAlign: 'center' }}>Xóa</th>
                             </tr>
                         </thead>
@@ -441,6 +442,7 @@ function ListCustomer(props) {
                                                       return sex.id === user.gioiTinh ? sex.name : '';
                                                   })}
                                               </td>
+                                              <td>{user.name}</td>
                                               <td style={{ textAlign: 'center' }}>
                                                   <button
                                                       className={clsx(styles.table_button)}

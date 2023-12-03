@@ -79,3 +79,23 @@
     font-weight: 900;
     color: #f8ce0b;
 }
+
+.stars-inner-5 {
+    width: 100%;
+}
+
+.stars-inner-4 {
+    width: 80%;
+}
+
+.stars-inner-3 {
+    width: 60%;
+}
+
+.stars-inner-2 {
+    width: 40%;
+}
+
+.stars-inner-1 {
+    width: 20%;
+}

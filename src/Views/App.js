@@ -55,8 +55,9 @@ function App() {
                     <Route path={path.EnterCode} element={<EnterCode />} />
                     <Route path={path.PassWordNew} element={<PasswordNew />} />
                 </Route>
-                <Route path={path.Public} element={<Layout toast={toast} />}>
-                    <Route index element={<Home />} />
+
+                <Route path={path.Public} exact={true} element={<Layout toast={toast} />}>
+                    <Route path={path.Public} element={<Home />} />
                     <Route path={path.LivingRoom} element={<LivingRoom />} />
                     <Route path={path.Kitchen} element={<Kitchen />} />
                     <Route path={path.WorkRoom} element={<WorkRoom />} />
@@ -64,6 +65,7 @@ function App() {
                     <Route path={path.Cart} element={<Cart />} />
                     <Route path={path.ProductDetails} element={<ProductDetails />} />
                     <Route path={path.LayoutOrderAll} element={<OrderAll />} />
+                    <Route path="*" />
                     {/* Order */}
                     <Route path={path.LayoutOrder} element={<LayoutOrder toast={toast} />}>
                         <Route path={path.LayoutOrderAll} element={<OrderAll />} />

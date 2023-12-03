@@ -19,6 +19,7 @@ function ListProduct(props) {
         isActive,
         handleNext,
         handlePrevious,
+        setProductPerPage,
     } = props;
     const search = useRef();
     const [products, setProducts] = useState([]);
@@ -29,7 +30,6 @@ function ListProduct(props) {
     const [searchQuery, setSearchQuery] = useState('');
     const [succeSearch, setSucceSearch] = useState([]);
     const [isChecked, setIsChecked] = useState([]);
-
     const [showSort, setShowSort] = useState(true);
     const [showSortPrice, setShowSortPrice] = useState(true);
 
@@ -246,11 +246,23 @@ function ListProduct(props) {
                             </button>
                         </div>
                     </div>
-                    <div>
+                    <div className={clsx(styles.listProduct_title__right)}>
                         <Link to="/admin/ThemSp" className={clsx(styles.listProduct_add)}>
                             <i className="fa-regular fa-square-plus" style={{ style: '#fff', marginRight: 6 }}></i>
                             Thêm sản phẩm
                         </Link>
+
+                        <div className={clsx(styles.listProduct_title__right__show)}>
+                            <select
+                                className={clsx(styles.home_title__show)}
+                                onChange={(e) => setProductPerPage(e.target.value)}
+                            >
+                                <option style={{ display: 'none' }}>Hiển thị</option>
+                                <option value={products.length}>Tất cả</option>
+                                <option value="4">4</option>
+                                <option value="8">8</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
                 {paginationProduct.length === 0 ? (
@@ -311,6 +323,7 @@ function ListProduct(props) {
                             <tbody>
                                 {currentProductSearch.length === 0
                                     ? paginationProduct.map((product) => {
+                                          console.log(product.Meterial.tenChatLieu);
                                           return (
                                               <tr key={product.ID}>
                                                   <td>
@@ -323,7 +336,7 @@ function ListProduct(props) {
                                                   </td>
                                                   <td>{product.ID}</td>
                                                   <td style={{ minWidth: 300 }}>{product.tenSp}</td>
-                                                  <td>{product.chatLieu}</td>
+                                                  <td>{product.Meterial.tenChatLieu}</td>
                                                   <td>{VND.format(product.giaNhap)}</td>
                                                   <td>{VND.format(product.giaBan)}</td>
                                                   <td style={{ textAlign: 'center' }}>{product.soLuong}</td>

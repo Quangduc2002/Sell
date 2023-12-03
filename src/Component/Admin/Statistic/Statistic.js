@@ -69,7 +69,7 @@ function Statistic(props) {
     // thống kê tổng tiền
     let income = 0;
     for (let i = 0; i < incomes.length; i++) {
-        income += incomes[i].orderitems.donGia;
+        income += incomes[i].OrderItems.donGia;
     }
 
     return (

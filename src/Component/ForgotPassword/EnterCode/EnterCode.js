@@ -17,6 +17,14 @@ function EnterCode(props) {
                 setCountDown(countDown - 1);
             }, 1000);
             return () => clearInterval(timer);
+        } else {
+            axios
+                .post('http://localhost:8080/user/resetOTP', {
+                    user: JSON.parse(localStorage.account),
+                    OTP: '',
+                })
+                .then((res) => {})
+                .catch((err) => {});
         }
     });
 

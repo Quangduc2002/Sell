@@ -17,7 +17,7 @@ function LayoutLogin(props) {
     return (
         <div className={clsx(styles.nav2)}>
             <Routes>
-                <Route path={path.Login} element={<Login />} />
+                <Route path={path.Login} element={<Login toast={toast} />} />
                 <Route path={path.EnterCode} element={<EnterCode />} />
                 <Route path={path.Recover} element={<Recover handleCancel={handleCancel} />} />
                 <Route path={path.FindAccounts} element={<FindAccounts handleCancel={handleCancel} />} />

@@ -12,7 +12,7 @@ import { fetchUser } from '../../services/UseServices';
 import Product from '../Product/Product';
 
 function ProductDetails(props) {
-    const { onAdd, count, handleProductreduction, handleIncreaseProduct, toast } = props;
+    const { onAdd, count, setCount, toast } = props;
     let { id } = useParams();
     const [product, setProduct] = useState([]);
     const [ratings, setRatings] = useState([]);
@@ -78,7 +78,7 @@ function ProductDetails(props) {
     ];
 
     useEffect(() => {
-        getUsers(id);
+        getProductDetails(id);
         getEvaluation(id);
         getRating();
     }, [id]);
@@ -89,7 +89,7 @@ function ProductDetails(props) {
         }
     }, [product]);
 
-    const getUsers = async (id) => {
+    const getProductDetails = async (id) => {
         let res = await fetchUser(`/products/${id}`);
         setTimeout(() => setProduct(res.data), 1000);
     };
@@ -108,31 +108,6 @@ function ProductDetails(props) {
         let res = await fetchUser(`/products/${smlproduct.producttypeId}/ProductType`);
         setSimilarProduct(res.data);
     };
-
-    // const handleSubmitEvaluate = (e) => {
-    //     e.preventDefault();
-    //     if (localStorage.length !== 0) {
-    //         if (JSON.parse(localStorage.account).roleId === 1) {
-    //             axios
-    //                 .put(`http://localhost:8080/products/${id}/rating`, {
-    //                     userId: JSON.parse(localStorage.account).id,
-    //                     productId: id,
-    //                     numberRating: starID,
-    //                 })
-    //                 .then((res) => {
-    //                     toast.success('Đánh giá thành công !');
-    //                     setChangeRating(!changeRating);
-    //                 })
-    //                 .catch((err) => {
-    //                     console.log(err);
-    //                 });
-    //         } else {
-    //             toast.warn('Tài khoản này không thể đánh giá !');
-    //         }
-    //     } else {
-    //         navigate('/Login');
-    //     }
-    // };
 
     const VND = new Intl.NumberFormat('vi-VN', {
         style: 'currency',
@@ -164,6 +139,18 @@ function ProductDetails(props) {
         }
     };
 
+    // Tăng số sản phẩm trong trang chi tiết sản phẩm
+    const handleIncreaseProduct = () => {
+        if (count < product.soLuong) {
+            setCount(count + 1);
+        }
+    };
+
+    const handleProductreduction = () => {
+        if (count > 1) {
+            setCount(count - 1);
+        }
+    };
     return (
         <div style={{ backgroundColor: 'rgb(248, 249, 251)', paddingBottom: 60 }}>
             <div className={clsx(styles.room1)}>
@@ -237,7 +224,7 @@ function ProductDetails(props) {
                                 )}
                             </div>
 
-                            {product.giamGia !== '' ? (
+                            {product.giamGia !== 0 ? (
                                 <div className={clsx(styles.right_discountCode)}>
                                     <p>Mã giảm giá của shop </p>
                                     <span>-{product.giamGia}%</span>
@@ -257,7 +244,7 @@ function ProductDetails(props) {
                             <div className={clsx(styles.right_transport)}>
                                 <p>Chất liệu</p>
                                 <div className={clsx(styles.right_transport__free)}>
-                                    <span>{product.chatLieu}</span>
+                                    <span>{product.Meterial.tenChatLieu}</span>
                                 </div>
                             </div>
 
@@ -268,36 +255,47 @@ function ProductDetails(props) {
                                 </div>
                             </div>
 
-                            <div className={clsx(styles.right_quantity)}>
-                                <div>
-                                    <p>Số lượng</p>
+                            <div style={{ marginTop: 30, marginBottom: 30 }}>
+                                <div className={clsx(styles.right_quantity)}>
+                                    <div>
+                                        <p>Số lượng</p>
+                                    </div>
+                                    <div className={clsx(styles.right_quantity__count)}>
+                                        <button onClick={handleProductreduction}>
+                                            <svg
+                                                enableBackground="new 0 0 10 10"
+                                                viewBox="0 0 10 10"
+                                                x="0"
+                                                y="0"
+                                                className="shopee-svg-icon"
+                                            >
+                                                <polygon points="4.5 4.5 3.5 4.5 0 4.5 0 5.5 3.5 5.5 4.5 5.5 10 5.5 10 4.5"></polygon>
+                                            </svg>
+                                        </button>
+                                        <span>{count}</span>
+                                        <button onClick={handleIncreaseProduct}>
+                                            <svg
+                                                enableBackground="new 0 0 10 10"
+                                                viewBox="0 0 10 10"
+                                                x="0"
+                                                y="0"
+                                                className="shopee-svg-icon icon-plus-sign"
+                                            >
+                                                <polygon points="10 4.5 5.5 4.5 5.5 0 4.5 0 4.5 4.5 0 4.5 0 5.5 4.5 5.5 4.5 10 5.5 10 5.5 5.5 10 5.5"></polygon>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <div className={clsx(styles.right_quantity__available)}>
+                                        {product.soLuong} &nbsp;Sản phẩm có sẵn
+                                    </div>
                                 </div>
-                                <div className={clsx(styles.right_quantity__count)}>
-                                    <button onClick={handleProductreduction}>
-                                        <svg
-                                            enableBackground="new 0 0 10 10"
-                                            viewBox="0 0 10 10"
-                                            x="0"
-                                            y="0"
-                                            className="shopee-svg-icon"
-                                        >
-                                            <polygon points="4.5 4.5 3.5 4.5 0 4.5 0 5.5 3.5 5.5 4.5 5.5 10 5.5 10 4.5"></polygon>
-                                        </svg>
-                                    </button>
-                                    <span>{count}</span>
-                                    <button onClick={handleIncreaseProduct}>
-                                        <svg
-                                            enableBackground="new 0 0 10 10"
-                                            viewBox="0 0 10 10"
-                                            x="0"
-                                            y="0"
-                                            className="shopee-svg-icon icon-plus-sign"
-                                        >
-                                            <polygon points="10 4.5 5.5 4.5 5.5 0 4.5 0 4.5 4.5 0 4.5 0 5.5 4.5 5.5 4.5 10 5.5 10 5.5 5.5 10 5.5"></polygon>
-                                        </svg>
-                                    </button>
-                                </div>
-                                <div className={clsx(styles.right_quantity__available)}>Sản phẩm có sẵn </div>
+                                {count === product.soLuong ? (
+                                    <div style={{ color: '#ee4d2d', marginTop: 10 }}>
+                                        Số lượng bạn chọn đã đạt mức tối đa của sản phẩm này
+                                    </div>
+                                ) : (
+                                    ''
+                                )}
                             </div>
 
                             <div className={clsx(styles.right_transport)}>
@@ -413,15 +411,6 @@ function ProductDetails(props) {
                                             );
                                         })}
                                     </div>
-                                    {/* <div>
-                                        <button
-                                            onClick={(e) => handleSubmitEvaluate(e)}
-                                            style={{ height: 'auto', padding: 10 }}
-                                            className={clsx(styles.right_cart, styles.right_evalua)}
-                                        >
-                                            <span>Đánh giá</span>
-                                        </button>
-                                    </div> */}
                                 </form>
 
                                 <div>

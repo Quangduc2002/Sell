@@ -72,6 +72,7 @@ function Finish(props) {
             });
     };
 
+    console.log(orders);
     return (
         <motion.div
             className={clsx(styles.order)}
@@ -165,7 +166,7 @@ function Finish(props) {
                                         </span>
                                     </div>
                                     <div className={clsx(styles.order_purchase)}>
-                                        {order[0].order.trangThaiDH === 0 ? (
+                                        {order[0].Order.trangThaiDH === 0 ? (
                                             <button className={clsx(styles.order_purchase__btn)}>Hủy đơn hàng</button>
                                         ) : (
                                             <button className={clsx(styles.order_purchase__btn)}>Mua lại</button>

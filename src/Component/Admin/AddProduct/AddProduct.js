@@ -19,8 +19,8 @@ function AddProduct(props) {
     const [kichThuoc, setKichThuoc] = useState('');
     const [giamGia, setGiamGia] = useState('');
     const [producttypes, setProducttypes] = useState('');
+    const [materials, setMaterials] = useState('');
     const [formErrors, setFormErrors] = useState({});
-    const material = ['Gỗ gụ', 'Gỗ gõ', 'Vải', 'Gỗ hương đá', 'Gỗ hương'];
 
     const handleImage = (e) => {
         // add image vào csdl
@@ -29,11 +29,17 @@ function AddProduct(props) {
 
     useEffect(() => {
         getUsers();
+        getMeterial();
     }, []);
 
     const getUsers = async () => {
         let res = await fetchUser('/producttypes');
         setProducttypes(res.data);
+    };
+
+    const getMeterial = async () => {
+        let res = await fetchUser('/products/meterial');
+        setMaterials(res.data);
     };
 
     // validate
@@ -93,14 +99,14 @@ function AddProduct(props) {
             formData.append('chatLieu', chatLieu);
             formData.append('giaNhap', gnhap);
             formData.append('giaBan', gBan);
-            formData.append('loaiSp', loaiSp);
+            formData.append('producttypeId', loaiSp);
             formData.append('image', Image);
             formData.append('giamGia', giamGia);
             formData.append('kichThuoc', kichThuoc);
             formData.append('soLuong', soLuong);
-            formData.append('soLuotDanhGia', 0);
-            formData.append('tongDanhGia', 0);
             formData.append('trangThai', 1);
+            formData.append('maNV', JSON.parse(localStorage.account).id);
+
             axios
                 .post('http://localhost:8080/products/add', formData)
                 .then((res) => {
@@ -182,9 +188,9 @@ function AddProduct(props) {
                                     <option disabled style={{ display: 'none' }} value="0">
                                         Chất liệu
                                     </option>
-                                    {material &&
-                                        material.map((material, index) => {
-                                            return <option key={index}>{material}</option>;
+                                    {materials &&
+                                        materials.map((material) => {
+                                            return <option value={material.id}>{material.tenChatLieu}</option>;
                                         })}
                                 </select>
                                 <div>

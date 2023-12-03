@@ -76,6 +76,18 @@
         margin-top: 40px;
     }
 }
+
+.filter {
+    padding: 6px 10px;
+    background-color: #ee4d2d;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #fff;
+    &:hover {
+        transition: all 0.3s linear;
+        background-color: #c52432;
+    }
+}
 //reponsive
 @media screen and (min-width: 922px) and (max-width: 1200px) {
     .medium {

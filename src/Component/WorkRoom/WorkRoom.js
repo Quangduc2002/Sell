@@ -8,13 +8,21 @@ import { Link } from 'react-router-dom';
 import Loading from '../Loading/Loading';
 import { fetchUser } from '../../services/UseServices';
 import Pagination from '../Pagination/Pagination';
+import Filter from '../Filter/Filter';
 
 function WorkRoom(props) {
     const { indexOfLastProduct, indeOfFirstProduct, productPerPage, pagination, isActive, handleNext, handlePrevious } =
         props;
     const [products, setProducts] = useState([]);
-    let newProducts = [];
-    newProducts = products.slice(0);
+    const [showFilters, setShowFilters] = useState(false);
+    const [priceActive, setPriceActive] = useState(1);
+    const [isCheckedMaterial, setIsCheckedMaterial] = useState([]);
+    const [minPrice, setMinPrice] = useState('');
+    const [maxPrice, setMaxPrice] = useState('');
+    const [discount, setDiscount] = useState(false);
+    const [ratings, setRatings] = useState('');
+    // let newProducts = [];
+    // newProducts = products.slice(0);
     useEffect(() => {
         // axios
         //     .get('http://localhost:8080/producttypes/3')
@@ -32,30 +40,40 @@ function WorkRoom(props) {
         setTimeout(() => setProducts(res.data), 1000);
     };
 
-    const listWorkRoom = products.slice(indeOfFirstProduct, indexOfLastProduct);
+    // function handleFilterProducts() {
+    //     var selectedOption = document.querySelector('select').value;
+    //     if (selectedOption === '1') {
+    //         newProducts.sort((a, b) => {
+    //             return (
+    //                 parseFloat(a.giaBan - (a.giaBan * a.giamGia) / 100) -
+    //                 parseFloat(b.giaBan - (b.giaBan * b.giamGia) / 100)
+    //             );
+    //         });
+    //         setProducts(newProducts);
+    //     }
+    //     if (selectedOption === '2') {
+    //         newProducts.sort((a, b) => {
+    //             return (
+    //                 parseFloat(b.giaBan - (b.giaBan * b.giamGia) / 100) -
+    //                 parseFloat(a.giaBan - (a.giaBan * a.giamGia) / 100)
+    //             );
+    //         });
+    //         setProducts(newProducts);
+    //     }
+    // }
 
-    function handleFilterProducts() {
-        var selectedOption = document.querySelector('select').value;
-        if (selectedOption === '1') {
-            newProducts.sort((a, b) => {
-                return (
-                    parseFloat(a.giaBan - (a.giaBan * a.giamGia) / 100) -
-                    parseFloat(b.giaBan - (b.giaBan * b.giamGia) / 100)
-                );
-            });
-            setProducts(newProducts);
-        }
-        if (selectedOption === '2') {
-            newProducts.sort((a, b) => {
-                return (
-                    parseFloat(b.giaBan - (b.giaBan * b.giamGia) / 100) -
-                    parseFloat(a.giaBan - (a.giaBan * a.giamGia) / 100)
-                );
-            });
-            setProducts(newProducts);
-        }
-    }
-
+    const filterProducts = products.filter(
+        (product) =>
+            (isCheckedMaterial.length === 0 || isCheckedMaterial.includes(product.chatLieu)) &&
+            (maxPrice
+                ? (minPrice === '' ||
+                      product.giaBan - (product.giaBan * product.giamGia) / 100 >= parseInt(minPrice)) &&
+                  (maxPrice === '' || product.giaBan - (product.giaBan * product.giamGia) / 100 <= parseInt(maxPrice))
+                : minPrice === '' || product.giaBan - (product.giaBan * product.giamGia) / 100 >= parseInt(minPrice)) &&
+            (discount ? product.giamGia > 0 : product.giamGia >= 0) &&
+            (ratings === '' || (ratings ? product.tongDanhGia >= ratings : '')),
+    );
+    const workRoom = filterProducts.slice(indeOfFirstProduct, indexOfLastProduct);
     return (
         <div style={{ backgroundColor: '#f8f9fb', paddingBottom: 60 }}>
             <div className={clsx(styles.room1)}>
@@ -68,7 +86,11 @@ function WorkRoom(props) {
                         <span>Phòng làm việc</span>
                     </div>
 
-                    <ul>
+                    <div className={clsx(styles.filter)} onClick={() => setShowFilters(!showFilters)}>
+                        <i class="fa-solid fa-filter" style={{ color: '#fff', marginRight: 4 }}></i>Lọc
+                    </div>
+
+                    {/* <ul>
                         <select
                             defaultValue="0"
                             onChange={() => handleFilterProducts()}
@@ -80,12 +102,31 @@ function WorkRoom(props) {
                             <option value="1">Giá: thấp đến cao</option>
                             <option value="2">Giá: cao đến thấp</option>
                         </select>
-                    </ul>
+                    </ul> */}
                 </div>
             </div>
             <div className={clsx(styles.home__product)}>
-                {newProducts.length === 0 ? (
+                {showFilters && (
+                    <Filter
+                        products={products}
+                        priceActive={priceActive}
+                        setPriceActive={setPriceActive}
+                        isCheckedMaterial={isCheckedMaterial}
+                        setIsCheckedMaterial={setIsCheckedMaterial}
+                        setMinPrice={setMinPrice}
+                        setMaxPrice={setMaxPrice}
+                        setDiscount={setDiscount}
+                        discount={discount}
+                        ratings={ratings}
+                        setRatings={setRatings}
+                    />
+                )}
+                {products.length === 0 ? (
                     <Loading />
+                ) : workRoom.length === 0 ? (
+                    <div style={{ fontSize: 24, color: '#ee4d2d', textAlign: 'center', marginTop: 30 }}>
+                        Sản phẩm tìm kiếm không tồn tại
+                    </div>
                 ) : (
                     <motion.div
                         className={clsx(styles.home__product)}
@@ -97,13 +138,13 @@ function WorkRoom(props) {
                         }}
                     >
                         <div className={clsx(styles.room_product)}>
-                            {listWorkRoom.map((product) => {
+                            {workRoom.map((product) => {
                                 return <Product key={product.ID} product={product} />;
                             })}
                         </div>
                         <Pagination
                             productPerPage={productPerPage}
-                            totalProduct={products.length}
+                            totalProduct={filterProducts.length}
                             pagination={pagination}
                             isActive={isActive}
                             handleNext={handleNext}

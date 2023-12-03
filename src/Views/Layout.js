@@ -26,10 +26,11 @@ function Layout(props) {
     const { roleId } = props;
     const [cartItems, setCartItems] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [productPerPage] = useState(12);
+    const [productPerPage, setProductPerPage] = useState(12);
     const [isActive, setIsActive] = useState(1);
     const [count, setCount] = useState(1);
     const [searchQuery, setSearchQuery] = useState('');
+    const [searchs, setSearchs] = useState('');
     const [succeSearch, setSucceSearch] = useState([]);
     const [allSp, setAllSp] = useState(true);
     //api
@@ -41,7 +42,7 @@ function Layout(props) {
 
     const getUsers = async () => {
         let res = await fetchUser('products');
-        // setName để search sản phẩm
+        // setName để searchs sản phẩm
         setName(res.data);
     };
 
@@ -121,20 +122,15 @@ function Layout(props) {
         setCurrentPage(currentPage - 1);
     };
 
-    // Tăng số sản phẩm trong trang chi tiết sản phẩm
-    const handleIncreaseProduct = () => {
-        setCount(count + 1);
-    };
-
-    const handleProductreduction = () => {
-        if (count > 1) {
-            setCount(count - 1);
-        }
-    };
-
     const HandleOnSubmit = (event) => {
         setSucceSearch(filteredItems);
         setSearchQuery('');
+        setAllSp(false);
+    };
+
+    const HandleSearch = () => {
+        setSucceSearch(filteredProducts);
+        setSearchs('');
         setAllSp(false);
     };
 
@@ -142,12 +138,17 @@ function Layout(props) {
         if (e.key === 'Enter') {
             // Handle the Enter key press event
             HandleOnSubmit();
+            HandleSearch();
         }
     };
 
-    //search
+    //searchs
     const filteredItems = name.filter((item) => {
         return item.tenSp.toLowerCase().includes(searchQuery.toLowerCase());
+    });
+
+    const filteredProducts = name.filter((item) => {
+        return item.tenSp.toLowerCase().includes(searchs.toLowerCase());
     });
 
     return (
@@ -178,6 +179,11 @@ function Layout(props) {
                             succeSearch={succeSearch}
                             allSp={allSp}
                             setAllSp={setAllSp}
+                            setProductPerPage={setProductPerPage}
+                            setSearchs={setSearchs}
+                            filteredProducts={filteredProducts}
+                            searchs={searchs}
+                            handleKeyPress={handleKeyPress}
                         />
                     }
                 />
@@ -255,20 +261,13 @@ function Layout(props) {
                             onDelete={onDelete}
                             totalMoney={totalMoney}
                             toast={toast}
+                            setCartItems={setCartItems}
                         />
                     }
                 />
                 <Route
                     path={path.ProductDetails}
-                    element={
-                        <ProductDetails
-                            count={count}
-                            handleIncreaseProduct={handleIncreaseProduct}
-                            handleProductreduction={handleProductreduction}
-                            onAdd={onAdd}
-                            toast={toast}
-                        />
-                    }
+                    element={<ProductDetails count={count} setCount={setCount} onAdd={onAdd} toast={toast} />}
                 />
                 <Route path={path.LayoutOrder} element={<LayoutOrder onAdd={onAdd} toast={toast} />}>
                     <Route path={path.LayoutOrderAll} element={<OrderAll toast={toast} />} />

@@ -25,7 +25,7 @@ function Product(props) {
                 <div className={clsx(styles.room_image)}>
                     <div className={clsx(styles.room_badge)}>
                         <img alt="" src={`http://localhost:3000/Image/${product.image}`} />
-                        {product.giamGia === '' ? (
+                        {product.giamGia === 0 ? (
                             ''
                         ) : (
                             <span className={clsx(styles.room_pos)}>-{product.giamGia}%</span>
@@ -35,7 +35,7 @@ function Product(props) {
                 <div className={clsx(styles.room_text)}>
                     <p title={product.text}>{product.tenSp}</p>
                     <div className={clsx(styles.room_price)}>
-                        {product.giamGia !== '' ? (
+                        {product.giamGia !== 0 ? (
                             <span className={clsx(styles.priceAmount)}>{VND.format(product.giaBan)}</span>
                         ) : (
                             ''
