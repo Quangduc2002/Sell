@@ -33,6 +33,7 @@ function Header(props) {
         toast.success('Đăng xuất thành công !');
     };
 
+    console.log(localStorage.account);
     return (
         <div className={clsx(styles.wrapper)}>
             <div className={clsx(styles.top)}>
@@ -63,7 +64,7 @@ function Header(props) {
                                             setShow(!show);
                                         }}
                                     >
-                                        {/* {JSON.parse(localStorage.account).name} */}
+                                        {localStorage.account ? JSON.parse(localStorage.account).name : ''}
                                         <i style={{ marginLeft: 6 }} className="fa-sharp fa-solid fa-caret-down"></i>
                                     </span>
                                 )}
