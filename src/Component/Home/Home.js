@@ -28,7 +28,7 @@ function Home(props) {
         handlePrevious,
         succeSearch,
         allSp,
-        setAllSp,
+        // setAllSp,
         setProductPerPage,
         setSearchs,
         filteredProducts,
