@@ -124,36 +124,16 @@ function Filter(props) {
             <div className={clsx(styles.panelFilter_container)}>
                 <div className={clsx(styles.panelFilter_wrapFilter)}>
                     <div className={clsx(styles.panelFilter_wrapFilter__filter)}>
-                        <div className={clsx(styles.panelFilter_wrapFilter__filter__mtext)}>Dịch Vụ & Khuyến Mãi</div>
-                        <ul>
-                            <li>
-                                <label
-                                    style={{ display: 'flex', alignItems: 'center' }}
-                                    className={clsx(discount ? styles.sortPrice : '')}
-                                >
-                                    <input
-                                        style={{ width: 16, height: 16 }}
-                                        value={'discount'}
-                                        type="checkbox"
-                                        checked={discount}
-                                        name="materialFilter"
-                                        onChange={(e) => setDiscount(e.target.checked)}
-                                    />
-                                    &nbsp;&nbsp;Đang giảm giá
-                                </label>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div className={clsx(styles.panelFilter_wrapFilter__filter)}>
                         <div className={clsx(styles.panelFilter_wrapFilter__filter__mtext)}>Đánh giá</div>
                         <ul>
                             <li>
                                 {stars.map((star, index) => {
                                     return (
                                         <div
-                                            style={{ width: 200, padding: '10px 20px ', cursor: 'pointer' }}
-                                            className={clsx(+ratings === star.id ? styles.activeRating : '')}
+                                            className={clsx(
+                                                +ratings === star.id ? styles.activeRating : '',
+                                                styles.comtainerRating,
+                                            )}
                                             key={star.id}
                                             onClick={() => handleCheckRadioRatings(star.id)}
                                         >
@@ -165,8 +145,10 @@ function Filter(props) {
                                                     )}
                                                 ></div>
                                             </div>
-                                            &nbsp;
-                                            {star.id < 5 ? <span>trở lên</span> : ''}
+                                            &nbsp;&nbsp;
+                                            <span className={clsx(star.id === 5 ? styles.visibility : '')}>
+                                                trở lên
+                                            </span>
                                         </div>
                                     );
                                 })}
@@ -226,6 +208,28 @@ function Filter(props) {
                                     </li>
                                 );
                             })}
+                        </ul>
+                    </div>
+
+                    <div className={clsx(styles.panelFilter_wrapFilter__filter)}>
+                        <div className={clsx(styles.panelFilter_wrapFilter__filter__mtext)}>Dịch Vụ & Khuyến Mãi</div>
+                        <ul>
+                            <li>
+                                <label
+                                    style={{ display: 'flex', alignItems: 'center' }}
+                                    className={clsx(discount ? styles.sortPrice : '')}
+                                >
+                                    <input
+                                        style={{ width: 16, height: 16 }}
+                                        value={'discount'}
+                                        type="checkbox"
+                                        checked={discount}
+                                        name="materialFilter"
+                                        onChange={(e) => setDiscount(e.target.checked)}
+                                    />
+                                    &nbsp;&nbsp;Đang giảm giá
+                                </label>
+                            </li>
                         </ul>
                     </div>
                 </div>

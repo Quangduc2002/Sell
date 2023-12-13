@@ -28,7 +28,6 @@ function Home(props) {
         handlePrevious,
         succeSearch,
         allSp,
-        // setAllSp,
         setProductPerPage,
         setSearchs,
         filteredProducts,
@@ -182,7 +181,7 @@ function Home(props) {
         <div div className={clsx(styles.home, products.length === 0 ? styles.MG : '')}>
             {products.length !== 0 ? (
                 <>
-                    <div className={clsx(styles.home1)}>
+                    <div className={clsx(styles.home1, 'home1')}>
                         <Slider {...settings}>
                             {slickSlides.map((slickSlide, index) => {
                                 return <img className={clsx(styles.home1_img)} alt="" src={slickSlide} key={index} />;
@@ -200,40 +199,43 @@ function Home(props) {
                                     onChange={(e) => setProductPerPage(e.target.value)}
                                 >
                                     <option style={{ display: 'none' }}>Mặc định</option>
-                                    <option value={products.length}>Tất cả</option>
-                                    <option value="4">4</option>
-                                    <option value="8">8</option>
-                                    <option value="12">12</option>
+                                    <option
+                                        selected={+productPerPage === products.length ? true : false}
+                                        value={products.length}
+                                    >
+                                        Tất cả
+                                    </option>
+                                    <option selected={+productPerPage === 4 ? true : false} value="4">
+                                        4
+                                    </option>
+                                    <option selected={+productPerPage === 8 ? true : false} value="8">
+                                        8
+                                    </option>
+                                    <option selected={+productPerPage === 12 ? true : false} value="12">
+                                        12
+                                    </option>
                                 </select>
                             </li>
-                            {/* <li className="tab has-icon">
-                                <button
-                                    onClick={() => setAllSp(true)}
-                                    className={clsx(
-                                        styles.home_title_button,
-                                        allSp === true ? styles.home_title_button__active : '',
-                                    )}
+
+                            <div style={{ display: 'flex' }}>
+                                <li
+                                    className={clsx(styles.filter, showSearch ? styles.showFilter : '')}
+                                    onClick={() => show('search')}
                                 >
-                                    Tất cả sản phẩm
-                                </button>
-                            </li> */}
-                            <li
-                                className={clsx(styles.filter, showSearch ? styles.showFilter : '')}
-                                onClick={() => show('search')}
-                            >
-                                <i
-                                    className="fa-sharp fa-solid fa-magnifying-glass"
-                                    style={{ color: '#fff', marginRight: 4 }}
-                                ></i>
-                                Tìm kiếm
-                            </li>
-                            <li
-                                value="filter"
-                                className={clsx(styles.filter, showFilters ? styles.showFilter : '')}
-                                onClick={() => show('filter')}
-                            >
-                                <i className="fa-solid fa-filter" style={{ color: '#fff', marginRight: 4 }}></i>Lọc
-                            </li>
+                                    <i
+                                        className="fa-sharp fa-solid fa-magnifying-glass"
+                                        style={{ color: '#fff', marginRight: 4 }}
+                                    ></i>
+                                    Tìm kiếm
+                                </li>
+                                <li
+                                    value="filter"
+                                    className={clsx(styles.filter, showFilters ? styles.showFilter : '')}
+                                    onClick={() => show('filter')}
+                                >
+                                    <i className="fa-solid fa-filter" style={{ color: '#fff', marginRight: 4 }}></i>Lọc
+                                </li>
+                            </div>
                         </ul>
                     </div>
 

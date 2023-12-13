@@ -77,7 +77,10 @@ function LivingRoom(props) {
                         <span>Phòng Khách</span>
                     </div>
 
-                    <div className={clsx(styles.filter)} onClick={() => setShowFilters(!showFilters)}>
+                    <div
+                        className={clsx(styles.filter, showFilters ? styles.showFilter : '')}
+                        onClick={() => setShowFilters(!showFilters)}
+                    >
                         <i className="fa-solid fa-filter" style={{ color: '#fff', marginRight: 4 }}></i>Lọc
                     </div>
                     {/* <ul>

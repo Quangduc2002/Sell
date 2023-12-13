@@ -86,7 +86,10 @@ function WorkRoom(props) {
                         <span>Phòng làm việc</span>
                     </div>
 
-                    <div className={clsx(styles.filter)} onClick={() => setShowFilters(!showFilters)}>
+                    <div
+                        className={clsx(styles.filter, showFilters ? styles.showFilter : '')}
+                        onClick={() => setShowFilters(!showFilters)}
+                    >
                         <i class="fa-solid fa-filter" style={{ color: '#fff', marginRight: 4 }}></i>Lọc
                     </div>
 

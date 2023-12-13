@@ -252,6 +252,11 @@ function Finish(props) {
                                                 </div>
                                             </form>
                                         </div>
+                                        <textarea
+                                            placeholder="Để lại đánh giá"
+                                            className={clsx(styles.table__comment)}
+                                            cols="100"
+                                        ></textarea>
                                     </div>
                                 );
                             })}

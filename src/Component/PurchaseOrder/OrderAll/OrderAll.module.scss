@@ -266,6 +266,16 @@
         margin: 20px 0;
     }
 
+    &__comment {
+        margin: 20px 0;
+        outline: none;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        max-width: 80%;
+        min-height: 38px;
+    }
+
     &_image {
         width: 80px;
         height: 80px;
@@ -291,7 +301,7 @@
 
     &_container {
         position: fixed;
-        min-width: 900px;
+        width: 900px;
         height: 360px;
         transform: translate(-50%, -50%);
         border: 1px solid rgba(0, 0, 0, 0.2);

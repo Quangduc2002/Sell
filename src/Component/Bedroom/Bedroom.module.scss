@@ -78,6 +78,7 @@
 }
 
 .filter {
+    position: relative;
     padding: 6px 10px;
     background-color: #ee4d2d;
     border-radius: 4px;
@@ -86,6 +87,27 @@
     &:hover {
         transition: all 0.3s linear;
         background-color: #c52432;
+    }
+}
+
+.showFilter {
+    &::after {
+        content: '';
+        position: absolute;
+        background-color: #ee4d2d;
+        display: block;
+        width: 14px;
+        height: 14px;
+        left: calc(50% - 7px);
+        bottom: -6px;
+        transition: all 0.4s;
+        transform: rotate(45deg);
+    }
+    &:hover {
+        &::after {
+            transition: all 0.3s linear;
+            background-color: #c52432;
+        }
     }
 }
 //reponsive

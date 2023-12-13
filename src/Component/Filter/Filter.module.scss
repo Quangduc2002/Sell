@@ -10,13 +10,17 @@
 
     &_wrapFilter {
         display: flex;
-        justify-content: flex-end;
+        justify-content: space-between;
+        flex-wrap: wrap;
 
         &__filter {
-            width: 20%;
+            margin-bottom: 20px;
+            min-width: 200px;
 
             &__mtext {
                 padding-bottom: 16px;
+                font-weight: bold;
+                font-size: 18px;
             }
 
             li {
@@ -63,7 +67,20 @@
 
 .activeRating {
     background-color: #fff;
+}
+
+.comtainerRating {
+    width: max-content;
+    font-size: 14px;
+    padding: 10px 20px;
+    cursor: pointer;
+    border: 1px solid #ccc;
     border-radius: 20px;
+    margin-bottom: 10px;
+}
+
+.visibility {
+    visibility: hidden;
 }
 
 @keyframes filter {
@@ -74,5 +91,12 @@
     100% {
         transform: translateY(0);
         opacity: 1;
+    }
+}
+
+//reponsive
+@media screen and (max-width: 1200px) {
+    .panelFilter {
+        width: auto;
     }
 }

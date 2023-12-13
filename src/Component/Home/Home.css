@@ -16,6 +16,7 @@
     z-index: 1;
     border: none;
     border: 2px solid #fff;
+    opacity: 0;
 }
 
 .slick-prev {
@@ -40,4 +41,9 @@
 
 .slick-slide > div:first-child {
     height: 100%;
+}
+
+.slick-slider:hover > button {
+    transition: all 0.5s linear;
+    opacity: 1;
 }

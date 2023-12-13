@@ -264,6 +264,10 @@
     border-radius: 4px;
     cursor: pointer;
     color: #fff;
+    &:hover {
+        transition: all 0.3s linear;
+        background-color: #c52432;
+    }
 }
 
 .showFilter {
@@ -278,6 +282,12 @@
         bottom: -6px;
         transition: all 0.4s;
         transform: rotate(45deg);
+    }
+    &:hover {
+        &::after {
+            transition: all 0.3s linear;
+            background-color: #c52432;
+        }
     }
 }
 
@@ -397,6 +407,15 @@
 }
 
 //reponsive
+
+@media screen and (max-width: 1200px) {
+    .wrapper2 {
+        &_search {
+            width: auto;
+        }
+    }
+}
+
 @media screen and (min-width: 922px) and (max-width: 1200px) {
     .home {
         &_product {
@@ -481,6 +500,18 @@
             }
             p {
                 font-size: 14px;
+            }
+        }
+    }
+
+    .home {
+        &_title {
+            ul {
+                flex-wrap: wrap;
+
+                li {
+                    margin: 6px;
+                }
             }
         }
     }

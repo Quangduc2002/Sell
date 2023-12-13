@@ -53,7 +53,8 @@ function Header(props) {
                                 <span>Liên hệ</span>
                             </li>
                             <li style={{ marginLeft: 12 }}>
-                                {localStorage.length === 0 ? (
+                                {!localStorage.account ? (
+                                    // && localStorage.length === 0
                                     <Link to="/Login" style={{ textDecoration: 'none', color: '#000' }}>
                                         <span className={clsx(styles.show)}>Đăng nhập</span>
                                     </Link>
@@ -68,6 +69,7 @@ function Header(props) {
                                         <i style={{ marginLeft: 6 }} className="fa-sharp fa-solid fa-caret-down"></i>
                                     </span>
                                 )}
+
                                 {show && (
                                     <div className={clsx(styles.wrapper1_user)}>
                                         {JSON.parse(localStorage.account).roleId !== 1 ? (
