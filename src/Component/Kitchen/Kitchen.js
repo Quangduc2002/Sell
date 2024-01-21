@@ -24,14 +24,6 @@ function Kitchen(props) {
     // let newProducts = [];
     // newProducts = products.slice(0);
     useEffect(() => {
-        // axios
-        //     .get('http://localhost:8080/producttypes/2')
-        //     .then((res) => {
-        //         setTimeout(() => setProducts(res.data.Product), 1000);
-        //     })
-        //     .catch((err) => {
-        //         console.log(err);
-        //     });
         getUsers();
     }, []);
 

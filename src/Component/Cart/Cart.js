@@ -1,22 +1,12 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import clsx from 'clsx';
+import React, { useContext } from 'react';
+import { NavLink } from 'react-router-dom';
 import { motion, spring } from 'framer-motion';
-import styles from '../Cart/Cart.module.scss';
 import CartIMG from '../../assets/Image/cart.png';
+import { UserContext } from '../../Context/UserContext';
 
 function Cart(props) {
-    const { cartItems, onDelete, totalMoney, toast } = props;
-    const navigate = useNavigate();
-    const [showPay, setShowPay] = useState(false);
-    const [tenKH, setTenKH] = useState('');
-    const [soDT, setSoDT] = useState('');
-    const [email, setEmail] = useState('');
-    const [diaChi, setDiaChi] = useState('');
-    const [thanhToan, setThanhToan] = useState('');
-    const [note, setNote] = useState('');
-    const [formErrors, setFormErrors] = useState({});
+    const { cartItems, onDelete, totalMoney } = props;
+    const { user } = useContext(UserContext);
 
     // format tiền
     const VND = new Intl.NumberFormat('vi-VN', {
@@ -24,70 +14,10 @@ function Cart(props) {
         currency: 'VND',
     });
 
-    const handleValidation = () => {
-        let errors = {};
-        let isValid = true;
-
-        if (!tenKH) {
-            errors.tenKH = 'Please enter name !';
-            isValid = false;
-        }
-
-        if (!soDT) {
-            errors.soDT = 'Please enter phone number !';
-            isValid = false;
-        }
-
-        if (!email) {
-            errors.email = 'Please enter email !';
-            isValid = false;
-        }
-
-        if (!diaChi) {
-            errors.diaChi = 'Please enter address !';
-            isValid = false;
-        }
-        if (!thanhToan) {
-            errors.thanhToan = 'Please enter select a payment method !';
-            isValid = false;
-        }
-        setFormErrors(errors);
-        return isValid;
-    };
-
-    const handleOrder = (e) => {
-        e.preventDefault();
-        if (localStorage.length !== 0) {
-            if (handleValidation()) {
-                axios
-                    .post('http://localhost:8080/order', {
-                        Product: cartItems,
-                        tenKH: tenKH,
-                        soDT: soDT,
-                        diaChi: diaChi,
-                        email: email,
-                        phuongThucTT: thanhToan,
-                        note: note,
-                        trangThaiDH: 0,
-                        maKH: JSON.parse(localStorage.account).id,
-                    })
-                    .then((res) => {
-                        toast.success('Mua sản phẩm thành công ');
-                    })
-                    .catch((err) => {
-                        toast.error(err);
-                    });
-            }
-        } else {
-            navigate('/Login');
-        }
-    };
-
     return (
-        <div className={clsx(styles.cart)}>
-            {cartItems.length === 0 && (
+        <div className="bg-gray-100 pt-20 pb-20">
+            {cartItems.length === 0 ? (
                 <motion.div
-                    className={clsx(styles.product)}
                     initial={{ y: '4rem', opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{
@@ -95,218 +25,102 @@ function Cart(props) {
                         type: spring,
                     }}
                 >
-                    <div>
-                        <img className={clsx(styles.product_img)} alt="" src={CartIMG} />
-                        <p>Chưa có sản phẩm nào trong giỏ hàng.</p>
+                    <div className="text-center">
+                        <img className="w-48 m-auto" alt="" src={CartIMG} />
+                        <p className="text-[#ee4d2d] text-lg ">Chưa có sản phẩm nào trong giỏ hàng.</p>
                     </div>
                 </motion.div>
-            )}
-
-            {cartItems.length !== 0 && (
-                <motion.div
-                    className={clsx(styles.cart1)}
-                    initial={{ y: '4rem', opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{
-                        duration: 1,
-                        type: spring,
-                    }}
-                >
-                    <div>
-                        <table className={clsx(styles.table, cartItems.length === 0 ? styles.active : '')}>
-                            <tbody>
-                                <tr>
-                                    <th>Image</th>
-                                    <th className={clsx(styles.name)}>Name</th>
-                                    <th style={{ textAlign: 'center' }} className={clsx(styles.price)}>
-                                        Price
-                                    </th>
-                                    <th className={clsx(styles.price)}>Quantity</th>
-                                    <th style={{ textAlign: 'center' }} className={clsx(styles.price)}>
-                                        Total
-                                    </th>
-                                    <th>Detete</th>
-                                </tr>
-                                {cartItems.map((item) => {
+            ) : (
+                <>
+                    <h1 className="max-w-5xl px-8 xl:px-0 mx-auto text-left mb-10 text-3xl font-bold text-gray-600">
+                        Giỏ hàng
+                    </h1>
+                    <div className="mx-auto max-w-5xl justify-center px-6 md:flex md:space-x-6 xl:px-0">
+                        <div className="rounded-lg md:w-2/3">
+                            {cartItems &&
+                                cartItems.map((cartItem) => {
                                     return (
-                                        <tr key={item.ID}>
-                                            <td>
-                                                <img
-                                                    className={clsx(styles.image)}
-                                                    alt=""
-                                                    src={`http://localhost:3000/Image/${item.image}`}
-                                                />
-                                            </td>
-                                            <td>
-                                                {item.tenSp}
-                                                <p className={clsx(styles.quantity)}>
-                                                    {item.qty} x{' '}
-                                                    {VND.format(item.giaBan - (item.giaBan * item.giamGia) / 100)}
-                                                </p>
-                                                {item.qty === 1 ? (
-                                                    ''
-                                                ) : (
-                                                    <p className={clsx(styles.quantity)}>
-                                                        total: {VND.format(item.total)}
+                                        <div
+                                            key={cartItem.id}
+                                            className="justify-between mb-6 rounded-lg bg-white p-6 shadow-md sm:flex sm:justify-start"
+                                        >
+                                            <img
+                                                src={`http://localhost:3000/Image/${cartItem.image}`}
+                                                alt=""
+                                                className="w-full rounded-lg sm:w-40"
+                                            />
+                                            <div className="sm:ml-4 sm:flex sm:w-full sm:justify-between">
+                                                <div className="sm:mt-0">
+                                                    <h2 className="text-lg font-bold text-gray-900">
+                                                        {cartItem.tenSp}
+                                                    </h2>
+                                                    <p className="mt-1 text-base text-left text-gray-700">
+                                                        Chất liệu: {cartItem.Meterial.tenChatLieu}
                                                     </p>
-                                                )}
-                                            </td>
-                                            <td className={clsx(styles.price)}>
-                                                {VND.format(item.giaBan - (item.giaBan * item.giamGia) / 100)}
-                                            </td>
-                                            <td style={{ textAlign: 'center' }} className={clsx(styles.price)}>
-                                                x{item.qty}
-                                            </td>
-                                            <td className={clsx(styles.price)}>{VND.format(item.total)} </td>
-                                            <td style={{ textAlign: 'center' }} className={clsx(styles.del)}>
-                                                <p
-                                                    onClick={() => {
-                                                        onDelete(item);
-                                                    }}
-                                                >
-                                                    Xóa
-                                                </p>
-                                            </td>
-                                        </tr>
+                                                </div>
+                                                <div className=" flex justify-between sm:space-y-6 sm:mt-0 sm:block sm:space-x-6">
+                                                    <div className=" sm:mb-4 rounded-sm border border-coolGray-200 gap-3 inline-flex items-center justify-between xs:m-0">
+                                                        <span>
+                                                            <i className="fa-solid fa-minus py-2 px-2 border-x hover:bg-gray-200 cursor-pointer"></i>
+                                                        </span>
+                                                        <p className="m-0 ">{cartItem.qty}</p>
+                                                        <span>
+                                                            <i className="fa-solid fa-plus py-2 px-2 border-x hover:bg-gray-200 cursor-pointer"></i>
+                                                        </span>
+                                                    </div>
+
+                                                    <div className="flex items-center space-x-4 justify-between m-0">
+                                                        <p className="text-sm mb-0">{VND.format(cartItem.total)}</p>
+                                                        <svg
+                                                            onClick={() => onDelete(cartItem)}
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            fill="none"
+                                                            viewBox="0 0 24 24"
+                                                            stroke-width="1.5"
+                                                            stroke="currentColor"
+                                                            className="h-5 w-5 cursor-pointer duration-150 hover:text-red-500"
+                                                        >
+                                                            <path
+                                                                stroke-linecap="round"
+                                                                stroke-linejoin="round"
+                                                                d="M6 18L18 6M6 6l12 12"
+                                                            />
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     );
                                 })}
-                            </tbody>
-                        </table>
+                        </div>
 
-                        {showPay && (
-                            <div className={clsx(styles.cart1_form)}>
-                                <div className={clsx(styles.cart1_formGroup)}>
-                                    <label className={clsx(styles.cart1_label)} htmlFor="firstname-dd">
-                                        Họ Và Tên <span className="require">*</span>
-                                    </label>
-                                    <input
-                                        value={tenKH}
-                                        type="text"
-                                        id="firstname-dd"
-                                        className={clsx(styles.cart1_formControl)}
-                                        onChange={(e) => setTenKH(e.target.value)}
-                                    />
-                                    <div>
-                                        {formErrors.tenKH && (
-                                            <p className={clsx(styles.form_message)}>{formErrors.tenKH}</p>
-                                        )}
-                                    </div>
-                                </div>
-
-                                <div className={clsx(styles.cart1_formGroup)}>
-                                    <label className={clsx(styles.cart1_label)} htmlFor="email-dd">
-                                        E-Mail <span className="require">*</span>
-                                    </label>
-                                    <input
-                                        value={email}
-                                        type="text"
-                                        id="email-dd"
-                                        className={clsx(styles.cart1_formControl)}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                    />
-                                    <div>
-                                        {formErrors.email && (
-                                            <p className={clsx(styles.form_message)}>{formErrors.email}</p>
-                                        )}
-                                    </div>
-                                </div>
-                                <div className={clsx(styles.cart1_formGroup)}>
-                                    <label className={clsx(styles.cart1_label)} htmlFor="telephone-dd">
-                                        Số điện thoại <span className="require">*</span>
-                                    </label>
-                                    <input
-                                        value={soDT}
-                                        type="text"
-                                        id="telephone-dd"
-                                        className={clsx(styles.cart1_formControl)}
-                                        onChange={(e) => setSoDT(e.target.value)}
-                                    />
-                                    <div>
-                                        {formErrors.soDT && (
-                                            <p className={clsx(styles.form_message)}>{formErrors.soDT}</p>
-                                        )}
-                                    </div>
-                                </div>
-
-                                <div className={clsx(styles.cart1_formGroup)}>
-                                    <label className={clsx(styles.cart1_label)} htmlFor="company-dd">
-                                        Địa chỉ <span className="require">*</span>
-                                    </label>
-                                    <input
-                                        value={diaChi}
-                                        type="text"
-                                        id="company-dd"
-                                        className={clsx(styles.cart1_formControl)}
-                                        onChange={(e) => setDiaChi(e.target.value)}
-                                    />
-                                    <div>
-                                        {formErrors.diaChi && (
-                                            <p className={clsx(styles.form_message)}>{formErrors.diaChi}</p>
-                                        )}
-                                    </div>
-                                </div>
-
-                                <div className={clsx(styles.cart1_formGroup)}>
-                                    <label className={clsx(styles.cart1_label)} htmlFor="company-dd">
-                                        Phương thức thanh toán
-                                    </label>
-                                    <select
-                                        defaultValue="0"
-                                        value={thanhToan}
-                                        onChange={(e) => setThanhToan(e.target.value)}
-                                        className={clsx(styles.cart1_formControl)}
-                                    >
-                                        <option value="0" style={{ display: 'none' }}>
-                                            Phương thức thanh toán
-                                        </option>
-                                        <option>Thanh toán khi nhận hàng</option>
-                                        <option>Ngân hàng điện tử</option>
-                                        <option>Thẻ ATM nội địa</option>
-                                    </select>
-                                    <div>
-                                        {formErrors.thanhToan && (
-                                            <p className={clsx(styles.form_message)}>{formErrors.thanhToan}</p>
-                                        )}
-                                    </div>
-                                </div>
-
-                                <div className={clsx(styles.cart1_formGroup)}>
-                                    <h3>THÔNG TIN BỔ SUNG</h3>
-                                    <label className={clsx(styles.cart1_label)} htmlFor="company-dd">
-                                        Ghi chú đơn hàng(tùy chọn)
-                                    </label>
-                                    <textarea
-                                        cols={50}
-                                        rows={1}
-                                        value={note}
-                                        type="text"
-                                        id="company-dd"
-                                        className={clsx(styles.cart1_formControl)}
-                                        onChange={(e) => setNote(e.target.value)}
-                                    ></textarea>
+                        <div className="mt-6 h-full rounded-lg border bg-white p-6 shadow-md md:mt-0 md:w-1/3">
+                            <div className="mb-2 flex justify-between">
+                                <p className="text-gray-700">Tổng tiền</p>
+                                <p className="text-gray-700">{VND.format(totalMoney)}</p>
+                            </div>
+                            <div className="flex justify-between">
+                                <p className="text-gray-700">Phí vận chuyển</p>
+                                <p className="text-gray-700">{VND.format(300000)}</p>
+                            </div>
+                            <hr className="my-4" />
+                            <div className="flex justify-between">
+                                <p className="text-lg font-bold">Tổng tiền</p>
+                                <div className="">
+                                    <p className="mb-1 text-lg font-bold">{VND.format(totalMoney + 300000)}</p>
                                 </div>
                             </div>
-                        )}
-
-                        <div className={clsx(styles.cart1_purchase)}>
-                            <div className={clsx(styles.cart1__transport)}>
-                                <p>Tổng tiền: </p>
-                                {VND.format(totalMoney)}
-                            </div>
-                            {!showPay && (
-                                <button onClick={() => setShowPay(!showPay)} className={clsx(styles.cart1_order)}>
-                                    Mua ngay
+                            <NavLink
+                                to={Object.entries(user.account).length !== 0 ? '/checkout' : '/Login'}
+                                className="text-white no-underline"
+                            >
+                                <button className="mt-6 w-full rounded-md  py-1.5 font-medium text-blue-50 bg-[#ee4d2d] hover:bg-[#c52432]">
+                                    Thủ tục thanh toán
                                 </button>
-                            )}
-
-                            {showPay && (
-                                <button onClick={(e) => handleOrder(e)} className={clsx(styles.cart1_order)}>
-                                    Đặt hàng
-                                </button>
-                            )}
+                            </NavLink>
                         </div>
                     </div>
-                </motion.div>
+                </>
             )}
         </div>
     );

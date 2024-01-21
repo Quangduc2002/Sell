@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import clsx from 'clsx';
 import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
@@ -9,6 +9,7 @@ import { fetchUser } from '../../../services/UseServices';
 import Loading from '../../Loading/Loading';
 import Pagination from '../../Pagination/Pagination';
 import { fetchDelete } from '../../../services/UseServices';
+import { UserContext } from '../../../Context/UserContext';
 
 function ListCustomer(props) {
     const {
@@ -37,6 +38,7 @@ function ListCustomer(props) {
     const [Month, setMonth] = useState('');
     const [Year, setYear] = useState('');
     const [formErrors, setFormErrors] = useState({});
+    const { user } = useContext(UserContext);
 
     // search
     const search = useRef();
@@ -46,164 +48,6 @@ function ListCustomer(props) {
         getUser(showUsers);
     }, [showUsers]);
 
-    const Days = [
-        '1',
-        '2',
-        '3',
-        '4',
-        '5',
-        '6',
-        '7',
-        '8',
-        '9',
-        '10',
-        '11',
-        '12',
-        '13',
-        '14',
-        '15',
-        '16',
-        '17',
-        '18',
-        '19',
-        '20',
-        '21',
-        '22',
-        '23',
-        '24',
-        '25',
-        '26',
-        '27',
-        '28',
-        '29',
-        '30',
-        '31',
-    ];
-
-    const Months = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
-
-    const Years = [
-        '2023',
-        '2022',
-        '2021',
-        '2020',
-        '2019',
-        '2018',
-        '2017',
-        '2016',
-        '2015',
-        '2014',
-        '2013',
-        '2012',
-        '2011',
-        '2010',
-        '2009',
-        '2008',
-        '2007',
-        '2006',
-        '2005',
-        '2004',
-        '2003',
-        '2002',
-        '2001',
-        '2000',
-        '1999',
-        '1998',
-        '1997',
-        '1996',
-        '1995',
-        '1994',
-        '1993',
-        '1992',
-        '1991',
-        '1990',
-        '1989',
-        '1988',
-        '1987',
-        '1986',
-        '1985',
-        '1984',
-        '1983',
-        '1982',
-        '1981',
-        '1980',
-        '1979',
-        '1978',
-        '1977',
-        '1976',
-        '1975',
-        '1974',
-        '1973',
-        '1972',
-        '1971',
-        '1970',
-        '1969',
-        '1968',
-        '1967',
-        '1966',
-        '1965',
-        '1964',
-        '1963',
-        '1962',
-        '1961',
-        '1960',
-        '1959',
-        '1958',
-        '1957',
-        '1956',
-        '1955',
-        '1954',
-        '1953',
-        '1952',
-        '1951',
-        '1950',
-        '1949',
-        '1948',
-        '1947',
-        '1946',
-        '1945',
-        '1944',
-        '1943',
-        '1942',
-        '1941',
-        '1940',
-        '1939',
-        '1938',
-        '1937',
-        '1936',
-        '1935',
-        '1934',
-        '1933',
-        '1932',
-        '1931',
-        '1930',
-        '1929',
-        '1928',
-        '1927',
-        '1926',
-        '1925',
-        '1924',
-        '1923',
-        '1922',
-        '1921',
-        '1920',
-        '1919',
-        '1918',
-        '1917',
-        '1916',
-        '1915',
-        '1914',
-        '1913',
-        '1912',
-        '1911',
-        '1910',
-        '1909',
-        '1908',
-        '1907',
-        '1906',
-        '1905',
-    ];
-
     const Sexs = [
         { id: 0, name: 'nam' },
         { id: 1, name: 'nữ' },
@@ -212,13 +56,23 @@ function ListCustomer(props) {
 
     // curDate sẽ lưu trữ thời gian hiện tại
     var curDate = new Date();
-    // Lấy ngày hiện tại
-    var curDay = curDate.getDate();
-    // Lấy tháng hiện tại
-    var curMonth = curDate.getMonth() + 1;
     // Lấy năm hiện tại
     var curYear = curDate.getFullYear();
 
+    const Days = [];
+    for (let Day = 1; Day <= 31; Day++) {
+        Days.push(Day);
+    }
+
+    const Months = [];
+    for (let Month = 1; Month <= 12; Month++) {
+        Months.push(Month);
+    }
+
+    const Years = [];
+    for (let Year = curYear; Year >= 1990; Year--) {
+        Years.push(Year);
+    }
     const validateForm = () => {
         let errors = {};
         let isValid = true;
@@ -275,7 +129,7 @@ function ListCustomer(props) {
     };
 
     const handleDelete = async () => {
-        if (localStorage.RoleId === '3') {
+        if (user.account.getUser.RoleId === '3') {
             setShow(!show);
             let res = await fetchDelete(`/user/${id}/Customer`);
             if (res && res.status === 200) {
@@ -349,8 +203,8 @@ function ListCustomer(props) {
     const currentUserSearch = succeSearch.slice(indeOfFirstProduct, indexOfLastProduct);
 
     return (
-        <div className={clsx(styles.listProduct)}>
-            <div className={clsx(styles.listProduct_header)}>
+        <div className={clsx(styles.listProduct, 'xs:w-full md:w-[80%]')}>
+            <div className={clsx(styles.listProduct_header, 'flex-wrap')}>
                 <div className={clsx(styles.breadcrumbs)}>
                     <Link to="/" className={clsx(styles.Link)}>
                         Trang
@@ -358,7 +212,7 @@ function ListCustomer(props) {
                     <span className={clsx(styles.divider)}>/</span>
                     <span>Quản lý người dùng</span>
                 </div>
-                <div style={{ display: 'flex' }}>
+                <div className="flex my-4">
                     <div className={clsx(styles.listProduct_header__search)}>
                         <input
                             type="text"
@@ -382,8 +236,9 @@ function ListCustomer(props) {
                     </div>
                 </div>
             </div>
-            <div className={clsx(styles.listProduct_PD)}>
-                <div className={clsx(styles.listProduct_title)}>
+
+            <div className={clsx(styles.listProduct_PD, 'overflow-hidden overflow-x-scroll')}>
+                <div className={clsx(styles.listProduct_title, 'flex-wrap')}>
                     <div>
                         <h1>{showUsers ? 'Danh sách khách hàng' : 'Danh sách nhân viên'} </h1>
                         {users && currentUsers ? (
@@ -397,7 +252,7 @@ function ListCustomer(props) {
                         )}
                     </div>
 
-                    <div>
+                    <div className="flex flex-wrap gap-2 my-4">
                         <button onClick={() => setShowUsers(!showUsers)} className={clsx(styles.listProduct_user)}>
                             {showUsers ? 'Danh sách nhân viên' : 'Danh sách khách hàng'}
                         </button>
@@ -410,80 +265,92 @@ function ListCustomer(props) {
                 {currentUsers.length === 0 ? (
                     <Loading />
                 ) : (
-                    <motion.table
-                        className={clsx(styles.table)}
-                        initial={{ y: '4rem', opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        transition={{
-                            duration: 1,
-                            type: spring,
-                        }}
-                    >
-                        <thead>
-                            <tr>
-                                <th>Email</th>
-                                <th>{showUsers ? 'Tên khách hàng' : 'Tên nhân viên'}</th>
-                                <th>Ngày sinh</th>
-                                <th style={{ textAlign: 'center' }}>Giới tính</th>
-                                <th>Tiền hàng</th>
-                                <th style={{ textAlign: 'center' }}>Xóa</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {currentUserSearch.length === 0
-                                ? currentUsers.map((user) => {
-                                      return (
-                                          <tr key={user.ID}>
-                                              <td style={{ minWidth: 300 }}>{user.email}</td>
-                                              <td>{user.name}</td>
-                                              <td>{user.ngaySinh + '/' + user.thangSinh + '/' + user.namSinh}</td>
-                                              <td style={{ textAlign: 'center' }}>
-                                                  {Sexs.map((sex) => {
-                                                      return sex.id === user.gioiTinh ? sex.name : '';
-                                                  })}
-                                              </td>
-                                              <td>{user.name}</td>
-                                              <td style={{ textAlign: 'center' }}>
-                                                  <button
-                                                      className={clsx(styles.table_button)}
-                                                      onClick={() => handleId(user.ID)}
-                                                  >
-                                                      <i
-                                                          style={{ color: '#eb1336' }}
-                                                          className={clsx('fas fa-trash')}
-                                                      ></i>
-                                                  </button>
-                                              </td>
-                                          </tr>
-                                      );
-                                  })
-                                : currentUserSearch.map((user) => {
-                                      return (
-                                          <tr key={user.ID}>
-                                              <td style={{ minWidth: 300 }}>{user.email}</td>
-                                              <td>{user.name}</td>
-                                              <td>{user.ngaySinh + '/' + user.thangSinh + '/' + user.namSinh}</td>
-                                              <td style={{ textAlign: 'center' }}>
-                                                  {Sexs.map((sex) => {
-                                                      return sex.id === user.gioiTinh ? sex.name : '';
-                                                  })}
-                                              </td>
-                                              <td style={{ textAlign: 'center' }}>
-                                                  <button
-                                                      className={clsx(styles.table_button)}
-                                                      onClick={() => handleId(user.ID)}
-                                                  >
-                                                      <i
-                                                          style={{ color: '#eb1336' }}
-                                                          className={clsx('fas fa-trash')}
-                                                      ></i>
-                                                  </button>
-                                              </td>
-                                          </tr>
-                                      );
-                                  })}
-                        </tbody>
-                    </motion.table>
+                    <div className="overflow-x-auto overflow-hidden pb-5">
+                        <motion.table
+                            className={clsx(styles.table, ' border-collapse p-2 border xs:w-[1070px]')}
+                            initial={{ y: '4rem', opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            transition={{
+                                duration: 1,
+                                type: spring,
+                            }}
+                        >
+                            <thead className="border-collapse p-2">
+                                <tr className="border-collapse p-2 p-2">
+                                    <th className="bg-[#ddd] text-left border-collapse p-2">Email</th>
+                                    <th className="bg-[#ddd] text-left border-collapse p-2">
+                                        {showUsers ? 'Tên khách hàng' : 'Tên nhân viên'}
+                                    </th>
+                                    <th className="bg-[#ddd] text-left border-collapse p-2">Ngày sinh</th>
+                                    <th className="bg-[#ddd] text-left border-collapse p-2 text-center">Giới tính</th>
+                                    <th className="bg-[#ddd] text-left border-collapse p-2">Tiền hàng</th>
+                                    <th className="bg-[#ddd] text-left border-collapse p-2 text-center">Xóa</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {currentUserSearch.length === 0
+                                    ? currentUsers.map((user) => {
+                                          return (
+                                              <tr className="border-collapse p-2 p-2" key={user.ID}>
+                                                  <td className="border-collapse p-2" style={{ minWidth: 300 }}>
+                                                      {user.email}
+                                                  </td>
+                                                  <td className="border-collapse p-2">{user.name}</td>
+                                                  <td className="border-collapse p-2">
+                                                      {user.ngaySinh + '/' + user.thangSinh + '/' + user.namSinh}
+                                                  </td>
+                                                  <td className="border-collapse p-2 text-center">
+                                                      {Sexs.map((sex) => {
+                                                          return sex.id === user.gioiTinh ? sex.name : '';
+                                                      })}
+                                                  </td>
+                                                  <td className="border-collapse p-2">{user.name}</td>
+                                                  <td className="border-collapse p-2 text-center">
+                                                      <button
+                                                          className={clsx(styles.table_button)}
+                                                          onClick={() => handleId(user.ID)}
+                                                      >
+                                                          <i
+                                                              style={{ color: '#eb1336' }}
+                                                              className={clsx('fas fa-trash')}
+                                                          ></i>
+                                                      </button>
+                                                  </td>
+                                              </tr>
+                                          );
+                                      })
+                                    : currentUserSearch.map((user) => {
+                                          return (
+                                              <tr className="border-collapse p-2 p-2" key={user.ID}>
+                                                  <td className="border-collapse p-2" style={{ minWidth: 300 }}>
+                                                      {user.email}
+                                                  </td>
+                                                  <td className="border-collapse p-2">{user.name}</td>
+                                                  <td className="border-collapse p-2">
+                                                      {user.ngaySinh + '/' + user.thangSinh + '/' + user.namSinh}
+                                                  </td>
+                                                  <td className="border-collapse p-2 text-center">
+                                                      {Sexs.map((sex) => {
+                                                          return sex.id === user.gioiTinh ? sex.name : '';
+                                                      })}
+                                                  </td>
+                                                  <td className="border-collapse p-2 text-center">
+                                                      <button
+                                                          className={clsx(styles.table_button)}
+                                                          onClick={() => handleId(user.ID)}
+                                                      >
+                                                          <i
+                                                              style={{ color: '#eb1336' }}
+                                                              className={clsx('fas fa-trash')}
+                                                          ></i>
+                                                      </button>
+                                                  </td>
+                                              </tr>
+                                          );
+                                      })}
+                            </tbody>
+                        </motion.table>
+                    </div>
                 )}
                 {currentUsers.length > 0 && (
                     <Pagination
@@ -515,11 +382,15 @@ function ListCustomer(props) {
                                     <button
                                         onClick={() => setShow(!show)}
                                         type="button"
-                                        className={clsx(styles.modal_btnClose)}
+                                        className={clsx(styles.modal_btnClose, 'leading-normal')}
                                     >
                                         Hủy
                                     </button>
-                                    <button onClick={handleDelete} type="button" className={clsx(styles.modal_btnSave)}>
+                                    <button
+                                        onClick={handleDelete}
+                                        type="button"
+                                        className={clsx(styles.modal_btnSave, 'leading-normal')}
+                                    >
                                         Xóa
                                     </button>
                                 </div>
@@ -675,7 +546,6 @@ function ListCustomer(props) {
                                                     value={Day}
                                                     onChange={(e) => setDay(e.target.value)}
                                                 >
-                                                    <option style={{ display: 'none' }}>{curDay}</option>
                                                     {Days.map((day, index) => {
                                                         return (
                                                             <option key={index} value={day}>
@@ -693,7 +563,6 @@ function ListCustomer(props) {
                                                     value={Month}
                                                     onChange={(e) => setMonth(e.target.value)}
                                                 >
-                                                    <option style={{ display: 'none' }}>Tháng {curMonth}</option>
                                                     {Months.map((month) => {
                                                         return (
                                                             <option key={month} value={month}>
@@ -758,10 +627,16 @@ function ListCustomer(props) {
                             </div>
 
                             <div className={clsx(styles.modalAdd_footer)}>
-                                <button onClick={(e) => handleAddUser(e)} className={clsx(styles.modalAdd__btn)}>
+                                <button
+                                    onClick={(e) => handleAddUser(e)}
+                                    className={clsx(styles.modalAdd__btn, 'leading-normal')}
+                                >
                                     Thêm
                                 </button>
-                                <button onClick={() => setShow1(!show1)} className={clsx(styles.modalAdd__btn__cancel)}>
+                                <button
+                                    onClick={() => setShow1(!show1)}
+                                    className={clsx(styles.modalAdd__btn__cancel, 'leading-normal')}
+                                >
                                     Trở lại
                                 </button>
                             </div>

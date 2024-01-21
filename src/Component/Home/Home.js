@@ -142,6 +142,7 @@ function Home(props) {
             text1: 'Tự tin là nhà cung cấp sản phẩm nội thất với giá cả tốt nhất tại Việt Nam',
         },
     ];
+
     const [products, setProducts] = useState([]);
     useEffect(() => {
         getUsers();
@@ -149,7 +150,7 @@ function Home(props) {
 
     const getUsers = async () => {
         let res = await fetchUser('/products');
-        setTimeout(() => setProducts(res.data), 1000);
+        setTimeout(() => setProducts(res.data), 0);
     };
 
     const currentProductSearch = succeSearch.slice(indeOfFirstProduct, indexOfLastProduct);
@@ -197,23 +198,15 @@ function Home(props) {
                                 <select
                                     className={clsx(styles.home_title__show)}
                                     onChange={(e) => setProductPerPage(e.target.value)}
+                                    defaultValue={0}
                                 >
-                                    <option style={{ display: 'none' }}>Mặc định</option>
-                                    <option
-                                        selected={+productPerPage === products.length ? true : false}
-                                        value={products.length}
-                                    >
-                                        Tất cả
+                                    <option value={0} disabled className="hidden">
+                                        Mặc định
                                     </option>
-                                    <option selected={+productPerPage === 4 ? true : false} value="4">
-                                        4
-                                    </option>
-                                    <option selected={+productPerPage === 8 ? true : false} value="8">
-                                        8
-                                    </option>
-                                    <option selected={+productPerPage === 12 ? true : false} value="12">
-                                        12
-                                    </option>
+                                    <option value={products.length}>Tất cả</option>
+                                    <option value="4">4</option>
+                                    <option value="8">8</option>
+                                    <option value="12">12</option>
                                 </select>
                             </li>
 
@@ -233,7 +226,8 @@ function Home(props) {
                                     className={clsx(styles.filter, showFilters ? styles.showFilter : '')}
                                     onClick={() => show('filter')}
                                 >
-                                    <i className="fa-solid fa-filter" style={{ color: '#fff', marginRight: 4 }}></i>Lọc
+                                    <i className="fa-solid fa-filter" style={{ color: '#fff', marginRight: 4 }}></i>
+                                    Lọc
                                 </li>
                             </div>
                         </ul>
@@ -301,8 +295,10 @@ function Home(props) {
                     )}
 
                     {homeProducts.length === 0 ? (
-                        <div style={{ fontSize: 24, color: '#ee4d2d', textAlign: 'center', marginTop: 30 }}>
-                            Sản phẩm tìm kiếm không tồn tại
+                        <div className="mx-5 ">
+                            <p className="xl:w-[1170px] mx-auto py-3 md:text-xl xs:text-sm rounded-md text-red-500 font-semibold bg-orange-200 text-center">
+                                Sản phẩm tìm kiếm không tồn tại
+                            </p>
                         </div>
                     ) : (
                         <motion.div

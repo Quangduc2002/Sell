@@ -29,7 +29,6 @@
 }
 
 .addProduct {
-    width: 80%;
     padding: 24px;
     overflow: hidden;
     overflow-y: scroll;
@@ -58,17 +57,7 @@
 }
 
 .add {
-    display: flex;
     justify-content: space-between;
-
-    &_left,
-    &_right {
-        width: 46%;
-
-        label {
-            margin-left: 6px;
-        }
-    }
 
     &_formGroup {
         margin-bottom: 20px;
@@ -117,7 +106,6 @@
     color: #fff;
     border: none;
     font-size: 14px;
-    margin-right: 20px;
 
     &:hover {
         transition: all 0.3s linear;

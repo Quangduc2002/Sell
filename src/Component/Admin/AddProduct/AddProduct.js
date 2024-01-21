@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import clsx from 'clsx';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion, spring } from 'framer-motion';
 import axios from 'axios';
 import styles from './AddProduct.module.scss';
 import { fetchUser } from '../../../services/UseServices';
+import { UserContext } from '../../../Context/UserContext';
 
 function AddProduct(props) {
     const { toast } = props;
@@ -21,7 +22,8 @@ function AddProduct(props) {
     const [producttypes, setProducttypes] = useState('');
     const [materials, setMaterials] = useState('');
     const [formErrors, setFormErrors] = useState({});
-
+    const { user } = useContext(UserContext);
+    console.log(user);
     const handleImage = (e) => {
         // add image vào csdl
         setImage(e.target.files[0]);
@@ -105,7 +107,7 @@ function AddProduct(props) {
             formData.append('kichThuoc', kichThuoc);
             formData.append('soLuong', soLuong);
             formData.append('trangThai', 1);
-            formData.append('maNV', JSON.parse(localStorage.account).id);
+            formData.append('maNV', user.account.getUser.id);
 
             axios
                 .post('http://localhost:8080/products/add', formData)
@@ -132,7 +134,7 @@ function AddProduct(props) {
     };
 
     return (
-        <div className={clsx(styles.addProduct)}>
+        <div className={clsx(styles.addProduct, 'xs:w-full md:w-[80%]')}>
             <div className={clsx(styles.addProduct_header)}>
                 <div className={clsx(styles.breadcrumbs)}>
                     <Link to="/" className={clsx(styles.Link)}>
@@ -154,8 +156,8 @@ function AddProduct(props) {
             >
                 <h1>Thêm sản phẩm</h1>
                 <form className={clsx(styles.form)} method="post" encType="multipart/form-data" action="/products/add">
-                    <div className={clsx(styles.add)}>
-                        <div className={clsx(styles.add_left)}>
+                    <div className={clsx(styles.add, 'xs:block md:flex')}>
+                        <div className={clsx(styles.add_left, 'xs:w-full md:w-[46%]')}>
                             <div className={clsx(styles.add_formGroup)}>
                                 <label htmlFor="name">Tên sản phẩm</label>
                                 <br />
@@ -190,7 +192,11 @@ function AddProduct(props) {
                                     </option>
                                     {materials &&
                                         materials.map((material) => {
-                                            return <option value={material.id}>{material.tenChatLieu}</option>;
+                                            return (
+                                                <option key={material.id} value={material.id}>
+                                                    {material.tenChatLieu}
+                                                </option>
+                                            );
                                         })}
                                 </select>
                                 <div>
@@ -305,7 +311,7 @@ function AddProduct(props) {
                             </div>
                         </div>
 
-                        <div className={clsx(styles.add_right)}>
+                        <div className={clsx(styles.add_right, 'xs:w-full md:w-[46%]')}>
                             <div className={clsx(styles.add_formGroup)}>
                                 <label htmlFor="level">Ảnh sản phẩm</label>
                                 <br />
@@ -325,18 +331,25 @@ function AddProduct(props) {
                                     onChange={handleImage}
                                 />
                                 <br />
-                                <label htmlFor="FLFrontImage" className={clsx(styles.add_formGroup__customFile)}>
+                                <label
+                                    htmlFor="FLFrontImage"
+                                    className={clsx(styles.add_formGroup__customFile, 'xs:text-xs md:text-base')}
+                                >
                                     Chọn ảnh
                                     <i style={{ marginLeft: 6 }} className="fa-solid fa-cloud-arrow-up"></i>
                                 </label>
                             </div>
                         </div>
                     </div>
-                    <div>
-                        <button onClick={(e) => handleAddProduct(e)} className={clsx(styles.btnAdd)}>
+
+                    <div className="flex gap-3 ">
+                        <button
+                            onClick={(e) => handleAddProduct(e)}
+                            className={clsx(styles.btnAdd, 'xs:text-xs md:text-base')}
+                        >
                             Thêm sản phẩm
                         </button>
-                        <button onClick={handleBack} className={clsx(styles.btnBack)}>
+                        <button onClick={handleBack} className={clsx(styles.btnBack, 'xs:text-xs md:text-base')}>
                             Quay lại
                         </button>
                     </div>

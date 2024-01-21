@@ -37,7 +37,6 @@ th {
 }
 
 .listProduct {
-    width: 80%;
     padding: 24px;
     overflow: hidden;
     overflow-y: scroll;
@@ -107,7 +106,6 @@ th {
         &__right {
             display: flex;
             select {
-                margin-left: 8px;
                 padding: 12px 4px;
                 border-radius: 4px;
                 background: rgb(244 245 249);
@@ -162,7 +160,6 @@ th {
         padding-left: 10px;
 
         &__select {
-            margin: 0 16px;
             padding: 6px 8px;
             border: 1px solid #ced4da;
             border-radius: 4px;
@@ -192,7 +189,6 @@ th {
 }
 
 .table {
-    width: 100%;
     margin-bottom: 20px;
     &_button {
         border: none;

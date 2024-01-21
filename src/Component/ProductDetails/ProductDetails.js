@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Slider from 'react-slick';
 import { useParams, Link } from 'react-router-dom';
 import clsx from 'clsx';
-import { motion, spring } from 'framer-motion';
+import { motion, spring, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import styles from '../ProductDetails/ProductDetails.module.scss';
 import Free from '../../assets/Image/free.png';
@@ -10,6 +10,7 @@ import Loading from '../Loading/Loading';
 import '../Product/Product.css';
 import { fetchUser } from '../../services/UseServices';
 import Product from '../Product/Product';
+import { UserContext } from '../../Context/UserContext';
 
 function ProductDetails(props) {
     const { onAdd, count, setCount, toast } = props;
@@ -19,6 +20,8 @@ function ProductDetails(props) {
     const [evaluations, setEvaluations] = useState([]);
     const [similarProduct, setSimilarProduct] = useState([]);
     const [showDescribetion, setShowDescribetion] = useState(true);
+    const [selectedId, setSelectedId] = useState(null);
+    const { user } = useContext(UserContext);
 
     const navigate = useNavigate();
 
@@ -95,8 +98,10 @@ function ProductDetails(props) {
     };
 
     const getRating = async () => {
-        let res = await fetchUser(`/products/${JSON.parse(localStorage.account).id}/getRating`);
-        setTimeout(() => setRatings(res.data), 1000);
+        if (localStorage.account) {
+            let res = await fetchUser(`/products/${JSON.parse(localStorage.account).id}/getRating`);
+            setTimeout(() => setRatings(res.data), 1000);
+        }
     };
 
     const getEvaluation = async (id) => {
@@ -123,13 +128,13 @@ function ProductDetails(props) {
 
     // purchase products
     const handlePurchaseProduct = (product) => {
-        if (localStorage.length !== 0) {
-            if (JSON.parse(localStorage.account).roleId === 1) {
+        if (Object.entries(user.account).length !== 0) {
+            if (user.account.getUser.roleId === 1) {
                 if (product.soLuong === 0) {
                     toast.error('Sản phẩm đã hết hàng !');
                 } else {
                     onAdd(product);
-                    navigate('/giohang');
+                    navigate('/checkOut');
                 }
             } else {
                 toast.warn('Tài khoản này không thể mua hàng !');
@@ -183,10 +188,15 @@ function ProductDetails(props) {
                 >
                     <div className={clsx(styles.productDetail)}>
                         <div className={clsx(styles.images)}>
-                            <img src={`http://localhost:3000/Image/${product.image}`} alt="" />
+                            <img
+                                src={`http://localhost:3000/Image/${product.image}`}
+                                alt=""
+                                onClick={() => setSelectedId(product.ID)}
+                                layoutId={product.ID}
+                            />
                         </div>
                         <div className={clsx(styles.right)}>
-                            <h1>{product.tenSp}</h1>
+                            <h1 className="text-3xl">{product.tenSp}</h1>
                             {product.soLuotDanhGia !== 0 ? (
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
                                     <div>
@@ -418,7 +428,7 @@ function ProductDetails(props) {
                                     <div className={clsx(styles.describe_evaluation)}>
                                         {stars.map((star, index) => {
                                             return (
-                                                <div className={clsx(styles.describe_evaluation__star)}>
+                                                <div key={star.id} className={clsx(styles.describe_evaluation__star)}>
                                                     <span style={{ color: 'rgb(248, 206, 11)' }}>
                                                         ({evaluations[index].count} vote)
                                                     </span>
@@ -453,6 +463,33 @@ function ProductDetails(props) {
                                 </div>
                             </div>
                         </div>
+                    )}
+
+                    <AnimatePresence>
+                        {selectedId && (
+                            <motion.div
+                                style={{ transform: 'translate(-50%, -50%)' }}
+                                className="z-20 fixed top-1/2 left-1/2 -translate-y-1/2 w-1/2
+                            "
+                                layoutId={selectedId}
+                            >
+                                <motion.img
+                                    className="w-full rounded-md"
+                                    alt=""
+                                    src={`http://localhost:3000/Image/${product.image}`}
+                                />
+                                <i
+                                    onClick={() => setSelectedId(null)}
+                                    className="fa-solid fa-xmark absolute top-4 right-4  hover:text-[#ee4d2d] cursor-pointer"
+                                ></i>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                    {selectedId && (
+                        <div
+                            onClick={() => setSelectedId(null)}
+                            className="fixed top-0 left-0 bottom-0 right-0 z-10 bg-[#00000066]"
+                        ></div>
                     )}
                 </motion.div>
             )}

@@ -21,14 +21,27 @@ function Product(props) {
 
     return (
         <div className={clsx(styles.room_product1)}>
-            <Link to={`/Chitietsanpham/${product.ID}`} className={clsx(styles.room_product1_link)}>
+            <div className={clsx(styles.room_product1_link)}>
                 <div className={clsx(styles.room_image)}>
-                    <div className={clsx(styles.room_badge)}>
+                    <div className={clsx(styles.room_badge, styles.hover)}>
                         <img alt="" src={`http://localhost:3000/Image/${product.image}`} />
-                        {product.giamGia === 0 ? (
+                        <div
+                            className={clsx(
+                                styles.productDetail,
+                                'productDetail absolute w-full flex justify-center bottom-[16%] ',
+                            )}
+                        >
+                            <Link
+                                to={`/Chitietsanpham/${product.ID}`}
+                                className="lg:text-base px-3.5 py-2 bg-white xs:text-xs rounded-[20px] hover:text-white hover:bg-black"
+                            >
+                                Chi tiết sản phẩm
+                            </Link>
+                        </div>
+                        {product.giamGia === '0' ? (
                             ''
                         ) : (
-                            <span className={clsx(styles.room_pos)}>-{product.giamGia}%</span>
+                            <span className={clsx(styles.room_pos, 'top-2')}>-{product.giamGia}%</span>
                         )}
                     </div>
                 </div>
@@ -49,7 +62,7 @@ function Product(props) {
                     </div>
                     <p style={{ fontSize: 14 }}>Hà Nội</p>
                 </div>
-            </Link>
+            </div>
         </div>
     );
 }

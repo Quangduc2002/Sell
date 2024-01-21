@@ -365,12 +365,15 @@
         background-color: #fff;
         border-top: 1px solid rgba(0, 0, 0, 0.09);
         height: 60px;
-        line-height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
 
         button {
             padding: 10px 12px;
             background-color: #e5e5e5;
             font-size: 16px;
+            height: 44px;
         }
     }
 }

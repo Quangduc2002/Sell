@@ -8,4 +8,12 @@ function fetchDelete(url) {
     return baseURL.delete(url);
 }
 
-export { fetchUser, fetchDelete };
+function axiosPut(url, action) {
+    return baseURL.put(url, action);
+}
+
+function axiosPost(url, action) {
+    return baseURL.post(url, action);
+}
+
+export { fetchUser, fetchDelete, axiosPut, axiosPost };

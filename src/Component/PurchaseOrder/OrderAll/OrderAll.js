@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useState, useEffect } from 'react';
 import clsx from 'clsx';
-import axios from 'axios';
 import { motion, spring } from 'framer-motion';
 import styles from './OrderAll.module.scss';
-import { fetchUser } from '../../../services/UseServices';
+import { fetchUser, axiosPut } from '../../../services/UseServices';
 import Free from '../../../assets/Image/free.png';
 import ImageOrder from '../../../assets/Image/hoaDon.png';
+import { UserContext } from '../../../Context/UserContext';
 
 function OrderAll(props) {
     const { onAdd, toast, handleStar, checkStar, setCheckStar, show, setShow, show1, setShow1 } = props;
@@ -14,7 +14,9 @@ function OrderAll(props) {
     const [cancel, setCancel] = useState(false);
     const [ratings, setRatings] = useState([]);
     const [orderDetails, setOrderDetails] = useState([]);
+    const [comments, setComments] = useState('');
     const [changeRating, setChangeRating] = useState(false);
+    const { user } = useContext(UserContext);
 
     const VND = new Intl.NumberFormat('vi-VN', {
         style: 'currency',
@@ -32,15 +34,17 @@ function OrderAll(props) {
     useEffect(() => {
         getUsers();
         getRating();
+        // bỏ warning React Hook useEffect has a missing dependency
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cancel, changeRating]);
 
     const getUsers = async () => {
-        let res = await fetchUser(`/order/${JSON.parse(localStorage.account).id}/getOrder`);
+        let res = await fetchUser(`/order/${user.account.getUser.id}/getOrder`);
         setOrders(res.data);
     };
 
     const getRating = async () => {
-        let res = await fetchUser(`/products/${JSON.parse(localStorage.account).id}/getRating`);
+        let res = await fetchUser(`/products/${user.account.getUser.id}/getRating`);
         setTimeout(() => setRatings(res.data), 1000);
     };
 
@@ -57,10 +61,9 @@ function OrderAll(props) {
     };
 
     const cancelOrder = (ID) => {
-        axios
-            .put(`http://localhost:8080/order/${ID}/cancelOrder`, {
-                trangThaiDH: 3,
-            })
+        axiosPut(`/order/${ID}/cancelOrder`, {
+            trangThaiDH: 3,
+        })
             .then((res) => {
                 setCancel(!cancel);
                 toast.success('Hủy đơn hàng thành công !');
@@ -72,11 +75,10 @@ function OrderAll(props) {
 
     const handleSubmitEvaluate = (e) => {
         e.preventDefault();
-        axios
-            .put(`http://localhost:8080/products/rating`, {
-                userId: JSON.parse(localStorage.account).id,
-                checkStar: checkStar,
-            })
+        axiosPut(`/products/rating`, {
+            userId: user.account.getUser.id,
+            checkStar: checkStar,
+        })
             .then((res) => {
                 toast.success('Đánh giá thành công !');
                 setChangeRating(!changeRating);
@@ -294,7 +296,9 @@ function OrderAll(props) {
                                             placeholder="Để lại đánh giá"
                                             className={clsx(styles.table__comment)}
                                             cols="100"
-                                        ></textarea>
+                                            value={comments}
+                                            onChange={(e) => setComments(e.target.value)}
+                                        />
                                     </div>
                                 );
                             })}

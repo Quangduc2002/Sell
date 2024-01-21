@@ -9,12 +9,12 @@
 }
 
 .wrapper1 {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1170px;
-    height: 40px;
-    margin: auto;
+    // display: flex;
+    // justify-content: space-between;
+    // align-items: center;
+    // max-width: 1170px;
+    // height: 40px;
+    // margin: auto;
 
     h3 {
         color: #f62d3e;
@@ -166,7 +166,6 @@
     }
 
     &_phone {
-        display: flex;
         img {
             width: 45px;
             height: 45px;
@@ -631,7 +630,7 @@
 
 @media screen and (min-width: 768px) and (max-width: 922px) {
     .wrapper1 {
-        justify-content: center;
+        // justify-content: center;
 
         h3 {
             font-size: 12px;
@@ -737,11 +736,6 @@
 
     .wrapper2 {
         justify-content: space-around;
-
-        &_search,
-        &_phone {
-            display: none;
-        }
     }
 
     .cart {
@@ -813,7 +807,7 @@
 
 @media screen and (max-width: 576px) {
     .wrapper1 {
-        justify-content: center;
+        // justify-content: center;
 
         h3 {
             font-size: 12px;

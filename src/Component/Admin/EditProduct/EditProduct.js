@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { useParams, Link } from 'react-router-dom';
 import { motion, spring } from 'framer-motion';
@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styles from './EditProduct.module.scss';
 import { fetchUser } from '../../../services/UseServices';
+import { UserContext } from '../../../Context/UserContext';
 
 function EditProduct(props) {
     const { toast } = props;
@@ -23,6 +24,7 @@ function EditProduct(props) {
     const [fileImage, setFileImage] = useState();
     const [producttypes, setProducttypes] = useState('');
     const material = ['Gỗ gụ', 'Gỗ gõ', 'Vải', 'Gỗ hương đá', 'Gỗ hương'];
+    const { user } = useContext(UserContext);
 
     useEffect(() => {
         getUsers();
@@ -48,7 +50,7 @@ function EditProduct(props) {
     };
 
     const handleEdit = async (e) => {
-        if (JSON.parse(localStorage.account).roleId === 3) {
+        if (user.account.getUser.roleId === 3) {
             e.preventDefault();
             setShow(!show);
             axios
@@ -103,7 +105,7 @@ function EditProduct(props) {
             </div>
 
             <motion.div
-                className={clsx(styles.editProduct_PD)}
+                className={clsx(styles.editProduct_PD, 'overflow-x-scroll')}
                 initial={{ y: '4rem', opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{

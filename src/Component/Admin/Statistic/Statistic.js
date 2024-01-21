@@ -1,41 +1,90 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { Bar } from 'react-chartjs-2';
 import clsx from 'clsx';
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { motion, spring } from 'framer-motion';
+import 'chart.js/auto';
 import styles from './Statistic.module.scss';
-import { fetchUser } from '../../../services/UseServices';
+import { axiosPost, fetchUser } from '../../../services/UseServices';
 import Pagination from '../../Pagination/Pagination';
-import Loading from '../../Loading/Loading';
 import CountUp from 'react-countup';
+import Bars from '../Bars/Bars';
 
 function Statistic(props) {
-    const { indexOfLastProduct, indeOfFirstProduct, productPerPage, pagination, isActive, handleNext, handlePrevious } =
-        props;
-
+    const {
+        indexOfLastProduct,
+        indeOfFirstProduct,
+        productPerPage,
+        pagination,
+        isActive,
+        handleNext,
+        handlePrevious,
+        setMenu,
+        menu,
+    } = props;
+    const [listStatistic, setListStatistic] = useState([]);
+    const [bill, setBill] = useState([]);
+    const [incomes, setIncomes] = useState([]);
+    const [customers, setCustomers] = useState([]);
+    const [statusWait, setStatusWait] = useState([]);
+    const [methodStatistic, setMethodStatistic] = useState('');
+    const [month, setMonth] = useState('');
+    const [year, setYear] = useState('');
+    const [chartStatistics, setChartStatistics] = useState([]);
     const VND = new Intl.NumberFormat('vi-VN', {
         style: 'currency',
         currency: 'VND',
     });
+    // curDate sẽ lưu trữ thời gian hiện tại
+    var curDate = new Date();
+    // Lấy năm hiện tại
+    var curYear = curDate.getFullYear();
 
-    const [listOrder, setListOrder] = useState([]);
-    const [bill, setBill] = useState([]);
-    const [incomes, setIncomes] = useState([]);
-    const [orderDetail, setOrderDetail] = useState([]);
-    const [customers, setCustomers] = useState([]);
+    const Months = [];
+    for (let Month = 1; Month <= 12; Month++) {
+        Months.push(Month);
+    }
 
-    const [show, setShow] = useState(false);
+    const Years = [];
+    for (let Year = curYear; Year >= 1990; Year--) {
+        Years.push(Year);
+    }
+
+    const data = {
+        labels: Months.map((month) => `Tháng ${month}`),
+        datasets: [
+            {
+                label: 'Tổng tiền',
+                backgroundColor: 'rgba(75,192,192,0.2)',
+                borderColor: 'rgba(75,192,192,1)',
+                borderWidth: 1,
+                hoverBackgroundColor: 'rgba(75,192,192,0.4)',
+                hoverBorderColor: 'rgba(75,192,192,1)',
+                data: chartStatistics.map((chartStatistic) => chartStatistic.total),
+            },
+        ],
+    };
 
     useEffect(() => {
-        getOrder();
+        getStatistic();
         getBill();
         getIncome();
         getCustomer();
+        getChartStatistic();
+        getStatusWait();
+        // bỏ warning React Hook useEffect has a missing dependency
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const getOrder = async () => {
-        let res = await fetchUser('/order/listOrder');
-        setTimeout(() => setListOrder(res.data), 500);
+    const getStatistic = async () => {
+        let res = await axiosPost('/products/statistic', { methodStatistic: methodStatistic });
+        setListStatistic(res.data);
+    };
+
+    const getChartStatistic = async () => {
+        let res = await axiosPost('/products/chartStatistic', {
+            year: year,
+        });
+        setChartStatistics(res.data);
     };
 
     const getCustomer = async () => {
@@ -53,18 +102,12 @@ function Statistic(props) {
         setTimeout(() => setIncomes(res.data), 500);
     };
 
-    const currentListOrder = listOrder.slice(indeOfFirstProduct, indexOfLastProduct);
-
-    const handleModal = async (id) => {
-        setShow(!show);
-        let res = await fetchUser(`/orderItem/${id}`);
-        setOrderDetail(res.data);
+    const getStatusWait = async () => {
+        let res = await fetchUser('/products/statistic/status');
+        setTimeout(() => setStatusWait(res.data), 500);
     };
 
-    let total = 0;
-    for (let i = 0; i < orderDetail.length; i++) {
-        total += orderDetail[i].donGia;
-    }
+    const currentListStatistic = listStatistic.slice(indeOfFirstProduct, indexOfLastProduct);
 
     // thống kê tổng tiền
     let income = 0;
@@ -72,205 +115,241 @@ function Statistic(props) {
         income += incomes[i].OrderItems.donGia;
     }
 
+    const handleStatistics = () => {
+        axiosPost('/products/statistic', {
+            methodStatistic: methodStatistic,
+            month: month,
+            year: year,
+        })
+            .then((res) => {
+                setListStatistic(res.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
+
+    const handleChartStatistics = () => {
+        axiosPost('/products/chartStatistic', {
+            year: year,
+        })
+            .then((res) => {
+                setChartStatistics(res.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
+
     return (
-        <div className={clsx(styles.revenue)}>
-            <div className={clsx(styles.revenue_header)}>
-                <div className={clsx(styles.breadcrumbs)}>
-                    <Link to="/" className={clsx(styles.Link)}>
-                        Trang
-                    </Link>
-                    <span className={clsx(styles.divider)}>/</span>
-                    <span>Thống kê </span>
-                </div>
-            </div>
+        <div className={clsx(styles.revenue, 'xs:w-full md:w-[80%]')}>
+            <Bars setMenu={setMenu} menu={menu} />
 
-            {currentListOrder.length === 0 ? (
-                <Loading />
-            ) : (
-                <motion.div
-                    initial={{ y: '4rem', opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{
-                        duration: 1,
-                        type: spring,
-                    }}
+            <motion.div
+                initial={{ y: '4rem', opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{
+                    duration: 1,
+                    type: spring,
+                }}
+            >
+                <div
+                    className={clsx(
+                        styles.revenue_card,
+                        'grid grid-cols-1  sm:grid-cols-2 lg:grid-cols-4 flex-row gap-4 flex-wrap ',
+                    )}
                 >
-                    <div className={clsx(styles.revenue_card)}>
-                        <div className={clsx(styles.revenue_card__body)}>
-                            <div>
-                                <p className={clsx(styles.revenue_card__title)}>Thu nhập</p>
-                                <CountUp
-                                    start={0}
-                                    end={income}
-                                    suffix=" VND"
-                                    className={clsx(styles.revenue_card__number)}
-                                ></CountUp>
-                            </div>
-                            <div>
-                                <i className="fa-solid fa-calendar" style={{ color: '#6777ef' }}></i>
-                            </div>
+                    <div className={clsx(styles.revenue_card__body)}>
+                        <div>
+                            <p className={clsx(styles.revenue_card__title)}>Thu nhập</p>
+                            <CountUp
+                                start={0}
+                                end={income}
+                                suffix=" VND"
+                                className={clsx(styles.revenue_card__number)}
+                            ></CountUp>
                         </div>
-
-                        <div className={clsx(styles.revenue_card__body)}>
-                            <div>
-                                <p className={clsx(styles.revenue_card__title)}>Bán hàng</p>
-                                <CountUp
-                                    start={0}
-                                    end={bill.length}
-                                    className={clsx(styles.revenue_card__number)}
-                                ></CountUp>
-                            </div>
-                            <div>
-                                <i style={{ color: '#66bb6a' }} className="fa-solid fa-cart-shopping"></i>
-                            </div>
-                        </div>
-
-                        <div className={clsx(styles.revenue_card__body)}>
-                            <div>
-                                <p className={clsx(styles.revenue_card__title)}>Khách hàng</p>
-                                <CountUp
-                                    start={0}
-                                    end={customers.length}
-                                    className={clsx(styles.revenue_card__number)}
-                                ></CountUp>
-                            </div>
-                            <div>
-                                <i style={{ color: '#3abaf4' }} className="fa-solid fa-users"></i>
-                            </div>
-                        </div>
-
-                        <div className={clsx(styles.revenue_card__body)}>
-                            <div>
-                                <p className={clsx(styles.revenue_card__title)}>Chờ giải quyết</p>
-                                <CountUp
-                                    start={0}
-                                    end={listOrder.length - bill.length}
-                                    className={clsx(styles.revenue_card__number)}
-                                ></CountUp>
-                            </div>
-                            <div>
-                                <i style={{ color: '#ffa426' }} className="fa-solid fa-comments"></i>
-                            </div>
+                        <div>
+                            <i className="fa-solid fa-calendar" style={{ color: '#6777ef' }}></i>
                         </div>
                     </div>
 
-                    <div className={clsx(styles.revenue__PD)}>
-                        <p className={clsx(styles.revenue_bill)}>Hóa Đơn</p>
-                        <table className={clsx(styles.table)}>
-                            <thead>
-                                <tr>
-                                    <th>Mã ĐH</th>
-                                    <th>Tên khách hàng</th>
-                                    <th>Địa chỉ</th>
-                                    <th>Số điện thoại</th>
-                                    <th>Trạng thái đơn hàng</th>
-                                    <th>Chi tiết</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {currentListOrder.map((order) => {
-                                    return (
-                                        <tr key={order.ID}>
-                                            <td>MDH{order.ID}</td>
-                                            <td>{order.tenKH}</td>
-                                            <td>{order.diaChi}</td>
-                                            <td>{order.soDT}</td>
-                                            <td>
-                                                {order.trangThaiDH === 1 ? (
-                                                    <button className={clsx(styles.table_confirmed)}>
-                                                        Đã giao hàng
-                                                    </button>
-                                                ) : order.trangThaiDH === 0 ? (
-                                                    <button className={clsx(styles.table_status)}>Đang xử lý</button>
-                                                ) : (
-                                                    <button className={clsx(styles.table_cancel)}>Đã hủy</button>
-                                                )}
-                                            </td>
-                                            <td>
-                                                <button
-                                                    onClick={() => handleModal(order.ID)}
-                                                    className={clsx(styles.table_action)}
-                                                >
-                                                    Chi tiết
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
-                        {currentListOrder.length > 0 && (
-                            <Pagination
-                                productPerPage={productPerPage}
-                                pagination={pagination}
-                                totalProduct={listOrder.length}
-                                isActive={isActive}
-                                handleNext={handleNext}
-                                handlePrevious={handlePrevious}
-                            />
-                        )}
+                    <div className={clsx(styles.revenue_card__body)}>
+                        <div>
+                            <p className={clsx(styles.revenue_card__title)}>Bán hàng</p>
+                            <CountUp start={0} end={bill} className={clsx(styles.revenue_card__number)}></CountUp>
+                        </div>
+                        <div>
+                            <i style={{ color: '#66bb6a' }} className="fa-solid fa-cart-shopping"></i>
+                        </div>
                     </div>
-                </motion.div>
-            )}
 
-            {show && (
-                <>
-                    <div onClick={() => setShow(!show)} className={clsx(styles.modal1)}></div>
+                    <div className={clsx(styles.revenue_card__body)}>
+                        <div>
+                            <p className={clsx(styles.revenue_card__title)}>Khách hàng</p>
+                            <CountUp
+                                start={0}
+                                end={customers.length}
+                                className={clsx(styles.revenue_card__number)}
+                            ></CountUp>
+                        </div>
+                        <div>
+                            <i style={{ color: '#3abaf4' }} className="fa-solid fa-users"></i>
+                        </div>
+                    </div>
 
-                    <div className={clsx(styles.modal)} tabindex="-1" role="dialog">
-                        <div className={clsx(styles.modal_header)}>
-                            <h5 className="modal-title">Chi tiết hóa đơn</h5>
+                    <div className={clsx(styles.revenue_card__body)}>
+                        <div>
+                            <p className={clsx(styles.revenue_card__title)}>Chờ giải quyết</p>
+                            <CountUp start={0} end={statusWait} className={clsx(styles.revenue_card__number)}></CountUp>
+                        </div>
+                        <div>
+                            <i style={{ color: '#ffa426' }} className="fa-solid fa-comments"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div className={clsx(styles.revenue__PD, 'overflow-hidden overflow-x-scroll')}>
+                    <div className="my-5 ">
+                        <div>
+                            <p>Chọn phương thức thống kê:</p>
+                            <div className="flex justify-between flex-wrap gap-3 mt-2">
+                                <div className="flex flex-wrap gap-3 ">
+                                    <select
+                                        onChange={(e) => setMethodStatistic(e.target.value)}
+                                        className="py-2 px-2 xxs:w-auto xs:w-full  focus:ring focus:border-gray-300 outline-none block border border-gray-200 rounded-lg text-sm "
+                                    >
+                                        <option className="hidden">--Chọn hành động--</option>
+                                        <option value={'Sản phẩm theo ngày'}>Sản phẩm theo ngày</option>
+                                        <option value={'Sản phẩm đã bán trong tháng'}>
+                                            Sản phẩm đã bán trong tháng
+                                        </option>
+                                    </select>
+                                    <button
+                                        onClick={handleStatistics}
+                                        className="lg:block xs:hidden rounded-md py-1.5 px-3 text-white bg-[#ee4d2d] hover:bg-[#c52432]"
+                                    >
+                                        Thống kê
+                                    </button>
+                                </div>
+
+                                {methodStatistic === 'Sản phẩm đã bán trong tháng' ? (
+                                    <div className="flex gap-3 flex-wrap">
+                                        <select
+                                            onChange={(e) => setMonth(e.target.value)}
+                                            className="py-2 px-2  focus:ring focus:border-gray-300 outline-none block border border-gray-200 rounded-lg text-sm "
+                                        >
+                                            <option className="hidden">Chọn tháng</option>
+                                            {Months.map((month, index) => (
+                                                <option key={index} value={month}>
+                                                    tháng {month}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <select
+                                            onChange={(e) => setYear(e.target.value)}
+                                            className="py-2 px-2  focus:ring focus:border-gray-300 outline-none block border border-gray-200 rounded-lg text-sm "
+                                        >
+                                            <option className="hidden">Chọn năm</option>
+                                            {Years.map((Year, index) => (
+                                                <option key={index} value={Year}>
+                                                    {Year}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                ) : (
+                                    ''
+                                )}
+                            </div>
+                        </div>
+                        <div>
                             <button
-                                type="button"
-                                className={clsx(styles.modal_close)}
-                                data-dismiss="modal"
-                                aria-label="Close"
+                                onClick={handleStatistics}
+                                className="mt-2 xs:block lg:hidden rounded-md py-1.5 px-3 text-white bg-[#ee4d2d] hover:bg-[#c52432]"
                             >
-                                <span onClick={() => setShow(!show)} aria-hidden="true">
-                                    &times;
-                                </span>
+                                Thống kê
                             </button>
                         </div>
+                    </div>
 
-                        <table className={clsx(styles.table)}>
-                            <thead>
-                                <tr>
-                                    <th>Mã đơn hàng</th>
-                                    <th>Mã sản phẩm</th>
-                                    <th>Ảnh sản phẩm</th>
-                                    <th>Tên sản phẩm</th>
-                                    <th>Số lượng</th>
-                                    <th>tổng tiền</th>
+                    {currentListStatistic.length === 0 ? (
+                        <div>
+                            <p className="w-auto mx-auto py-3 md:text-xl xs:text-sm rounded-md text-red-500 font-semibold bg-orange-200 text-center">
+                                Sản phẩm thống kê không tồn tại
+                            </p>
+                        </div>
+                    ) : (
+                        <table className={clsx(styles.table, 'border-collapse p-2 border w-[1070px]')}>
+                            <thead className="border-collapse p-2">
+                                <tr className="border-collapse p-2 p-2">
+                                    <th className="bg-[#ddd] text-left border-collapse p-2 text-center">STT</th>
+                                    <th className="bg-[#ddd] text-left border-collapse p-2">Tên sản phẩm</th>
+                                    <th className="bg-[#ddd] text-left border-collapse p-2 text-center">Ảnh</th>
+                                    <th className="bg-[#ddd] text-left border-collapse p-2 text-center">Kích thước</th>
+                                    <th className="bg-[#ddd] text-left border-collapse p-2 text-center">Số lượng</th>
+                                    <th className="bg-[#ddd] text-left border-collapse p-2 text-center">Tổng tiền</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {orderDetail.map((order, index) => {
+                                {currentListStatistic.map((order, index) => {
                                     return (
-                                        <tr key={order.ID}>
-                                            <td>MDH{order.orderID}</td>
-                                            <td>SP{order.productID}</td>
-                                            <td>
+                                        <tr key={order.ID} className="border-collapse p-2 border">
+                                            <td className="border-collapse p-2 text-center">{index + 1}</td>
+                                            <td className="border-collapse p-2">{order.tenSp}</td>
+                                            <td className="border-collapse p-2 ">
                                                 <img
-                                                    className={clsx(styles.table_image)}
+                                                    className={clsx(styles.table_image, 'mx-auto')}
                                                     src={`http://localhost:3000/Image/${order.image}`}
                                                     alt=""
                                                 />
                                             </td>
-                                            <td>{order.tenSp}</td>
-                                            <td>{order.soLuong}</td>
-                                            <td>{VND.format(order.donGia)}</td>
+                                            <td className="border-collapse p-2 text-center">{order.kichThuoc}</td>
+                                            <td className="border-collapse p-2 text-center">{order.totalQuantity}</td>
+                                            <td className="border-collapse p-2 text-center">
+                                                {VND.format(order.donGia * order.totalQuantity)}
+                                            </td>
                                         </tr>
                                     );
                                 })}
                             </tbody>
                         </table>
+                    )}
+                    {currentListStatistic.length > 0 && (
+                        <Pagination
+                            productPerPage={productPerPage}
+                            pagination={pagination}
+                            totalProduct={listStatistic.length}
+                            isActive={isActive}
+                            handleNext={handleNext}
+                            handlePrevious={handlePrevious}
+                        />
+                    )}
 
-                        <div className={clsx(styles.modal_footer)}>
-                            <p>Tổng tiền hóa đơn: {VND.format(total)}</p>
+                    <div>
+                        <div className="flex gap-3 my-6">
+                            <select
+                                onChange={(e) => setYear(e.target.value)}
+                                className="py-2 px-2  focus:ring focus:border-gray-300 outline-none block border border-gray-200 rounded-lg text-sm "
+                            >
+                                <option className="hidden">--Chọn hành động--</option>
+                                {Years.map((Year, index) => (
+                                    <option key={index} value={Year}>
+                                        {Year}
+                                    </option>
+                                ))}
+                            </select>
+                            <button
+                                onClick={handleChartStatistics}
+                                className=" rounded-md py-1.5 px-3 text-white bg-[#ee4d2d] hover:bg-[#c52432]"
+                            >
+                                Thống kê
+                            </button>
                         </div>
+                        <Bar className="w-full mb-10" data={data} />
                     </div>
-                </>
-            )}
+                </div>
+            </motion.div>
         </div>
     );
 }

@@ -197,6 +197,9 @@
                 background-color: #fff;
                 border: 1px solid #e8e8e8;
                 cursor: pointer;
+                display: flex;
+                justify-content: center;
+                align-items: center;
 
                 &:hover {
                     background-color: #eaeaea;

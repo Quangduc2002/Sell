@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import { motion, spring } from 'framer-motion';
 import styles from './Deliver.module.scss';
 import { fetchUser } from '../../../services/UseServices';
 import ImageOrder from '../../../assets/Image/hoaDon.png';
+import { UserContext } from '../../../Context/UserContext';
 
 function Deliver(props) {
     const [orders, setOrders] = useState([]);
+    const { user } = useContext(UserContext);
     const VND = new Intl.NumberFormat('vi-VN', {
         style: 'currency',
         currency: 'VND',
@@ -15,10 +17,12 @@ function Deliver(props) {
 
     useEffect(() => {
         getUsers();
+        // bỏ warning React Hook useEffect has a missing dependency
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const getUsers = async () => {
-        let res = await fetchUser(`/order/${JSON.parse(localStorage.account).id}/waitConfirm`);
+        let res = await fetchUser(`/order/${user.account.getUser.id}/waitConfirm`);
         setOrders(res.data);
     };
 

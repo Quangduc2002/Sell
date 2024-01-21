@@ -54,50 +54,41 @@ function ListProduct(props) {
 
     // [DELETE] /products/:id/delete
     const handleDeleteProduct = async () => {
-        if (JSON.parse(localStorage.account).roleId === 3) {
-            setShow(!show);
-            axios
-                .put(`http://localhost:8080/products/${id}/delete`, {
-                    trangThai: 0,
-                })
-                .then((res) => {
-                    setProducts(products.filter((product) => id !== product.ID));
-                    setSucceSearch(products.filter((product) => id !== product.ID));
-                    toast.success('Xóa sản phẩm thành công !');
-                })
-                .catch((err) => {
-                    toast.error(err);
-                });
-        } else {
-            setShow(!show);
-            toast.warn('Bạn không có quyền xóa sản phẩm !');
-        }
+        setShow(!show);
+        axios
+            .put(`http://localhost:8080/products/${id}/delete`, {
+                trangThai: 0,
+            })
+            .then((res) => {
+                setProducts(products.filter((product) => id !== product.ID));
+                setSucceSearch(products.filter((product) => id !== product.ID));
+                toast.success('Xóa sản phẩm thành công !');
+            })
+            .catch((err) => {
+                toast.error(err);
+            });
     };
 
     const handleDeleteAllProduct = async () => {
         var selectedOption = document.querySelector('select').value;
-        if (JSON.parse(localStorage.account).roleId === 3) {
-            if (isChecked.length > 0) {
-                if (selectedOption === '') {
-                    toast.warn('Vui lòng chọn hành động !');
-                } else {
-                    axios
-                        .put(`http://localhost:8080/products/deleteAll`, {
-                            trangThai: 0,
-                            isChecked: isChecked,
-                            action: selectedOption,
-                        })
-                        .then((res) => {
-                            setDelAll(!delAll);
-                            toast.success('Xóa sản phẩm thành công !');
-                        })
-                        .catch((err) => {
-                            toast.error(err);
-                        });
-                }
+        if (isChecked.length > 0) {
+            if (selectedOption === '') {
+                toast.warn('Vui lòng chọn hành động !');
+            } else {
+                axios
+                    .put(`http://localhost:8080/products/deleteAll`, {
+                        trangThai: 0,
+                        isChecked: isChecked,
+                        action: selectedOption,
+                    })
+                    .then((res) => {
+                        setDelAll(!delAll);
+                        toast.success('Xóa sản phẩm thành công !');
+                    })
+                    .catch((err) => {
+                        toast.error(err);
+                    });
             }
-        } else {
-            toast.warn('Bạn không có quyền xóa sản phẩm !');
         }
     };
 
@@ -135,9 +126,8 @@ function ListProduct(props) {
         setShowSort(!showSort);
     };
 
-    // sắp xếp tên sản phẩm
+    // sắp xếp giá
     const hanldeSortPrice = (sort, sortField) => {
-        console.log(sort, sortField);
         const sortOrderByPrice = _.orderBy(products, [sortField], [sort]);
         setProducts(sortOrderByPrice);
         if (currentProductSearch.length > 0) {
@@ -167,10 +157,9 @@ function ListProduct(props) {
             setIsChecked(postId);
         }
     };
-
     return (
-        <div className={clsx(styles.listProduct)}>
-            <div className={clsx(styles.listProduct_header)}>
+        <div className={clsx(styles.listProduct, 'xs:w-full md:w-[80%]')}>
+            <div className={clsx(styles.listProduct_header, 'flex-wrap')}>
                 <div className={clsx(styles.breadcrumbs)}>
                     <Link to="/" className={clsx(styles.Link)}>
                         Trang
@@ -203,8 +192,8 @@ function ListProduct(props) {
                 </div>
             </div>
 
-            <div className={clsx(styles.listProduct_PD)}>
-                <div className={clsx(styles.listProduct_title)}>
+            <div className={clsx(styles.listProduct_PD, 'overflow-hidden overflow-x-scroll')}>
+                <div className={clsx(styles.listProduct_title, 'flex-wrap')}>
                     <div>
                         <h1>Danh sách sản phẩm</h1>
                         {paginationProduct && products ? (
@@ -218,7 +207,7 @@ function ListProduct(props) {
                         ) : (
                             ''
                         )}
-                        <div className={clsx(styles.listProduct_action)}>
+                        <div className={clsx(styles.listProduct_action, 'flex-wrap gap-4')}>
                             <div className={clsx(styles.listProduct_action__checkAll)}>
                                 <input
                                     id="checkAll"
@@ -246,7 +235,8 @@ function ListProduct(props) {
                             </button>
                         </div>
                     </div>
-                    <div className={clsx(styles.listProduct_title__right)}>
+
+                    <div className={clsx(styles.listProduct_title__right, 'my-4 flex-wrap gap-2 pl-2.5')}>
                         <Link to="/admin/ThemSp" className={clsx(styles.listProduct_add)}>
                             <i className="fa-regular fa-square-plus" style={{ style: '#fff', marginRight: 6 }}></i>
                             Thêm sản phẩm
@@ -269,6 +259,7 @@ function ListProduct(props) {
                     <Loading />
                 ) : (
                     <motion.div
+                        className="overflow-hidden  overflow-x-auto pb-5"
                         initial={{ y: '4rem', opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         transition={{
@@ -276,12 +267,12 @@ function ListProduct(props) {
                             type: spring,
                         }}
                     >
-                        <table className={clsx(styles.table)}>
-                            <thead>
-                                <tr>
-                                    <th></th>
-                                    <th>STT</th>
-                                    <th>
+                        <table className={clsx(styles.table, 'border-collapse p-2 border w-[1070px]')}>
+                            <thead className="border-collapse p-2">
+                                <tr className="border-collapse p-2 p-2">
+                                    <th className="bg-[#ddd] text-left border-collapse p-2"></th>
+                                    <th className="bg-[#ddd] text-left border-collapse p-2">STT</th>
+                                    <th className="bg-[#ddd] text-left border-collapse p-2">
                                         Tên sản phẩm
                                         {showSort ? (
                                             <i
@@ -297,9 +288,11 @@ function ListProduct(props) {
                                             ></i>
                                         )}
                                     </th>
-                                    <th style={{ minWidth: 150 }}>Chất liệu</th>
-                                    <th>Giá nhập</th>
-                                    <th>
+                                    <th className="bg-[#ddd] text-left border-collapse p-2" style={{ minWidth: 150 }}>
+                                        Chất liệu
+                                    </th>
+                                    <th className="bg-[#ddd] text-left border-collapse p-2">Giá nhập</th>
+                                    <th className="bg-[#ddd] text-left border-collapse p-2">
                                         Giá bán
                                         {showSortPrice ? (
                                             <i
@@ -315,18 +308,17 @@ function ListProduct(props) {
                                             ></i>
                                         )}
                                     </th>
-                                    <th style={{ textAlign: 'center' }}>Số lượng</th>
-                                    <th style={{ textAlign: 'center' }}>Sửa </th>
-                                    <th style={{ textAlign: 'center' }}>Xóa</th>
+                                    <th className="text-center bg-[#ddd] text-left border-collapse p-2">Số lượng</th>
+                                    <th className="text-center bg-[#ddd] text-left border-collapse p-2">Sửa </th>
+                                    <th className="text-center bg-[#ddd] text-left border-collapse p-2">Xóa</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {currentProductSearch.length === 0
                                     ? paginationProduct.map((product) => {
-                                          console.log(product.Meterial.tenChatLieu);
                                           return (
-                                              <tr key={product.ID}>
-                                                  <td>
+                                              <tr className="border-collapse p-2 p-2" key={product.ID}>
+                                                  <td className="border-collapse p-2">
                                                       <input
                                                           checked={isChecked.includes(product.ID)}
                                                           value={product.ID}
@@ -334,13 +326,19 @@ function ListProduct(props) {
                                                           onChange={handleCheckboxChange}
                                                       />
                                                   </td>
-                                                  <td>{product.ID}</td>
-                                                  <td style={{ minWidth: 300 }}>{product.tenSp}</td>
-                                                  <td>{product.Meterial.tenChatLieu}</td>
-                                                  <td>{VND.format(product.giaNhap)}</td>
-                                                  <td>{VND.format(product.giaBan)}</td>
-                                                  <td style={{ textAlign: 'center' }}>{product.soLuong}</td>
-                                                  <td style={{ textAlign: 'center' }}>
+                                                  <td className="border-collapse p-2">{product.ID}</td>
+                                                  <td className="border-collapse p-2" style={{ minWidth: 300 }}>
+                                                      {product.tenSp}
+                                                  </td>
+                                                  <td className="border-collapse p-2">
+                                                      {product.Meterial.tenChatLieu}
+                                                  </td>
+                                                  <td className="border-collapse p-2">{VND.format(product.giaNhap)}</td>
+                                                  <td className="border-collapse p-2">{VND.format(product.giaBan)}</td>
+                                                  <td className="border-collapse p-2" style={{ textAlign: 'center' }}>
+                                                      {product.soLuong}
+                                                  </td>
+                                                  <td className="border-collapse p-2" style={{ textAlign: 'center' }}>
                                                       <button className={clsx(styles.table_button)}>
                                                           <Link to={`/admin/DSSP/products/${product.ID}/edit`}>
                                                               <i
@@ -350,7 +348,7 @@ function ListProduct(props) {
                                                           </Link>
                                                       </button>
                                                   </td>
-                                                  <td style={{ textAlign: 'center' }}>
+                                                  <td className="border-collapse p-2" style={{ textAlign: 'center' }}>
                                                       <button
                                                           className={clsx(styles.table_button)}
                                                           onClick={() => handleId(product.ID)}
@@ -366,8 +364,8 @@ function ListProduct(props) {
                                       })
                                     : currentProductSearch.map((product) => {
                                           return (
-                                              <tr key={product.ID}>
-                                                  <td>
+                                              <tr className="border-collapse p-2 p-2" key={product.ID}>
+                                                  <td className="border-collapse p-2">
                                                       <input
                                                           checked={isChecked.includes(product.ID)}
                                                           value={product.ID}
@@ -375,13 +373,17 @@ function ListProduct(props) {
                                                           onChange={handleCheckboxChange}
                                                       />
                                                   </td>
-                                                  <td>{product.ID}</td>
-                                                  <td style={{ minWidth: 300 }}>{product.tenSp}</td>
-                                                  <td>{product.chatLieu}</td>
-                                                  <td>{VND.format(product.giaNhap)}</td>
-                                                  <td>{VND.format(product.giaBan)}</td>
-                                                  <td style={{ textAlign: 'center' }}>{product.soLuong}</td>
-                                                  <td style={{ textAlign: 'center' }}>
+                                                  <td className="border-collapse p-2">{product.ID}</td>
+                                                  <td className="border-collapse p-2" style={{ minWidth: 300 }}>
+                                                      {product.tenSp}
+                                                  </td>
+                                                  <td className="border-collapse p-2">{product.chatLieu}</td>
+                                                  <td className="border-collapse p-2">{VND.format(product.giaNhap)}</td>
+                                                  <td className="border-collapse p-2">{VND.format(product.giaBan)}</td>
+                                                  <td className="border-collapse p-2" style={{ textAlign: 'center' }}>
+                                                      {product.soLuong}
+                                                  </td>
+                                                  <td className="border-collapse p-2" style={{ textAlign: 'center' }}>
                                                       <button className={clsx(styles.table_button)}>
                                                           <Link to={`/admin/DSSP/products/${product.ID}/edit`}>
                                                               <i
@@ -391,7 +393,7 @@ function ListProduct(props) {
                                                           </Link>
                                                       </button>
                                                   </td>
-                                                  <td style={{ textAlign: 'center' }}>
+                                                  <td className="border-collapse p-2" style={{ textAlign: 'center' }}>
                                                       <button
                                                           className={clsx(styles.table_button)}
                                                           onClick={() => handleId(product.ID)}

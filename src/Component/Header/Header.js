@@ -1,10 +1,12 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useContext } from 'react';
 import clsx from 'clsx';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import styles from '../Header/Header.module.scss';
 import LogoTT from '../../assets/Image/Logo.png';
 import Phone from '../../assets/Image/telephone.png';
 import path from '../Ultis/Path';
+import { UserContext } from '../../Context/UserContext';
+import { fetchUser } from '../../services/UseServices';
 
 function Header(props) {
     const { cartItems, handleKeyPress, searchQuery, setSearchQuery, filteredItems, HandleOnSubmit, roleId, toast } =
@@ -12,9 +14,8 @@ function Header(props) {
     const [show, setShow] = useState(false);
     const [show2, setShow2] = useState(false);
     const [showPage, setShowPage] = useState(false);
-    const navigate = useNavigate();
     const search = useRef();
-
+    const { user, logoutConText } = useContext(UserContext);
     const links = [
         { path: '/', title: 'Trang chủ' },
         { path: '/phongkhach', title: 'Phòng khách' },
@@ -23,23 +24,29 @@ function Header(props) {
         { path: '/phongngu', title: 'Phòng ngủ' },
     ];
 
-    const handleLogout = () => {
-        localStorage.removeItem('account');
-        sessionStorage.removeItem('account');
-
-        setShow(false);
-        setShow2(false);
-        navigate('/');
-        toast.success('Đăng xuất thành công !');
+    const handleLogout = async () => {
+        const res = await fetchUser('/user/logout');
+        if (res && res.data && +res.data.EC === 0) {
+            localStorage.removeItem('jwt');
+            localStorage.removeItem('account');
+            setShow(false);
+            setShow2(false);
+            toast.success('Đăng xuất thành công !');
+            logoutConText();
+        }
     };
 
-    console.log(localStorage.account);
     return (
         <div className={clsx(styles.wrapper)}>
-            <div className={clsx(styles.top)}>
-                <div className={clsx(styles.wrapper1)}>
-                    <div className={clsx(styles.wrapper1_custom)}>
-                        <h3>CHÀO MỪNG BẠN ĐẾN VỚI HỆ THỐNG SIÊU THỊ NỘI THẤT </h3>
+            <div className={clsx(styles.top, 'px-10')}>
+                <div
+                    className={clsx(
+                        styles.wrapper1,
+                        'h-10 flex lg:justify-between items-center xl:w-[1170px] xs:w-auto m-auto xs: justify-center lg:m-auto ',
+                    )}
+                >
+                    <div>
+                        <h3 className="font-bold">CHÀO MỪNG BẠN ĐẾN VỚI HỆ THỐNG SIÊU THỊ NỘI THẤT </h3>
                     </div>
                     <div className={clsx(styles.wrapper1_medium)}>
                         <ul>
@@ -53,8 +60,7 @@ function Header(props) {
                                 <span>Liên hệ</span>
                             </li>
                             <li style={{ marginLeft: 12 }}>
-                                {!localStorage.account ? (
-                                    // && localStorage.length === 0
+                                {user.isAuthenticated === false ? (
                                     <Link to="/Login" style={{ textDecoration: 'none', color: '#000' }}>
                                         <span className={clsx(styles.show)}>Đăng nhập</span>
                                     </Link>
@@ -65,14 +71,15 @@ function Header(props) {
                                             setShow(!show);
                                         }}
                                     >
-                                        {localStorage.account ? JSON.parse(localStorage.account).name : ''}
+                                        {user.account.getUser.name}
+
                                         <i style={{ marginLeft: 6 }} className="fa-sharp fa-solid fa-caret-down"></i>
                                     </span>
                                 )}
 
                                 {show && (
                                     <div className={clsx(styles.wrapper1_user)}>
-                                        {JSON.parse(localStorage.account).roleId !== 1 ? (
+                                        {user.account && user.account && user.account.getUser.roleId !== 1 ? (
                                             <Link
                                                 to={`admin/${path.LayoutAdminStatistic}`}
                                                 className={clsx(styles.wrapper1_menu)}
@@ -92,7 +99,7 @@ function Header(props) {
                                             <p>Hồ sơ cá nhân</p>
                                         </NavLink>
 
-                                        {JSON.parse(localStorage.account).roleId === 1 ? (
+                                        {user.account && user.account && user.account.getUser.roleId === 1 ? (
                                             <NavLink
                                                 className={clsx(styles.wrapper1_menu)}
                                                 to={`/order/${path.LayoutOrderAll}`}
@@ -107,7 +114,7 @@ function Header(props) {
 
                                         <div className={clsx(styles.wrapper1_menu)}>
                                             <i className="fa-solid fa-right-from-bracket"></i>
-                                            <p onClick={handleLogout}>Đăng xuất</p>
+                                            <p onClick={() => handleLogout()}>Đăng xuất</p>
                                         </div>
                                     </div>
                                 )}
@@ -117,8 +124,8 @@ function Header(props) {
                 </div>
             </div>
 
-            <div className={clsx(styles.top1)}>
-                <div className={clsx(styles.wrapper2)}>
+            <div>
+                <div className={clsx(styles.wrapper2, 'lg:hidden xs:flex')}>
                     <div
                         onClick={() => {
                             setShow2(!show2);
@@ -141,7 +148,7 @@ function Header(props) {
                         ''
                     )}
 
-                    <div className={clsx(styles.wrapper2_search)}>
+                    <div className={clsx(styles.wrapper2_search, 'lg:block xs:hidden')}>
                         <div>
                             <input
                                 className={clsx(styles.input)}
@@ -185,7 +192,7 @@ function Header(props) {
                         </div>
                     </div>
 
-                    <div className={clsx(styles.wrapper2_phone)}>
+                    <div className={clsx(styles.wrapper2_phone, 'lg:flex xs:hidden')}>
                         <img alt="" src={Phone} />
                         <div className={clsx(styles.wrapper2_hotline)}>
                             <p style={{ fontWeight: 700 }}>Hotline</p>
@@ -268,9 +275,9 @@ function Header(props) {
                                             );
                                         })}
 
-                                        {localStorage.length !== 0 ? (
+                                        {user.isAuthenticated === true ? (
                                             <li>
-                                                {JSON.parse(localStorage.account).roleId !== 1 ? (
+                                                {user.account && user.account.getUser.roleId !== 1 ? (
                                                     <Link
                                                         to={`admin/${path.LayoutAdminStatistic}`}
                                                         style={{ textDecoration: 'none' }}
@@ -292,12 +299,12 @@ function Header(props) {
                             </div>
 
                             <div className={clsx(styles.wrapper3_btn)}>
-                                {localStorage.length === 0 ? (
+                                {user.isAuthenticated === false ? (
                                     <Link to="/Login" style={{ textDecoration: 'none', color: '#000' }}>
                                         <button className={clsx(styles.wrapper3__btn)}>Đăng nhập</button>
                                     </Link>
                                 ) : (
-                                    <button className={clsx(styles.wrapper3__btn)} onClick={handleLogout}>
+                                    <button className={clsx(styles.wrapper3__btn)} onClick={() => handleLogout()}>
                                         Đăng xuất
                                     </button>
                                 )}

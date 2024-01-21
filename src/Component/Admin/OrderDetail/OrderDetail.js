@@ -38,8 +38,8 @@ function OrderDetail(props) {
 
     const currentListOrderDetail = orderDetail.slice(indeOfFirstProduct, indexOfLastProduct);
     return (
-        <div className={clsx(styles.orderDetail)}>
-            <div className={clsx(styles.orderDetail_header)}>
+        <div className={clsx(styles.orderDetail, 'xs:w-full md:w-[80%]')}>
+            <div className={clsx(styles.orderDetail_header, 'flex-wrap')}>
                 <div className={clsx(styles.breadcrumbs)}>
                     <Link to="/" className={clsx(styles.Link)}>
                         Quản lý đơn hàng
@@ -47,7 +47,8 @@ function OrderDetail(props) {
                     <span className={clsx(styles.divider)}>/</span>
                     <span>Chi tiết đơn hàng</span>
                 </div>
-                <div style={{ display: 'flex' }}>
+
+                <div className="flex my-4">
                     <div className={clsx(styles.orderDetail_header__search)}>
                         <input
                             type="text"
@@ -65,8 +66,9 @@ function OrderDetail(props) {
                     </div>
                 </div>
             </div>
-            <div className={clsx(styles.orderDetail_PD)}>
-                <div className={clsx(styles.orderDetail_title)}>
+
+            <div className={clsx(styles.orderDetail_PD, 'overflow-hidden overflow-x-scroll')}>
+                <div className={clsx(styles.orderDetail_title, 'flex-wrap')}>
                     <div>
                         <h1>Chi tiết đơn hàng</h1>
                         {orderDetail ? (
@@ -78,10 +80,12 @@ function OrderDetail(props) {
                         )}
                     </div>
                 </div>
+
                 {currentListOrderDetail.length === 0 ? (
                     <Loading />
                 ) : (
                     <motion.div
+                        className="overflow-x-auto overflow-hidden pb-5"
                         initial={{ y: '4rem', opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         transition={{
@@ -89,33 +93,33 @@ function OrderDetail(props) {
                             type: spring,
                         }}
                     >
-                        <table className={clsx(styles.table)}>
-                            <thead>
-                                <tr>
-                                    <th>Mã đơn hàng</th>
-                                    <th>Mã sản phẩm</th>
-                                    <th>Ảnh sản phẩm</th>
-                                    <th>Tên sản phẩm</th>
-                                    <th>Số lượng</th>
-                                    <th>tổng tiền</th>
+                        <table className={clsx(styles.table, 'border-collapse p-2 border w-[1070px]')}>
+                            <thead className="border-collapse p-2">
+                                <tr className="border-collapse p-2 p-2">
+                                    <th className="bg-[#ddd] text-left border-collapse p-2">Mã đơn hàng</th>
+                                    <th className="bg-[#ddd] text-left border-collapse p-2">Mã sản phẩm</th>
+                                    <th className="bg-[#ddd] text-left border-collapse p-2">Ảnh sản phẩm</th>
+                                    <th className="bg-[#ddd] text-left border-collapse p-2">Tên sản phẩm</th>
+                                    <th className="bg-[#ddd] text-left border-collapse p-2">Số lượng</th>
+                                    <th className="bg-[#ddd] text-left border-collapse p-2">tổng tiền</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {currentListOrderDetail.map((order, index) => {
                                     return (
-                                        <tr key={order.ID}>
-                                            <td>MDH{order.orderID}</td>
-                                            <td>SP{order.productID}</td>
-                                            <td>
+                                        <tr className="border-collapse p-2 p-2" key={order.ID}>
+                                            <td className="border-collapse p-2">MDH{order.orderID}</td>
+                                            <td className="border-collapse p-2">SP{order.productID}</td>
+                                            <td className="border-collapse p-2">
                                                 <img
                                                     className={clsx(styles.table_image)}
                                                     src={`http://localhost:3000/Image/${order.image}`}
                                                     alt=""
                                                 />
                                             </td>
-                                            <td>{order.tenSp}</td>
-                                            <td>{order.soLuong}</td>
-                                            <td>{VND.format(order.donGia)}</td>
+                                            <td className="border-collapse p-2">{order.tenSp}</td>
+                                            <td className="border-collapse p-2">{order.soLuong}</td>
+                                            <td className="border-collapse p-2">{VND.format(order.donGia)}</td>
                                         </tr>
                                     );
                                 })}

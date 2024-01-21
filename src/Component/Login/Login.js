@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import clsx from 'clsx';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { axiosPost } from '../../services/UseServices';
 import styles from '../Login/Login.module.scss';
 import FindAccounts from '../ForgotPassword/FindAcounts/FindAcounts';
+import { UserContext } from '../../Context/UserContext';
 
 function Login(props) {
     const { toast } = props;
@@ -22,6 +23,7 @@ function Login(props) {
     const [showForgotPass, setShowForgotPass] = useState(true);
     const [formErrors, setFormErrors] = useState({});
     const navigate = useNavigate();
+    const { loginConText } = useContext(UserContext);
 
     // curDate sẽ lưu trữ thời gian hiện tại
     var curDate = new Date();
@@ -126,14 +128,28 @@ function Login(props) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (validateForm()) {
-            axios
-                .post('http://localhost:8080/user/login', {
+            axiosPost(
+                '/user/login',
+                {
                     email: email,
                     password: password,
-                })
+                },
+                // res cookies
+                { withCredentials: true },
+            )
                 .then((res) => {
                     //lấy tên người dùng
+                    let roles = res.data.DT.roles;
+                    let token = res.data.DT.access_token;
+                    let getUser = res.data.DT.getUser;
                     localStorage.setItem('account', JSON.stringify(res.data.user));
+                    localStorage.setItem('jwt', res.data.DT.access_token);
+                    let data = {
+                        account: { roles, token, getUser },
+                        isAuthenticated: true,
+                    };
+                    loginConText(data);
+
                     if (res.data.user.roleId === 1) {
                         navigate('/');
                         toast.success('Đăng nhập thành công !');
@@ -156,18 +172,17 @@ function Login(props) {
     const handleRegister = (e) => {
         e.preventDefault();
         if (validateFormRegister()) {
-            axios
-                .post('http://localhost:8080/user/register', {
-                    email: registerEmail,
-                    password: registerPassword,
-                    name: surname + ' ' + name,
-                    roleId: '1',
-                    ngaySinh: Day,
-                    thangSinh: Month,
-                    namSinh: Year,
-                    gioiTinh: gioiTinh,
-                    image: 'avt-default.jpg',
-                })
+            axiosPost('/user/register', {
+                email: registerEmail,
+                password: registerPassword,
+                name: surname + ' ' + name,
+                roleId: '1',
+                ngaySinh: Day,
+                thangSinh: Month,
+                namSinh: Year,
+                gioiTinh: gioiTinh,
+                image: 'avt-default.jpg',
+            })
                 .then((res) => {
                     toast.success('Đăng kí thành công !');
                     setRegisterEmail('');

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 import '../Views/App.css';
 import Header from '../Component/Header/Header';
@@ -21,6 +21,7 @@ import Finish from '../Component/PurchaseOrder/Finish/Finish';
 import Deliver from '../Component/PurchaseOrder/Deliver/Deliver';
 import Cancel from '../Component/PurchaseOrder/Cancel/Cancel';
 import Profile from '../Component/Profile/Profile';
+import CheckOut from '../Component/CheckOut/CheckOut.js';
 
 function Layout(props) {
     const { roleId } = props;
@@ -33,9 +34,8 @@ function Layout(props) {
     const [searchs, setSearchs] = useState('');
     const [succeSearch, setSucceSearch] = useState([]);
     const [allSp, setAllSp] = useState(true);
-    //api
     const [name, setName] = useState([]);
-    const navigate = useNavigate();
+    //api
     useEffect(() => {
         getUsers();
     }, []);
@@ -50,45 +50,37 @@ function Layout(props) {
         if (product.soLuong === 0) {
             toast.error('Sản phẩm đã hết hàng !');
         } else {
-            if (localStorage.length !== 0) {
-                if (JSON.parse(localStorage.account).roleId === 1) {
-                    const exist = cartItems.find((cartItem) => {
-                        return cartItem.ID === product.ID;
-                    });
+            const exist = cartItems.find((cartItem) => {
+                return cartItem.ID === product.ID;
+            });
 
-                    if (exist) {
-                        setCartItems(
-                            cartItems.map((cartItem) =>
-                                cartItem.ID === product.ID
-                                    ? {
-                                          ...exist,
-                                          qty: count + cartItem.qty,
-                                          total:
-                                              (count + cartItem.qty) *
-                                              parseFloat(cartItem.giaBan - (cartItem.giaBan * cartItem.giamGia) / 100),
-                                      }
-                                    : cartItem,
-                            ),
-                        );
-                        toast.success('Thêm sản phẩm thành công !');
-                    } else {
-                        setCartItems([
-                            ...cartItems,
-                            {
-                                ...product,
-                                qty: count,
-                                total: count * parseFloat(product.giaBan - (product.giaBan * product.giamGia) / 100),
-                            },
-                        ]);
-                        toast.success('Thêm sản phẩm thành công !');
-                    }
-                    setCount(1);
-                } else {
-                    toast.warn('Tài khoản này không thể mua hàng !');
-                }
+            if (exist) {
+                setCartItems(
+                    cartItems.map((cartItem) =>
+                        cartItem.ID === product.ID
+                            ? {
+                                  ...exist,
+                                  qty: count + cartItem.qty,
+                                  total:
+                                      (count + cartItem.qty) *
+                                      parseFloat(cartItem.giaBan - (cartItem.giaBan * cartItem.giamGia) / 100),
+                              }
+                            : cartItem,
+                    ),
+                );
+                toast.success('Thêm sản phẩm thành công !');
             } else {
-                navigate('/Login');
+                setCartItems([
+                    ...cartItems,
+                    {
+                        ...product,
+                        qty: count,
+                        total: count * parseFloat(product.giaBan - (product.giaBan * product.giamGia) / 100),
+                    },
+                ]);
+                toast.success('Thêm sản phẩm thành công !');
             }
+            setCount(1);
         }
     };
 
@@ -265,6 +257,18 @@ function Layout(props) {
                         />
                     }
                 />
+                <Route
+                    path={path.CheckOut}
+                    element={
+                        <CheckOut
+                            cartItems={cartItems}
+                            totalMoney={totalMoney}
+                            toast={toast}
+                            setCartItems={setCartItems}
+                        />
+                    }
+                />
+
                 <Route
                     path={path.ProductDetails}
                     element={<ProductDetails count={count} setCount={setCount} onAdd={onAdd} toast={toast} />}

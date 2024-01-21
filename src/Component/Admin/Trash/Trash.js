@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
-import axios from 'axios';
 import { motion, spring } from 'framer-motion';
 import _ from 'lodash';
 import styles from './Trash.module.scss';
-import { fetchUser } from '../../../services/UseServices';
+import { fetchUser, axiosPut } from '../../../services/UseServices';
 import Pagination from '../../Pagination/Pagination';
 
 function Trash(props) {
@@ -48,59 +47,46 @@ function Trash(props) {
         setShow(!show);
         setId(_id);
     };
-
     // [DELETE] /products/:id/delete
     const handleDeleteProduct = async () => {
-        if (JSON.parse(localStorage.account).roleId === 3) {
-            setShow(!show);
-            axios
-                .put(`http://localhost:8080/products/${id}/delete`, {
-                    trangThai: 0,
-                })
-                .then((res) => {
-                    setProducts(products.filter((product) => id !== product.ID));
-                    setSucceSearch(products.filter((product) => id !== product.ID));
-                    toast.success('Xóa sản phẩm thành công !');
-                })
-                .catch((err) => {
-                    toast.error(err);
-                });
-        } else {
-            setShow(!show);
-            toast.warn('Bạn không có quyền xóa sản phẩm !');
-        }
+        setShow(!show);
+        axiosPut(`/products/${id}/delete`, {
+            trangThai: 0,
+        })
+            .then((res) => {
+                setProducts(products.filter((product) => id !== product.ID));
+                setSucceSearch(products.filter((product) => id !== product.ID));
+                toast.success('Xóa sản phẩm thành công !');
+            })
+            .catch((err) => {
+                toast.error(err);
+            });
     };
 
     const handleDeleteAllProduct = async () => {
         var selectedOption = document.querySelector('select').value;
-        if (JSON.parse(localStorage.account).roleId === 3) {
-            if (isChecked.length > 0) {
-                if (selectedOption === '') {
-                    toast.warn('Vui lòng chọn hành động !');
-                } else {
-                    axios
-                        .put(`http://localhost:8080/products/trash`, {
-                            trangThai: 1,
-                            isChecked: isChecked,
-                            action: selectedOption,
-                        })
-                        .then((res) => {
-                            setDelAll(!delAll);
-                            selectedOption === 'delete'
-                                ? toast.success('Xóa sản phẩm thành công !')
-                                : toast.success('Khôi phục sản phẩm thành công !');
-                        })
-                        .catch((err) => {
-                            toast.error(err);
-                        });
-                }
+        if (isChecked.length > 0) {
+            if (selectedOption === '') {
+                toast.warn('Vui lòng chọn hành động !');
+            } else {
+                axiosPut(`/products/trash`, {
+                    trangThai: 1,
+                    isChecked: isChecked,
+                    action: selectedOption,
+                })
+                    .then((res) => {
+                        setDelAll(!delAll);
+                        selectedOption === 'delete'
+                            ? toast.success('Xóa sản phẩm thành công !')
+                            : toast.success('Khôi phục sản phẩm thành công !');
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
             }
-        } else {
-            toast.warn('Bạn không có quyền xóa sản phẩm !');
         }
     };
 
-    console.log(isChecked);
     const HandleClear = () => {
         setSearchQuery('');
     };
@@ -156,8 +142,8 @@ function Trash(props) {
         }
     };
     return (
-        <div className={clsx(styles.listProduct)}>
-            <div className={clsx(styles.listProduct_header)}>
+        <div className={clsx(styles.listProduct, 'xs:w-full md:w-[80%]')}>
+            <div className={clsx(styles.listProduct_header, 'flex-wrap')}>
                 <div className={clsx(styles.breadcrumbs)}>
                     <Link to="/" className={clsx(styles.Link)}>
                         Trang
@@ -165,7 +151,8 @@ function Trash(props) {
                     <span className={clsx(styles.divider)}>/</span>
                     <span>Quản lý sản phẩm</span>
                 </div>
-                <div style={{ display: 'flex' }}>
+
+                <div className="flex my-4">
                     <div className={clsx(styles.listProduct_header__search)}>
                         <input
                             type="text"
@@ -189,8 +176,9 @@ function Trash(props) {
                     </div>
                 </div>
             </div>
-            <div className={clsx(styles.listProduct_PD)}>
-                <div className={clsx(styles.listProduct_title)}>
+
+            <div className={clsx(styles.listProduct_PD, 'overflow-hidden overflow-x-scroll')}>
+                <div className={clsx(styles.listProduct_title, 'flex-wrap')}>
                     <div>
                         <h1>Sản phẩm đã xóa</h1>
                         {paginationProduct.length !== 0 ? (
@@ -206,7 +194,7 @@ function Trash(props) {
                                 ) : (
                                     ''
                                 )}
-                                <div className={clsx(styles.listProduct_action)}>
+                                <div className={clsx(styles.listProduct_action, 'flex-wrap gap-4')}>
                                     <div className={clsx(styles.listProduct_action__checkAll)}>
                                         <input
                                             id="checkAll"
@@ -240,10 +228,12 @@ function Trash(props) {
                         )}
                     </div>
                 </div>
+
                 {paginationProduct.length === 0 ? (
                     <p>Chưa có sản phẩm bị xóa</p>
                 ) : (
                     <motion.div
+                        className="overflow-hidden overflow-x-auto pb-5 "
                         initial={{ y: '4rem', opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         transition={{
@@ -251,12 +241,12 @@ function Trash(props) {
                             type: spring,
                         }}
                     >
-                        <table className={clsx(styles.table)}>
-                            <thead>
-                                <tr>
-                                    <th></th>
-                                    <th>STT</th>
-                                    <th>
+                        <table className={clsx(styles.table, 'border-collapse p-2 border w-[1070px]')}>
+                            <thead className="border-collapse p-2">
+                                <tr className="border-collapse p-2 p-2">
+                                    <th className="bg-[#ddd] text-left border-collapse p-2"></th>
+                                    <th className="bg-[#ddd] text-left border-collapse p-2">STT</th>
+                                    <th className="bg-[#ddd] text-left border-collapse p-2">
                                         Tên sản phẩm
                                         {showSort ? (
                                             <i
@@ -272,20 +262,30 @@ function Trash(props) {
                                             ></i>
                                         )}
                                     </th>
-                                    <th>Chất liệu</th>
-                                    <th>Giá nhập</th>
-                                    <th>Giá bán</th>
-                                    <th>Số lượng</th>
-                                    <th style={{ textAlign: 'center' }}>Sửa </th>
-                                    <th style={{ textAlign: 'center' }}>Xóa</th>
+                                    <th className="bg-[#ddd] text-left border-collapse p-2">Chất liệu</th>
+                                    <th className="bg-[#ddd] text-left border-collapse p-2">Giá nhập</th>
+                                    <th className="bg-[#ddd] text-left border-collapse p-2">Giá bán</th>
+                                    <th className="bg-[#ddd] text-left border-collapse p-2">Số lượng</th>
+                                    <th
+                                        className="bg-[#ddd] text-left border-collapse p-2"
+                                        style={{ textAlign: 'center' }}
+                                    >
+                                        Sửa{' '}
+                                    </th>
+                                    <th
+                                        className="bg-[#ddd] text-left border-collapse p-2"
+                                        style={{ textAlign: 'center' }}
+                                    >
+                                        Xóa
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {currentProductSearch.length === 0
                                     ? paginationProduct.map((product) => {
                                           return (
-                                              <tr key={product.ID}>
-                                                  <td>
+                                              <tr className="border-collapse p-2 p-2" key={product.ID}>
+                                                  <td className="border-collapse p-2">
                                                       <input
                                                           checked={isChecked.includes(product.ID)}
                                                           value={product.ID}
@@ -293,13 +293,17 @@ function Trash(props) {
                                                           onChange={handleCheckboxChange}
                                                       />
                                                   </td>
-                                                  <td>{product.ID}</td>
-                                                  <td style={{ minWidth: 300 }}>{product.tenSp}</td>
-                                                  <td>{product.chatLieu}</td>
-                                                  <td>{VND.format(product.giaNhap)}</td>
-                                                  <td>{VND.format(product.giaBan)}</td>
-                                                  <td>{product.soLuong}</td>
-                                                  <td style={{ textAlign: 'center' }}>
+                                                  <td className="border-collapse p-2">{product.ID}</td>
+                                                  <td className="border-collapse p-2" style={{ minWidth: 300 }}>
+                                                      {product.tenSp}
+                                                  </td>
+                                                  <td className="border-collapse p-2">
+                                                      {product.Meterial.tenChatLieu}
+                                                  </td>
+                                                  <td className="border-collapse p-2">{VND.format(product.giaNhap)}</td>
+                                                  <td className="border-collapse p-2">{VND.format(product.giaBan)}</td>
+                                                  <td className="border-collapse p-2">{product.soLuong}</td>
+                                                  <td className="border-collapse p-2 text-center">
                                                       <button className={clsx(styles.table_button)}>
                                                           <Link to={`/admin/DSSP/products/${product.ID}/edit`}>
                                                               <i
@@ -309,7 +313,7 @@ function Trash(props) {
                                                           </Link>
                                                       </button>
                                                   </td>
-                                                  <td style={{ textAlign: 'center' }}>
+                                                  <td className="border-collapse p-2 text-center">
                                                       <button
                                                           className={clsx(styles.table_button)}
                                                           onClick={() => handleId(product.ID)}
@@ -325,8 +329,8 @@ function Trash(props) {
                                       })
                                     : currentProductSearch.map((product) => {
                                           return (
-                                              <tr key={product.ID}>
-                                                  <td>
+                                              <tr className="border-collapse p-2 p-2" key={product.ID}>
+                                                  <td className="border-collapse p-2">
                                                       <input
                                                           checked={isChecked.includes(product.ID)}
                                                           value={product.ID}
@@ -334,13 +338,15 @@ function Trash(props) {
                                                           onChange={handleCheckboxChange}
                                                       />
                                                   </td>
-                                                  <td>{product.ID}</td>
-                                                  <td style={{ minWidth: 300 }}>{product.tenSp}</td>
-                                                  <td>{product.chatLieu}</td>
-                                                  <td>{VND.format(product.giaNhap)}</td>
-                                                  <td>{VND.format(product.giaBan)}</td>
-                                                  <td>{product.soLuong}</td>
-                                                  <td style={{ textAlign: 'center' }}>
+                                                  <td className="border-collapse p-2">{product.ID}</td>
+                                                  <td className="border-collapse p-2" style={{ minWidth: 300 }}>
+                                                      {product.tenSp}
+                                                  </td>
+                                                  <td className="border-collapse p-2">{product.chatLieu}</td>
+                                                  <td className="border-collapse p-2">{VND.format(product.giaNhap)}</td>
+                                                  <td className="border-collapse p-2">{VND.format(product.giaBan)}</td>
+                                                  <td className="border-collapse p-2">{product.soLuong}</td>
+                                                  <td className="border-collapse p-2 text-center">
                                                       <button className={clsx(styles.table_button)}>
                                                           <Link to={`/admin/DSSP/products/${product.ID}/edit`}>
                                                               <i
@@ -350,7 +356,7 @@ function Trash(props) {
                                                           </Link>
                                                       </button>
                                                   </td>
-                                                  <td style={{ textAlign: 'center' }}>
+                                                  <td className="border-collapse p-2 text-center">
                                                       <button
                                                           className={clsx(styles.table_button)}
                                                           onClick={() => handleId(product.ID)}

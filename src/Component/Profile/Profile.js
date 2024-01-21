@@ -1,10 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import clsx from 'clsx';
 import styles from './Profile.module.scss';
-import { useState } from 'react';
-import { useEffect } from 'react';
-import { fetchUser } from '../../services/UseServices';
-import axios from 'axios';
+import { fetchUser, axiosPut } from '../../services/UseServices';
+import { UserContext } from '../../Context/UserContext';
 
 function Profile(props) {
     const { toast } = props;
@@ -24,6 +22,7 @@ function Profile(props) {
     const [passNew, setPassNew] = useState('');
     const [enterPass, setEnterPass] = useState('');
     const [checkError, setCheckError] = useState('');
+    const { user } = useContext(UserContext);
 
     const handleImage = (e) => {
         // add image vào csdl
@@ -33,10 +32,12 @@ function Profile(props) {
 
     useEffect(() => {
         getUsers();
+        // bỏ warning React Hook useEffect has a missing dependency
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const getUsers = async () => {
-        let res = await fetchUser(`/user/${JSON.parse(localStorage.account).id}`);
+        let res = await fetchUser(`/user/${user.account.getUser.id}`);
         setName(res.data.name);
         setEmail(res.data.email);
         setGioiTinh(res.data.gioiTinh);
@@ -86,10 +87,9 @@ function Profile(props) {
         formData.append('thangSinh', Month);
         formData.append('namSinh', Year);
         formData.append('gioiTinh', gioiTinh);
-        axios
-            .put(`http://localhost:8080/user/${JSON.parse(localStorage.account).id}/edit`, formData)
+        axiosPut(`/user/${user.account.getUser.id}/edit`, formData)
             .then((res) => {
-                toast.success('Sửa user thành công ');
+                toast.success('Sửa thông tin thành công ');
             })
             .catch((err) => {
                 toast.error(err);
@@ -99,11 +99,10 @@ function Profile(props) {
     const handleChangePass = (e) => {
         e.preventDefault();
         if (passNew === enterPass && passNew !== currentPass && currentPass && enterPass && passNew) {
-            axios
-                .put(`http://localhost:8080/user/${JSON.parse(localStorage.account).id}/changePassword`, {
-                    currentPass: currentPass,
-                    password: passNew,
-                })
+            axiosPut(`/user/${user.account.getUser.id}/changePassword`, {
+                currentPass: currentPass,
+                password: passNew,
+            })
                 .then((res) => {
                     toast.success('Đổi mật khẩu thành công ');
                     setCheckError(res.data.errCode);

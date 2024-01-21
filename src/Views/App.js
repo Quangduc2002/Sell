@@ -4,6 +4,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import { motion, useScroll } from 'framer-motion';
 import 'react-toastify/dist/ReactToastify.css';
 import '../Views/App.css';
+import './index.css';
 import Home from '../Component/Home/Home';
 import LivingRoom from '../Component/LivingRoom/LivingRoom';
 import Kitchen from '../Component/Kitchen/Kitchen';
@@ -35,6 +36,8 @@ import Recover from '../Component/ForgotPassword/Recover/Recover';
 import FindAccounts from '../Component/ForgotPassword/FindAcounts/FindAcounts';
 import EnterCode from '../Component/ForgotPassword/EnterCode/EnterCode';
 import PasswordNew from '../Component/ForgotPassword/PasswordNew/PasswordNew';
+import AddUsers from '../Component/Admin/AddUsers/AddUsers.js';
+import CheckOut from '../Component/CheckOut/CheckOut.js';
 
 function App() {
     const { scrollYProgress } = useScroll();
@@ -63,6 +66,7 @@ function App() {
                     <Route path={path.WorkRoom} element={<WorkRoom />} />
                     <Route path={path.Bedroom} element={<Bedroom />} />
                     <Route path={path.Cart} element={<Cart />} />
+                    <Route path={path.CheckOut} element={<CheckOut />} />
                     <Route path={path.ProductDetails} element={<ProductDetails />} />
                     <Route path={path.LayoutOrderAll} element={<OrderAll />} />
                     <Route path="*" />
@@ -86,6 +90,7 @@ function App() {
                     <Route path={path.LayoutAdminAdd} element={<AddProduct />} />
                     <Route path={path.LayoutAdminEdit} element={<EditProduct />} />
                     <Route path={path.LayoutAdminCustomers} element={<ListCustomer />} />
+                    <Route path={path.LayoutAdminAddCustomers} element={<AddUsers />} />
                     <Route path={path.LayoutAdminListOrders} element={<ListOrderProduct />} />
                     <Route path={path.LayoutAdminOrderDetails} element={<OrderDetail />} />
                 </Route>

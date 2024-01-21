@@ -57,11 +57,11 @@
             border-top-left-radius: 4px;
             border-top-right-radius: 4px;
 
-            &:hover {
-                transform: scale(1.2);
-                cursor: pointer;
-                transition: all 0.3s linear;
-            }
+            // &:hover {
+            //     transform: scale(1.2);
+            //     cursor: pointer;
+            //     transition: all 0.3s linear;
+            // }
         }
     }
 
@@ -116,6 +116,25 @@
 
 .priceRed {
     color: #f62d3e;
+}
+.productDetail {
+    opacity: 0;
+}
+
+.hover:hover > .productDetail {
+    animation: slipModel 0.3s linear;
+    opacity: 1;
+}
+
+@keyframes slipModel {
+    from {
+        bottom: -20%;
+        opacity: 0;
+    }
+    to {
+        bottom: 16%;
+        opacity: 1;
+    }
 }
 
 //reponsive

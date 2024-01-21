@@ -1,10 +1,9 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import clsx from 'clsx';
 import { motion, spring } from 'framer-motion';
 import styles from './Finish.module.scss';
-import { fetchUser } from '../../../services/UseServices';
+import { fetchUser, axiosPut } from '../../../services/UseServices';
 import Free from '../../../assets/Image/free.png';
 import ImageOrder from '../../../assets/Image/hoaDon.png';
 
@@ -13,6 +12,7 @@ function Finish(props) {
     const [orders, setOrders] = useState([]);
     const [orderDetails, setOrderDetails] = useState([]);
     const [ratings, setRatings] = useState([]);
+    const [comments, setComments] = useState('');
     const [changeRating, setChangeRating] = useState(false);
 
     const stars = [
@@ -57,11 +57,10 @@ function Finish(props) {
 
     const handleSubmitEvaluate = (e) => {
         e.preventDefault();
-        axios
-            .put(`http://localhost:8080/products/rating`, {
-                userId: JSON.parse(localStorage.account).id,
-                checkStar: checkStar,
-            })
+        axiosPut(`/products/rating`, {
+            userId: JSON.parse(localStorage.account).id,
+            checkStar: checkStar,
+        })
             .then((res) => {
                 toast.success('Đánh giá thành công !');
                 setChangeRating(!changeRating);
@@ -72,7 +71,6 @@ function Finish(props) {
             });
     };
 
-    console.log(orders);
     return (
         <motion.div
             className={clsx(styles.order)}
@@ -256,7 +254,9 @@ function Finish(props) {
                                             placeholder="Để lại đánh giá"
                                             className={clsx(styles.table__comment)}
                                             cols="100"
-                                        ></textarea>
+                                            value={comments}
+                                            onChange={(e) => setComments(e.target.value)}
+                                        />
                                     </div>
                                 );
                             })}

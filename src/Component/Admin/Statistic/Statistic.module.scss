@@ -29,7 +29,6 @@
 }
 
 .revenue {
-    width: 80%;
     padding: 24px;
     overflow: hidden;
     overflow-y: scroll;
@@ -47,12 +46,9 @@
     }
 
     &_card {
-        display: flex;
-        justify-content: space-between;
         margin-bottom: 40px;
 
         &__body {
-            width: 24%;
             background-color: #fff;
             padding: 20px;
             border-radius: 4px;
@@ -91,7 +87,6 @@
 }
 
 .table {
-    width: 100%;
     margin-bottom: 20px;
 
     &_status {
@@ -169,7 +164,6 @@
     border-radius: 4px;
     left: 50%;
     top: 50%;
-    z-index: 4;
     overflow: hidden;
     overflow-y: scroll;
     padding: 20px;
@@ -228,7 +222,6 @@
     bottom: 0;
     background: rgba(0, 0, 0, 0.4);
     animation: model 0.5s linear;
-    z-index: 3;
 }
 
 @keyframes model {

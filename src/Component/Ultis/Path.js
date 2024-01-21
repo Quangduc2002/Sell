@@ -5,6 +5,7 @@ const path = {
     WorkRoom: 'phonglamviec',
     Bedroom: 'phongngu',
     Cart: 'giohang',
+    CheckOut: 'checkout',
     ProductDetails: 'Chitietsanpham/:id',
     // Admin
     LayoutAdmin: '/admin',
@@ -13,6 +14,7 @@ const path = {
     LayoutAdminAdd: 'ThemSp',
     LayoutAdminTrash: 'Trash',
     LayoutAdminCustomers: 'Customer',
+    LayoutAdminAddCustomers: 'AddCustomers',
     LayoutAdminListOrders: 'ListOrders',
     LayoutAdminOrderDetails: 'OrderDetails',
     LayoutAdminEdit: 'DSSP/products/:id/edit',
