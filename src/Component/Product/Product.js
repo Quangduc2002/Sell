@@ -18,7 +18,6 @@ function Product(props) {
     const starPercentage = (product.tongDanhGia / starsTotal) * 100;
     // Math.round làm tròn lên
     const starPercentageRounded = `${Math.round(starPercentage)}%`;
-
     return (
         <div className={clsx(styles.room_product1)}>
             <div className={clsx(styles.room_product1_link)}>
@@ -48,7 +47,7 @@ function Product(props) {
                 <div className={clsx(styles.room_text)}>
                     <p title={product.text}>{product.tenSp}</p>
                     <div className={clsx(styles.room_price)}>
-                        {product.giamGia !== 0 ? (
+                        {product.giamGia !== '0' ? (
                             <span className={clsx(styles.priceAmount)}>{VND.format(product.giaBan)}</span>
                         ) : (
                             ''

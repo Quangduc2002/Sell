@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { motion, spring } from 'framer-motion';
 import clsx from 'clsx';
 import styles from '../WorkRoom/WorkRoom.module.scss';
 import IconTop from '../IconTop/IconTop';
@@ -131,15 +130,7 @@ function WorkRoom(props) {
                         Sản phẩm tìm kiếm không tồn tại
                     </div>
                 ) : (
-                    <motion.div
-                        className={clsx(styles.home__product)}
-                        initial={{ y: '4rem', opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        transition={{
-                            duration: 1,
-                            type: spring,
-                        }}
-                    >
+                    <div className={clsx(styles.home__product)} data-aos="fade-up">
                         <div className={clsx(styles.room_product)}>
                             {workRoom.map((product) => {
                                 return <Product key={product.ID} product={product} />;
@@ -153,7 +144,7 @@ function WorkRoom(props) {
                             handleNext={handleNext}
                             handlePrevious={handlePrevious}
                         />
-                    </motion.div>
+                    </div>
                 )}
             </div>
 

@@ -7,9 +7,10 @@ import { fetchUser, axiosPut } from '../../../services/UseServices';
 import Free from '../../../assets/Image/free.png';
 import ImageOrder from '../../../assets/Image/hoaDon.png';
 import { UserContext } from '../../../Context/UserContext';
+import { Link } from 'react-router-dom';
 
 function OrderAll(props) {
-    const { onAdd, toast, handleStar, checkStar, setCheckStar, show, setShow, show1, setShow1 } = props;
+    const { toast, handleStar, checkStar, setCheckStar, show, setShow, show1, setShow1 } = props;
     const [orders, setOrders] = useState([]);
     const [cancel, setCancel] = useState(false);
     const [ratings, setRatings] = useState([]);
@@ -146,6 +147,7 @@ function OrderAll(props) {
 
                                 <div className={clsx(styles.order_body)}>
                                     {order.map((item) => {
+                                        console.log(item);
                                         return (
                                             <div key={item.ID} className={clsx(styles.order_product)}>
                                                 <div className={clsx(styles.order_product__left)}>
@@ -155,9 +157,7 @@ function OrderAll(props) {
                                                         src={`http://localhost:3000/Image/${item.image}`}
                                                     />
                                                     <div>
-                                                        <p className={clsx(styles.order_product__name)}>
-                                                            {item.tenSp} ({item.chatLieu})
-                                                        </p>
+                                                        <p className={clsx(styles.order_product__name)}>{item.tenSp}</p>
                                                         <p className={clsx(styles.order_product__numberOf)}>
                                                             Kích thước: {item.kichThuoc}
                                                         </p>
@@ -201,12 +201,11 @@ function OrderAll(props) {
                                             </button>
                                         ) : order[0].Order.trangThaiDH === 1 ? (
                                             <>
-                                                <button
-                                                    onClick={() => onAdd(order)}
-                                                    className={clsx(styles.order_purchase__btn)}
-                                                >
-                                                    Mua lại
-                                                </button>
+                                                <Link to={`/Chitietsanpham/${order[0].productId}`}>
+                                                    <button className={clsx(styles.order_purchase__btn)}>
+                                                        Mua lại
+                                                    </button>
+                                                </Link>
                                                 <button
                                                     onClick={() => hanldeSeeEvaluate(order[0].orderID)}
                                                     className={clsx(styles.order_purchase__btnContact)}

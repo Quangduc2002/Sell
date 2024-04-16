@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
-import { motion, spring } from 'framer-motion';
 import styles from '../Kitchen/Kitchen.module.scss';
 import IconTop from '../IconTop/IconTop';
 import Product from '../Product/Product';
@@ -82,7 +81,7 @@ function Kitchen(props) {
                         className={clsx(styles.filter, showFilters ? styles.showFilter : '')}
                         onClick={() => setShowFilters(!showFilters)}
                     >
-                        <i class="fa-solid fa-filter" style={{ color: '#fff', marginRight: 4 }}></i>Lọc
+                        <i className="fa-solid fa-filter" style={{ color: '#fff', marginRight: 4 }}></i>Lọc
                     </div>
 
                     {/* <ul>
@@ -123,15 +122,7 @@ function Kitchen(props) {
                         Sản phẩm tìm kiếm không tồn tại
                     </div>
                 ) : (
-                    <motion.div
-                        className={clsx(styles.home__product)}
-                        initial={{ y: '4rem', opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        transition={{
-                            duration: 1,
-                            type: spring,
-                        }}
-                    >
+                    <div className={clsx(styles.home__product)} data-aos="fade-up">
                         <div className={clsx(styles.room_product)}>
                             {kitChen.map((product) => {
                                 return <Product key={product.ID} product={product} />;
@@ -145,7 +136,7 @@ function Kitchen(props) {
                             handleNext={handleNext}
                             handlePrevious={handlePrevious}
                         />
-                    </motion.div>
+                    </div>
                 )}
             </div>
             <IconTop />

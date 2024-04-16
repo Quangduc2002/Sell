@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Slider from 'react-slick';
 import clsx from 'clsx';
-import { motion, spring } from 'framer-motion';
 import IconTop from '../IconTop/IconTop';
 import Product from '../Product/Product';
 import Slider1 from '../../assets/Image/slider_1.jpg';
@@ -181,7 +180,7 @@ function Home(props) {
     return (
         <div div className={clsx(styles.home, products.length === 0 ? styles.MG : '')}>
             {products.length !== 0 ? (
-                <>
+                <div>
                     <div className={clsx(styles.home1, 'home1')}>
                         <Slider {...settings}>
                             {slickSlides.map((slickSlide, index) => {
@@ -191,7 +190,7 @@ function Home(props) {
                     </div>
 
                     <div className={clsx(styles.home_title)}>
-                        <h2>Dòng sản phẩm nổi bật</h2>
+                        <h2 className="text-2xl">Dòng sản phẩm nổi bật</h2>
                         <ul>
                             <li>
                                 <label>Hiển thị: </label>
@@ -301,16 +300,7 @@ function Home(props) {
                             </p>
                         </div>
                     ) : (
-                        <motion.div
-                            className={clsx(styles.home__product)}
-                            initial={{ y: '4rem', opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            transition={{
-                                duration: 1,
-                                type: spring,
-                            }}
-                            style={{ marginTop: 40 }}
-                        >
+                        <div className={clsx(styles.home__product, 'mt-10')} data-aos="fade-up">
                             <div className={clsx(styles.home_product)}>
                                 {allSp === true
                                     ? homeProducts.map((product) => {
@@ -328,10 +318,10 @@ function Home(props) {
                                 handleNext={handleNext}
                                 handlePrevious={handlePrevious}
                             />
-                        </motion.div>
+                        </div>
                     )}
 
-                    <div className={clsx(styles.box)}>
+                    <div className={clsx(styles.box)} data-aos="fade-left">
                         <div className={clsx(styles.box_dark)}>
                             <div className={clsx(styles.box_info)}>
                                 <h2>Hệ thống phân phối & bán lẻ nội thất số 1 tại Việt Nam</h2>
@@ -340,9 +330,9 @@ function Home(props) {
                         </div>
                     </div>
 
-                    <div className={clsx(styles.inner)}>
+                    <div className={clsx(styles.inner)} data-aos="fade-up">
                         <div className={clsx(styles.inner_container)}>
-                            <h3 className={clsx(styles.inner_title)}>SẢN PHẨM BÁN CHẠY</h3>
+                            <h3 className={clsx(styles.inner_title, 'text-xl')}>SẢN PHẨM BÁN CHẠY</h3>
                             <div className={clsx(styles.inner_slider)}>
                                 <Slider {...settings1}>
                                     {products.map((product) => {
@@ -353,7 +343,7 @@ function Home(props) {
                         </div>
                     </div>
 
-                    <div className={clsx(styles.home_section)}>
+                    <div className={clsx(styles.home_section)} data-aos="fade-right">
                         <div className={clsx(styles.home_section1)}>
                             {sections.map((section, index) => {
                                 return (
@@ -369,7 +359,7 @@ function Home(props) {
                         </div>
                     </div>
                     <IconTop />
-                </>
+                </div>
             ) : (
                 <Loading />
             )}

@@ -243,7 +243,7 @@ function Trash(props) {
                     >
                         <table className={clsx(styles.table, 'border-collapse p-2 border w-[1070px]')}>
                             <thead className="border-collapse p-2">
-                                <tr className="border-collapse p-2 p-2">
+                                <tr className="border-collapse p-2 ">
                                     <th className="bg-[#ddd] text-left border-collapse p-2"></th>
                                     <th className="bg-[#ddd] text-left border-collapse p-2">STT</th>
                                     <th className="bg-[#ddd] text-left border-collapse p-2">
@@ -284,7 +284,7 @@ function Trash(props) {
                                 {currentProductSearch.length === 0
                                     ? paginationProduct.map((product) => {
                                           return (
-                                              <tr className="border-collapse p-2 p-2" key={product.ID}>
+                                              <tr className="border-collapse p-2 " key={product.ID}>
                                                   <td className="border-collapse p-2">
                                                       <input
                                                           checked={isChecked.includes(product.ID)}
@@ -329,7 +329,7 @@ function Trash(props) {
                                       })
                                     : currentProductSearch.map((product) => {
                                           return (
-                                              <tr className="border-collapse p-2 p-2" key={product.ID}>
+                                              <tr className="border-collapse p-2 " key={product.ID}>
                                                   <td className="border-collapse p-2">
                                                       <input
                                                           checked={isChecked.includes(product.ID)}

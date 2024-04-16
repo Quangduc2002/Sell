@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Bar } from 'react-chartjs-2';
+import { Line } from 'react-chartjs-2';
 import clsx from 'clsx';
 import { motion, spring } from 'framer-motion';
 import 'chart.js/auto';
@@ -28,6 +28,7 @@ function Statistic(props) {
     const [statusWait, setStatusWait] = useState([]);
     const [methodStatistic, setMethodStatistic] = useState('');
     const [month, setMonth] = useState('');
+    const [precious, setPrecious] = useState('');
     const [year, setYear] = useState('');
     const [chartStatistics, setChartStatistics] = useState([]);
     const VND = new Intl.NumberFormat('vi-VN', {
@@ -120,6 +121,7 @@ function Statistic(props) {
             methodStatistic: methodStatistic,
             month: month,
             year: year,
+            precious: precious,
         })
             .then((res) => {
                 setListStatistic(res.data);
@@ -210,6 +212,29 @@ function Statistic(props) {
                 </div>
 
                 <div className={clsx(styles.revenue__PD, 'overflow-hidden overflow-x-scroll')}>
+                    <div>
+                        <div className="flex gap-3 my-6">
+                            <select
+                                onChange={(e) => setYear(e.target.value)}
+                                className="py-2 px-2  focus:ring focus:border-gray-300 outline-none block border border-gray-200 rounded-lg text-sm "
+                            >
+                                <option className="hidden">--Chọn hành động--</option>
+                                {Years.map((Year, index) => (
+                                    <option key={index} value={Year}>
+                                        {Year}
+                                    </option>
+                                ))}
+                            </select>
+                            <button
+                                onClick={handleChartStatistics}
+                                className=" rounded-md py-1.5 px-3 text-white bg-[#ee4d2d] hover:bg-[#c52432]"
+                            >
+                                Thống kê
+                            </button>
+                        </div>
+                        <Line className="w-full mb-10" data={data} />
+                    </div>
+
                     <div className="my-5 ">
                         <div>
                             <p>Chọn phương thức thống kê:</p>
@@ -220,7 +245,7 @@ function Statistic(props) {
                                         className="py-2 px-2 xxs:w-auto xs:w-full  focus:ring focus:border-gray-300 outline-none block border border-gray-200 rounded-lg text-sm "
                                     >
                                         <option className="hidden">--Chọn hành động--</option>
-                                        <option value={'Sản phẩm theo ngày'}>Sản phẩm theo ngày</option>
+                                        <option value={'Sản phẩm đã bán theo quý'}>Sản phẩm đã bán theo quý</option>
                                         <option value={'Sản phẩm đã bán trong tháng'}>
                                             Sản phẩm đã bán trong tháng
                                         </option>
@@ -258,6 +283,30 @@ function Statistic(props) {
                                             ))}
                                         </select>
                                     </div>
+                                ) : methodStatistic === 'Sản phẩm đã bán theo quý' ? (
+                                    <div className="flex gap-3 flex-wrap">
+                                        <select
+                                            onChange={(e) => setPrecious(e.target.value)}
+                                            className="py-2 px-2  focus:ring focus:border-gray-300 outline-none block border border-gray-200 rounded-lg text-sm "
+                                        >
+                                            <option className="hidden">Chọn quý</option>
+                                            <option value={1}>Qúy 1</option>
+                                            <option value={2}>Qúy 2</option>
+                                            <option value={3}>Qúy 3</option>
+                                            <option value={4}>Qúy 4</option>
+                                        </select>
+                                        <select
+                                            onChange={(e) => setYear(e.target.value)}
+                                            className="py-2 px-2  focus:ring focus:border-gray-300 outline-none block border border-gray-200 rounded-lg text-sm "
+                                        >
+                                            <option className="hidden">Chọn năm</option>
+                                            {Years.map((Year, index) => (
+                                                <option key={index} value={Year}>
+                                                    {Year}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
                                 ) : (
                                     ''
                                 )}
@@ -282,13 +331,13 @@ function Statistic(props) {
                     ) : (
                         <table className={clsx(styles.table, 'border-collapse p-2 border w-[1070px]')}>
                             <thead className="border-collapse p-2">
-                                <tr className="border-collapse p-2 p-2">
-                                    <th className="bg-[#ddd] text-left border-collapse p-2 text-center">STT</th>
-                                    <th className="bg-[#ddd] text-left border-collapse p-2">Tên sản phẩm</th>
-                                    <th className="bg-[#ddd] text-left border-collapse p-2 text-center">Ảnh</th>
-                                    <th className="bg-[#ddd] text-left border-collapse p-2 text-center">Kích thước</th>
-                                    <th className="bg-[#ddd] text-left border-collapse p-2 text-center">Số lượng</th>
-                                    <th className="bg-[#ddd] text-left border-collapse p-2 text-center">Tổng tiền</th>
+                                <tr className="border-collapse p-2 ">
+                                    <th className="bg-[#ddd]  border-collapse p-2 text-center">STT</th>
+                                    <th className="bg-[#ddd]  text-left border-collapse p-2">Tên sản phẩm</th>
+                                    <th className="bg-[#ddd]  border-collapse p-2 text-center">Ảnh</th>
+                                    <th className="bg-[#ddd]  border-collapse p-2 text-center">Kích thước</th>
+                                    <th className="bg-[#ddd]  border-collapse p-2 text-center">Số lượng</th>
+                                    <th className="bg-[#ddd]  border-collapse p-2 text-center">Tổng tiền</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -325,29 +374,6 @@ function Statistic(props) {
                             handlePrevious={handlePrevious}
                         />
                     )}
-
-                    <div>
-                        <div className="flex gap-3 my-6">
-                            <select
-                                onChange={(e) => setYear(e.target.value)}
-                                className="py-2 px-2  focus:ring focus:border-gray-300 outline-none block border border-gray-200 rounded-lg text-sm "
-                            >
-                                <option className="hidden">--Chọn hành động--</option>
-                                {Years.map((Year, index) => (
-                                    <option key={index} value={Year}>
-                                        {Year}
-                                    </option>
-                                ))}
-                            </select>
-                            <button
-                                onClick={handleChartStatistics}
-                                className=" rounded-md py-1.5 px-3 text-white bg-[#ee4d2d] hover:bg-[#c52432]"
-                            >
-                                Thống kê
-                            </button>
-                        </div>
-                        <Bar className="w-full mb-10" data={data} />
-                    </div>
                 </div>
             </motion.div>
         </div>

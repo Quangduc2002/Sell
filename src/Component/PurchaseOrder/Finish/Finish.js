@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import clsx from 'clsx';
+import { Link } from 'react-router-dom';
 import { motion, spring } from 'framer-motion';
 import styles from './Finish.module.scss';
 import { fetchUser, axiosPut } from '../../../services/UseServices';
@@ -128,7 +129,8 @@ function Finish(props) {
                                                     />
                                                     <div>
                                                         <p className={clsx(styles.order_product__name)}>
-                                                            {item.tenSp} ({item.chatLieu})
+                                                            {item.tenSp}
+                                                            {/* ({item.chatLieu}) */}
                                                         </p>
                                                         <p className={clsx(styles.order_product__numberOf)}>
                                                             Kích thước: {item.kichThuoc}
@@ -167,7 +169,9 @@ function Finish(props) {
                                         {order[0].Order.trangThaiDH === 0 ? (
                                             <button className={clsx(styles.order_purchase__btn)}>Hủy đơn hàng</button>
                                         ) : (
-                                            <button className={clsx(styles.order_purchase__btn)}>Mua lại</button>
+                                            <Link to={`/Chitietsanpham/${order[0].productId}`}>
+                                                <button className={clsx(styles.order_purchase__btn)}>Mua lại</button>
+                                            </Link>
                                         )}
                                         <button className={clsx(styles.order_purchase__btnContact)}>
                                             Liên hệ người bán

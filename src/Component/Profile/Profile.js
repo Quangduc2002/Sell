@@ -18,6 +18,7 @@ function Profile(props) {
     const [check2, setCheck2] = useState(false);
     const [check3, setCheck3] = useState(false);
     const [show, setShow] = useState(false);
+    const [changeEmail, setChangeEmail] = useState(false);
     const [currentPass, setCurrentPass] = useState('');
     const [passNew, setPassNew] = useState('');
     const [enterPass, setEnterPass] = useState('');
@@ -117,6 +118,9 @@ function Profile(props) {
         }
     };
 
+    const parts = email.split('@');
+    const hiddenLocalPart = parts[0]?.substring(0, 2) + '*'.repeat(parts[0]?.length - (parts[0]?.length ? 2 : 0));
+
     return (
         <div className={clsx(styles.container)}>
             <div className={clsx(styles.container_information)}>
@@ -130,17 +134,30 @@ function Profile(props) {
 
                 <div className={clsx(styles.container_information__bottom)}>
                     <div className={clsx(styles.container_information__bottom__left)}>
-                        <div className={clsx(styles.container_information__bottom__sex)}>
+                        <div className={clsx(styles.container_information__bottom__sex, 'w-[580px]')}>
                             <label className={clsx(styles.container_information__bottom__label)}>Tên đăng nhập</label>
                             <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
                         </div>
 
-                        <div className={clsx(styles.container_information__bottom__sex)}>
+                        <div className={clsx(styles.container_information__bottom__sex, 'w-[580px]')}>
                             <label className={clsx(styles.container_information__bottom__label)}>Email</label>
-                            <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
+                            {!changeEmail && (
+                                <div className="flex justify-between w-full">
+                                    <span>{hiddenLocalPart + '@' + parts[1]}</span>
+                                    <p
+                                        className="hover:text-[#ee4d2d] cursor-pointer"
+                                        onClick={() => setChangeEmail(true)}
+                                    >
+                                        Thay đổi
+                                    </p>
+                                </div>
+                            )}
+                            {changeEmail && (
+                                <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
+                            )}
                         </div>
 
-                        <div className={clsx(styles.container_information__bottom__sex)}>
+                        <div className={clsx(styles.container_information__bottom__sex, 'w-[580px]')}>
                             <label className={clsx(styles.container_information__bottom__label)}>Giới tính</label>
                             <div style={{ display: 'flex', alignItems: 'center' }}>
                                 {Sexs.map((sex) => {
@@ -163,11 +180,11 @@ function Profile(props) {
                             </div>
                         </div>
 
-                        <div className={clsx(styles.container_information__bottom__sex)}>
+                        <div className={clsx(styles.container_information__bottom__sex, 'w-[580px] ')}>
                             <label className={clsx(styles.container_information__bottom__label)}>Ngày sinh</label>
-                            <div className={clsx(styles.auth_froup_date)}>
+                            <div className={clsx(styles.auth_froup_date, 'w-full flex justify-between flex-1 gap-4')}>
                                 <select
-                                    className={clsx(styles.container_information__bottom__select)}
+                                    className={clsx(styles.container_information__bottom__select, ' flex-1')}
                                     value={Day}
                                     onChange={(e) => setDay(e.target.value)}
                                 >
@@ -182,7 +199,7 @@ function Profile(props) {
                                 </select>
 
                                 <select
-                                    className={clsx(styles.container_information__bottom__select)}
+                                    className={clsx(styles.container_information__bottom__select, ' flex-1')}
                                     value={Month}
                                     onChange={(e) => setMonth(e.target.value)}
                                 >
@@ -198,7 +215,7 @@ function Profile(props) {
                                 </select>
 
                                 <select
-                                    className={clsx(styles.container_information__bottom__select)}
+                                    className={clsx(styles.container_information__bottom__select, ' flex-1')}
                                     value={Year}
                                     onChange={(e) => setYear(e.target.value)}
                                 >
@@ -214,10 +231,13 @@ function Profile(props) {
                             </div>
                         </div>
 
-                        <div className={clsx(styles.container_information__bottom__sex)}>
+                        <div className={clsx(styles.container_information__bottom__sex, 'w-[580px]')}>
                             <label className={clsx(styles.container_information__bottom__label)}></label>
-                            <button onClick={handleEdit} className={clsx(styles.container_information__bottom__btn)}>
-                                Lưu
+                            <button
+                                onClick={!changeEmail ? handleEdit : () => setChangeEmail(false)}
+                                className={clsx(styles.container_information__bottom__btn)}
+                            >
+                                {changeEmail ? 'Hủy' : 'Lưu'}
                             </button>
                         </div>
                     </div>

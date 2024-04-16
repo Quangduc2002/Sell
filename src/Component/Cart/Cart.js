@@ -1,18 +1,75 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import clsx from 'clsx';
 import { motion, spring } from 'framer-motion';
 import CartIMG from '../../assets/Image/cart.png';
 import { UserContext } from '../../Context/UserContext';
+import styles from './Cart.module.scss';
 
 function Cart(props) {
-    const { cartItems, onDelete, totalMoney } = props;
+    const { cartItems, setCartItems, onDelete, totalMoney, toast } = props;
     const { user } = useContext(UserContext);
+    const [show, setShow] = useState(false);
+    const [productID, setProductID] = useState('');
 
     // format tiền
     const VND = new Intl.NumberFormat('vi-VN', {
         style: 'currency',
         currency: 'VND',
     });
+
+    const handleUpdateCartUp = (product) => {
+        const exist = cartItems.find((cartItem) => {
+            return cartItem.ID === product.ID;
+        });
+
+        if (exist) {
+            setCartItems(
+                cartItems.map((cartItem) =>
+                    cartItem.ID === product.ID
+                        ? {
+                              ...exist,
+                              qty: cartItem.qty + 1,
+                              total:
+                                  (1 + cartItem.qty) *
+                                  parseFloat(cartItem.giaBan - (cartItem.giaBan * cartItem.giamGia) / 100),
+                          }
+                        : cartItem,
+                ),
+            );
+        }
+    };
+
+    const handleUpdateCartDown = (product) => {
+        const exist = cartItems.find((cartItem) => {
+            return cartItem.ID === product.ID;
+        });
+
+        if (exist && exist.qty > 1) {
+            setCartItems(
+                cartItems.map((cartItem) =>
+                    cartItem.ID === product.ID
+                        ? {
+                              ...exist,
+                              qty: cartItem.qty - 1,
+                              total:
+                                  (cartItem.qty - 1) *
+                                  parseFloat(cartItem.giaBan - (cartItem.giaBan * cartItem.giamGia) / 100),
+                          }
+                        : cartItem,
+                ),
+            );
+        } else {
+            setProductID(product.ID);
+            setShow(true);
+        }
+    };
+    const handleDeleleCart = () => {
+        setCartItems(cartItems.filter((cartItem) => cartItem.ID !== productID));
+        toast.success('Xóa sản phẩm thành công !');
+        setProductID('');
+        setShow(false);
+    };
 
     return (
         <div className="bg-gray-100 pt-20 pb-20">
@@ -60,11 +117,11 @@ function Cart(props) {
                                                 </div>
                                                 <div className=" flex justify-between sm:space-y-6 sm:mt-0 sm:block sm:space-x-6">
                                                     <div className=" sm:mb-4 rounded-sm border border-coolGray-200 gap-3 inline-flex items-center justify-between xs:m-0">
-                                                        <span>
+                                                        <span onClick={() => handleUpdateCartDown(cartItem)}>
                                                             <i className="fa-solid fa-minus py-2 px-2 border-x hover:bg-gray-200 cursor-pointer"></i>
                                                         </span>
                                                         <p className="m-0 ">{cartItem.qty}</p>
-                                                        <span>
+                                                        <span onClick={() => handleUpdateCartUp(cartItem)}>
                                                             <i className="fa-solid fa-plus py-2 px-2 border-x hover:bg-gray-200 cursor-pointer"></i>
                                                         </span>
                                                     </div>
@@ -121,6 +178,42 @@ function Cart(props) {
                         </div>
                     </div>
                 </>
+            )}
+
+            {show && (
+                <div className={clsx(styles.modal)}>
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className={clsx(styles.modal_header)}>
+                                <h5 className="modal-title">Xóa sản phẩm</h5>
+                                <button type="button" className={clsx(styles.modal_close)}>
+                                    <span onClick={() => setShow(!show)} aria-hidden="true">
+                                        &times;
+                                    </span>
+                                </button>
+                            </div>
+                            <div className={clsx(styles.modal_body)}>
+                                <p>Bạn chắc chắn muốn bỏ sản phẩm này ?</p>
+                            </div>
+                            <div className={clsx(styles.modal_footer)}>
+                                <button
+                                    onClick={() => setShow(!show)}
+                                    type="button"
+                                    className={clsx(styles.modal_btnClose)}
+                                >
+                                    Hủy
+                                </button>
+                                <button
+                                    onClick={() => handleDeleleCart()}
+                                    type="button"
+                                    className={clsx(styles.modal_btnSave)}
+                                >
+                                    Xóa
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             )}
         </div>
     );

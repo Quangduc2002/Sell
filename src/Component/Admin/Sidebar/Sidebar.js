@@ -66,7 +66,7 @@ function Sidebar(props) {
 
                     {show && (
                         <ul className={clsx(styles.sidebar_user__ul)}>
-                            <NavLink to="profile" className={clsx(styles.sidebar_user__link)}>
+                            <NavLink to="/profile" className={clsx(styles.sidebar_user__link)}>
                                 <li className={clsx(styles.sidebar_user__li)}>Thông tin của tôi</li>
                             </NavLink>
                             <NavLink to="setting" className={clsx(styles.sidebar_user__link)}>
@@ -110,7 +110,7 @@ function Sidebar(props) {
                                 <li className={clsx(styles.sidebar_user__li)}>Quản lý sản phẩm</li>
                             </NavLink>
                             <NavLink to={path.LayoutAdminAdd} className={clsx(styles.sidebar_user__link)}>
-                                <li className={clsx(styles.sidebar_user__li)}>Thêm mặt sản phẩm</li>
+                                <li className={clsx(styles.sidebar_user__li)}>Thêm sản phẩm</li>
                             </NavLink>
                             {user.account.getUser.roleId === 3 ? (
                                 <NavLink to={path.LayoutAdminAddCustomers} className={clsx(styles.sidebar_user__link)}>

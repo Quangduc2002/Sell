@@ -3,7 +3,7 @@ const instance = axios.create({
     baseURL: 'http://localhost:8080',
 });
 
-instance.defaults.withCredentials = true;
+instance.defaults.withCredentials = false;
 
 instance.defaults.headers.common['Authorization'] = `Bearer ${localStorage.jwt}`;
 // Add a request interceptor

@@ -220,7 +220,7 @@ function ProductDetails(props) {
                                 ''
                             )}
                             <div className={clsx(styles.right_price)}>
-                                {product.giamGia ? (
+                                {product.giamGia !== '0' ? (
                                     <>
                                         <span className={clsx(styles.right_priceAmount)}>
                                             {VND.format(product.giaBan)}
@@ -234,7 +234,7 @@ function ProductDetails(props) {
                                 )}
                             </div>
 
-                            {product.giamGia !== 0 ? (
+                            {product.giamGia !== '0' ? (
                                 <div className={clsx(styles.right_discountCode)}>
                                     <p>Mã giảm giá của shop </p>
                                     <span>-{product.giamGia}%</span>
@@ -283,7 +283,12 @@ function ProductDetails(props) {
                                             </svg>
                                         </button>
                                         <span>{count}</span>
-                                        <button onClick={handleIncreaseProduct}>
+                                        <button
+                                            onClick={handleIncreaseProduct}
+                                            className={`${
+                                                count === product.soLuong ? '!cursor-not-allowed hover:!bg-white' : ''
+                                            }`}
+                                        >
                                             <svg
                                                 enableBackground="new 0 0 10 10"
                                                 viewBox="0 0 10 10"

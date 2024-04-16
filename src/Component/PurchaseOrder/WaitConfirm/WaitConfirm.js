@@ -74,7 +74,8 @@ function WaitConfirm(props) {
                                                     />
                                                     <div>
                                                         <p className={clsx(styles.order_product__name)}>
-                                                            {item.tenSp} ({item.chatLieu})
+                                                            {item.tenSp}
+                                                            {/* ({item.chatLieu}) */}
                                                         </p>
                                                         <p className={clsx(styles.order_product__numberOf)}>
                                                             Kích thước: {item.kichThuoc}

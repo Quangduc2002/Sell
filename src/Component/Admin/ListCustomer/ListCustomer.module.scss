@@ -257,7 +257,7 @@ tr:nth-child(even) {
         border-radius: 4px;
         top: 50%;
         left: 50%;
-        z-index: 4;
+        z-index: 11;
         animation: slipModel 1s ease-in-out;
         overflow: hidden;
         background-color: #fff;
@@ -371,7 +371,7 @@ tr:nth-child(even) {
     bottom: 0;
     background: rgba(0, 0, 0, 0.4);
     animation: model 0.5s linear;
-    z-index: 3;
+    z-index: 10;
 }
 
 @keyframes model {

@@ -136,11 +136,11 @@ function Layout(props) {
 
     //searchs
     const filteredItems = name.filter((item) => {
-        return item.tenSp.toLowerCase().includes(searchQuery.toLowerCase());
+        return item?.tenSp?.toLowerCase().includes(searchQuery.toLowerCase());
     });
 
     const filteredProducts = name.filter((item) => {
-        return item.tenSp.toLowerCase().includes(searchs.toLowerCase());
+        return item?.tenSp?.toLowerCase().includes(searchs.toLowerCase());
     });
 
     return (

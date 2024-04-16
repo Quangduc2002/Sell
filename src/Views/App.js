@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 import { motion, useScroll } from 'framer-motion';
 import 'react-toastify/dist/ReactToastify.css';
 import '../Views/App.css';
@@ -41,7 +43,11 @@ import CheckOut from '../Component/CheckOut/CheckOut.js';
 
 function App() {
     const { scrollYProgress } = useScroll();
-
+    useEffect(() => {
+        AOS.init({
+            duration: 2000,
+        });
+    }, []);
     return (
         <div className="App">
             <motion.div

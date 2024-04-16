@@ -5,7 +5,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { motion, spring } from 'framer-motion';
 import styles from './ListCustomer.module.scss';
-import { fetchUser } from '../../../services/UseServices';
+import { axiosPost, fetchUser } from '../../../services/UseServices';
 import Loading from '../../Loading/Loading';
 import Pagination from '../../Pagination/Pagination';
 import { fetchDelete } from '../../../services/UseServices';
@@ -38,8 +38,12 @@ function ListCustomer(props) {
     const [Month, setMonth] = useState('');
     const [Year, setYear] = useState('');
     const [formErrors, setFormErrors] = useState({});
+    const [statisticCustomer, setStatisticCustomer] = useState('');
     const { user } = useContext(UserContext);
-
+    const VND = new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND',
+    });
     // search
     const search = useRef();
     const [searchQuery, setSearchQuery] = useState('');
@@ -199,9 +203,15 @@ function ListCustomer(props) {
         return item.email.toLowerCase().includes(searchQuery.toLowerCase());
     });
 
+    const handleStatisticCustomers = async () => {
+        await axiosPost('/user/statistic', { statisticCustomer: statisticCustomer })
+            .then((res) => {
+                setUsers(res.data);
+            })
+            .catch((err) => {});
+    };
     const currentUsers = users.slice(indeOfFirstProduct, indexOfLastProduct);
     const currentUserSearch = succeSearch.slice(indeOfFirstProduct, indexOfLastProduct);
-
     return (
         <div className={clsx(styles.listProduct, 'xs:w-full md:w-[80%]')}>
             <div className={clsx(styles.listProduct_header, 'flex-wrap')}>
@@ -262,6 +272,82 @@ function ListCustomer(props) {
                         </button>
                     </div>
                 </div>
+                <div className="mb-6">
+                    <p>Chọn phương thức thống kê:</p>
+                    <div className="flex justify-between flex-wrap gap-3 mt-2">
+                        <div className="flex flex-wrap gap-3 ">
+                            <select
+                                onChange={(e) => setStatisticCustomer(e.target.value)}
+                                className="py-2 px-2 xxs:w-auto xs:w-full  focus:ring focus:border-gray-300 outline-none block border border-gray-200 rounded-lg text-sm "
+                            >
+                                <option className="hidden">--Chọn hành động--</option>
+                                <option value={'2 khách hàng có tiền hàng lớn nhất'}>
+                                    2 khách hàng có tiền hàng lớn nhất
+                                </option>
+                                <option value={'Doanh thu khách hàng giảm dần'}>Doanh thu khách hàng giảm dần</option>
+                            </select>
+                            <button
+                                onClick={handleStatisticCustomers}
+                                className="lg:block xs:hidden rounded-md py-1.5 px-3 text-white bg-[#ee4d2d] hover:bg-[#c52432]"
+                            >
+                                Thống kê
+                            </button>
+                        </div>
+
+                        {/* {methodStatistic === 'Sản phẩm đã bán trong tháng' ? (
+                                <div className="flex gap-3 flex-wrap">
+                                    <select
+                                        onChange={(e) => setMonth(e.target.value)}
+                                        className="py-2 px-2  focus:ring focus:border-gray-300 outline-none block border border-gray-200 rounded-lg text-sm "
+                                    >
+                                        <option className="hidden">Chọn tháng</option>
+                                        {Months.map((month, index) => (
+                                            <option key={index} value={month}>
+                                                tháng {month}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <select
+                                        onChange={(e) => setYear(e.target.value)}
+                                        className="py-2 px-2  focus:ring focus:border-gray-300 outline-none block border border-gray-200 rounded-lg text-sm "
+                                    >
+                                        <option className="hidden">Chọn năm</option>
+                                        {Years.map((Year, index) => (
+                                            <option key={index} value={Year}>
+                                                {Year}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            ) : methodStatistic === 'Sản phẩm đã bán theo quý' ? (
+                                <div className="flex gap-3 flex-wrap">
+                                    <select
+                                        onChange={(e) => setPrecious(e.target.value)}
+                                        className="py-2 px-2  focus:ring focus:border-gray-300 outline-none block border border-gray-200 rounded-lg text-sm "
+                                    >
+                                        <option className="hidden">Chọn quý</option>
+                                        <option value={1}>Qúy 1</option>
+                                        <option value={2}>Qúy 2</option>
+                                        <option value={3}>Qúy 3</option>
+                                        <option value={4}>Qúy 4</option>
+                                    </select>
+                                    <select
+                                        onChange={(e) => setYear(e.target.value)}
+                                        className="py-2 px-2  focus:ring focus:border-gray-300 outline-none block border border-gray-200 rounded-lg text-sm "
+                                    >
+                                        <option className="hidden">Chọn năm</option>
+                                        {Years.map((Year, index) => (
+                                            <option key={index} value={Year}>
+                                                {Year}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            ) : (
+                                ''
+                            )} */}
+                    </div>
+                </div>
                 {currentUsers.length === 0 ? (
                     <Loading />
                 ) : (
@@ -281,9 +367,21 @@ function ListCustomer(props) {
                                     <th className="bg-[#ddd] text-left border-collapse p-2">
                                         {showUsers ? 'Tên khách hàng' : 'Tên nhân viên'}
                                     </th>
-                                    <th className="bg-[#ddd] text-left border-collapse p-2">Ngày sinh</th>
-                                    <th className="bg-[#ddd] text-left border-collapse p-2 text-center">Giới tính</th>
-                                    <th className="bg-[#ddd] text-left border-collapse p-2">Tiền hàng</th>
+                                    {showUsers ? (
+                                        ''
+                                    ) : (
+                                        <>
+                                            <th className="bg-[#ddd] text-left border-collapse p-2">Ngày sinh</th>
+                                            <th className="bg-[#ddd] text-left border-collapse p-2 text-center">
+                                                Giới tính
+                                            </th>
+                                        </>
+                                    )}
+                                    {showUsers ? (
+                                        <th className="bg-[#ddd] text-left border-collapse p-2">Tiền hàng</th>
+                                    ) : (
+                                        ''
+                                    )}
                                     <th className="bg-[#ddd] text-left border-collapse p-2 text-center">Xóa</th>
                                 </tr>
                             </thead>
@@ -296,15 +394,31 @@ function ListCustomer(props) {
                                                       {user.email}
                                                   </td>
                                                   <td className="border-collapse p-2">{user.name}</td>
-                                                  <td className="border-collapse p-2">
-                                                      {user.ngaySinh + '/' + user.thangSinh + '/' + user.namSinh}
-                                                  </td>
-                                                  <td className="border-collapse p-2 text-center">
-                                                      {Sexs.map((sex) => {
-                                                          return sex.id === user.gioiTinh ? sex.name : '';
-                                                      })}
-                                                  </td>
-                                                  <td className="border-collapse p-2">{user.name}</td>
+                                                  {showUsers ? (
+                                                      ''
+                                                  ) : (
+                                                      <>
+                                                          <td className="border-collapse p-2">
+                                                              {user.ngaySinh +
+                                                                  '/' +
+                                                                  user.thangSinh +
+                                                                  '/' +
+                                                                  user.namSinh}
+                                                          </td>
+                                                          <td className="border-collapse p-2 text-center">
+                                                              {Sexs.map((sex) => {
+                                                                  return sex.id === user.gioiTinh ? sex.name : '';
+                                                              })}
+                                                          </td>
+                                                      </>
+                                                  )}
+                                                  {showUsers ? (
+                                                      <td className="border-collapse p-2">
+                                                          {VND.format(user.totalPrice)}
+                                                      </td>
+                                                  ) : (
+                                                      ''
+                                                  )}
                                                   <td className="border-collapse p-2 text-center">
                                                       <button
                                                           className={clsx(styles.table_button)}
@@ -326,14 +440,31 @@ function ListCustomer(props) {
                                                       {user.email}
                                                   </td>
                                                   <td className="border-collapse p-2">{user.name}</td>
-                                                  <td className="border-collapse p-2">
-                                                      {user.ngaySinh + '/' + user.thangSinh + '/' + user.namSinh}
-                                                  </td>
-                                                  <td className="border-collapse p-2 text-center">
-                                                      {Sexs.map((sex) => {
-                                                          return sex.id === user.gioiTinh ? sex.name : '';
-                                                      })}
-                                                  </td>
+                                                  {showUsers ? (
+                                                      ''
+                                                  ) : (
+                                                      <>
+                                                          <td className="border-collapse p-2">
+                                                              {user.ngaySinh +
+                                                                  '/' +
+                                                                  user.thangSinh +
+                                                                  '/' +
+                                                                  user.namSinh}
+                                                          </td>
+                                                          <td className="border-collapse p-2 text-center">
+                                                              {Sexs.map((sex) => {
+                                                                  return sex.id === user.gioiTinh ? sex.name : '';
+                                                              })}
+                                                          </td>
+                                                      </>
+                                                  )}
+                                                  {showUsers ? (
+                                                      <td className="border-collapse p-2">
+                                                          {VND.format(user.totalPrice)}
+                                                      </td>
+                                                  ) : (
+                                                      ''
+                                                  )}
                                                   <td className="border-collapse p-2 text-center">
                                                       <button
                                                           className={clsx(styles.table_button)}

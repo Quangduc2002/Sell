@@ -23,7 +23,6 @@ function AddProduct(props) {
     const [materials, setMaterials] = useState('');
     const [formErrors, setFormErrors] = useState({});
     const { user } = useContext(UserContext);
-    console.log(user);
     const handleImage = (e) => {
         // add image vào csdl
         setImage(e.target.files[0]);
@@ -108,7 +107,6 @@ function AddProduct(props) {
             formData.append('soLuong', soLuong);
             formData.append('trangThai', 1);
             formData.append('maNV', user.account.getUser.id);
-
             axios
                 .post('http://localhost:8080/products/add', formData)
                 .then((res) => {
