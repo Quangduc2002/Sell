@@ -117,12 +117,18 @@
 .priceRed {
     color: #f62d3e;
 }
-.productDetail {
+.productDetail,
+.cart {
     opacity: 0;
 }
 
 .hover:hover > .productDetail {
     animation: slipModel 0.3s linear;
+    opacity: 1;
+}
+
+.hover:hover > .cart {
+    animation: slipModelCart 0.3s linear;
     opacity: 1;
 }
 
@@ -133,6 +139,17 @@
     }
     to {
         bottom: 16%;
+        opacity: 1;
+    }
+}
+
+@keyframes slipModelCart {
+    from {
+        left: -10%;
+        opacity: 0;
+    }
+    to {
+        left: 4%;
         opacity: 1;
     }
 }

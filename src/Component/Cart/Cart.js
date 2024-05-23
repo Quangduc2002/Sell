@@ -71,6 +71,10 @@ function Cart(props) {
         setShow(false);
     };
 
+    const goBack = () => {
+        window.history.back();
+    };
+
     return (
         <div className="bg-gray-100 pt-20 pb-20">
             {cartItems.length === 0 ? (
@@ -89,10 +93,21 @@ function Cart(props) {
                 </motion.div>
             ) : (
                 <>
-                    <h1 className="max-w-5xl px-8 xl:px-0 mx-auto text-left mb-10 text-3xl font-bold text-gray-600">
-                        Giỏ hàng
-                    </h1>
-                    <div className="mx-auto max-w-5xl justify-center px-6 md:flex md:space-x-6 xl:px-0">
+                    <div className=" lg:w-[1170px] lg:m-auto xs:px-5 lg:px-0 mb-4">
+                        <div className="mb-2">
+                            <button
+                                onClick={goBack}
+                                className="focus:outline-none hover:underline no-underline text-gray-500 text-sm"
+                            >
+                                <i className="fa-solid fa-arrow-left"></i>&nbsp;Quay lại
+                            </button>
+                        </div>
+                        <div className="mb-2">
+                            <h1 className="text-3xl md:text-5xl font-bold text-gray-600">Giỏ hàng</h1>
+                        </div>
+                    </div>
+
+                    <div className="lg:w-[1170px] mx-auto justify-center px-6 md:flex md:space-x-6 xl:px-0">
                         <div className="rounded-lg md:w-2/3">
                             {cartItems &&
                                 cartItems.map((cartItem) => {
@@ -133,13 +148,13 @@ function Cart(props) {
                                                             xmlns="http://www.w3.org/2000/svg"
                                                             fill="none"
                                                             viewBox="0 0 24 24"
-                                                            stroke-width="1.5"
+                                                            strokeWidth="1.5"
                                                             stroke="currentColor"
                                                             className="h-5 w-5 cursor-pointer duration-150 hover:text-red-500"
                                                         >
                                                             <path
-                                                                stroke-linecap="round"
-                                                                stroke-linejoin="round"
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
                                                                 d="M6 18L18 6M6 6l12 12"
                                                             />
                                                         </svg>

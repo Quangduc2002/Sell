@@ -16,6 +16,10 @@
     overflow: hidden;
     overflow-y: scroll;
 
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
     &_MG {
         margin: 0 20px;
     }

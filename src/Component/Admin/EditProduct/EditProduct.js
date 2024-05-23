@@ -11,6 +11,10 @@ import { UserContext } from '../../../Context/UserContext';
 function EditProduct(props) {
     const { toast } = props;
     let { id } = useParams();
+    const VND = new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND',
+    });
     const navigate = useNavigate();
     const [show, setShow] = useState(false);
     const [tenSp, setTenSp] = useState('');
@@ -148,9 +152,9 @@ function EditProduct(props) {
                                 <br />
                                 <input
                                     placeholder="giá nhập"
-                                    value={gnhap}
-                                    onChange={(e) => setgNhap(e.target.value)}
-                                    type="number"
+                                    value={VND.format(gnhap).replace('₫', '').trim()}
+                                    onChange={(e) => setgNhap(e.target.value.replace(/[^\d]/g, ''))}
+                                    type="text"
                                     min={0}
                                     className={clsx(styles.add_formControl)}
                                 />
@@ -160,9 +164,9 @@ function EditProduct(props) {
                                 <br />
                                 <input
                                     placeholder="giá bán"
-                                    value={gBan}
-                                    onChange={(e) => setgBan(e.target.value)}
-                                    type="number"
+                                    value={VND.format(gBan).replace('₫', '').trim()}
+                                    onChange={(e) => setgBan(e.target.value.replace(/[^\d]/g, ''))}
+                                    type="text"
                                     min={0}
                                     className={clsx(styles.add_formControl)}
                                 />

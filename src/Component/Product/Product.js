@@ -18,6 +18,7 @@ function Product(props) {
     const starPercentage = (product.tongDanhGia / starsTotal) * 100;
     // Math.round làm tròn lên
     const starPercentageRounded = `${Math.round(starPercentage)}%`;
+
     return (
         <div className={clsx(styles.room_product1)}>
             <div className={clsx(styles.room_product1_link)}>
@@ -25,10 +26,7 @@ function Product(props) {
                     <div className={clsx(styles.room_badge, styles.hover)}>
                         <img alt="" src={`http://localhost:3000/Image/${product.image}`} />
                         <div
-                            className={clsx(
-                                styles.productDetail,
-                                'productDetail absolute w-full flex justify-center bottom-[16%] ',
-                            )}
+                            className={clsx(styles.productDetail, 'absolute w-full flex justify-center bottom-[16%] ')}
                         >
                             <Link
                                 to={`/Chitietsanpham/${product.ID}`}

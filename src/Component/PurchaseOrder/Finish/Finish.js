@@ -9,11 +9,23 @@ import Free from '../../../assets/Image/free.png';
 import ImageOrder from '../../../assets/Image/hoaDon.png';
 
 function Finish(props) {
-    const { toast, handleStar, checkStar, setCheckStar, show, setShow, show1, setShow1 } = props;
+    const {
+        toast,
+        handleStar,
+        checkStar,
+        setCheckStar,
+        show,
+        setShow,
+        show1,
+        setShow1,
+        comments,
+        setComments,
+        setValueStar,
+        valueStar,
+    } = props;
     const [orders, setOrders] = useState([]);
     const [orderDetails, setOrderDetails] = useState([]);
     const [ratings, setRatings] = useState([]);
-    const [comments, setComments] = useState('');
     const [changeRating, setChangeRating] = useState(false);
 
     const stars = [
@@ -58,18 +70,22 @@ function Finish(props) {
 
     const handleSubmitEvaluate = (e) => {
         e.preventDefault();
-        axiosPut(`/products/rating`, {
-            userId: JSON.parse(localStorage.account).id,
-            checkStar: checkStar,
-        })
-            .then((res) => {
-                toast.success('Đánh giá thành công !');
-                setChangeRating(!changeRating);
-                setCheckStar([]);
+        if (valueStar) {
+            axiosPut(`/products/rating`, {
+                userId: JSON.parse(localStorage.account).id,
+                checkStar: checkStar,
             })
-            .catch((err) => {
-                console.log(err);
-            });
+                .then((res) => {
+                    toast.success('Đánh giá thành công !');
+                    setChangeRating(!changeRating);
+                    setCheckStar([]);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        } else {
+            toast.warn('Vui lòng chọn sao để đánh giá !');
+        }
     };
 
     return (
@@ -108,12 +124,20 @@ function Finish(props) {
                                             <img className={clsx(styles.order_status__img)} alt="" src={Free} />
                                             <p>Giao hàng thành công</p>
                                         </div>
-                                        <p
-                                            onClick={() => hanldeEvaluate(order[0].orderID)}
-                                            className={clsx(styles.order_header__right__review)}
-                                        >
-                                            Đánh giá
-                                        </p>
+                                        {order.every((obj1) =>
+                                            ratings.some((obj2) => obj1.productID === obj2.productId),
+                                        ) ? (
+                                            <p className={clsx(styles.order_header__right__review, '!cursor-default')}>
+                                                Đã đánh giá
+                                            </p>
+                                        ) : (
+                                            <p
+                                                onClick={() => hanldeEvaluate(order[0].orderID)}
+                                                className={clsx(styles.order_header__right__review)}
+                                            >
+                                                Đánh giá
+                                            </p>
+                                        )}
                                     </div>
                                 </div>
 
@@ -128,10 +152,7 @@ function Finish(props) {
                                                         src={`http://localhost:3000/Image/${item.image}`}
                                                     />
                                                     <div>
-                                                        <p className={clsx(styles.order_product__name)}>
-                                                            {item.tenSp}
-                                                            {/* ({item.chatLieu}) */}
-                                                        </p>
+                                                        <p className={clsx(styles.order_product__name)}>{item.tenSp}</p>
                                                         <p className={clsx(styles.order_product__numberOf)}>
                                                             Kích thước: {item.kichThuoc}
                                                         </p>
@@ -173,14 +194,21 @@ function Finish(props) {
                                                 <button className={clsx(styles.order_purchase__btn)}>Mua lại</button>
                                             </Link>
                                         )}
+                                        {order.every((obj1) =>
+                                            ratings.some((obj2) => obj1.productID === obj2.productId),
+                                        ) ? (
+                                            <button
+                                                onClick={() => hanldeSeeEvaluate(order[0].orderID)}
+                                                className={clsx(styles.order_purchase__btnContact)}
+                                            >
+                                                Xem đánh giá
+                                            </button>
+                                        ) : (
+                                            ''
+                                        )}
+
                                         <button className={clsx(styles.order_purchase__btnContact)}>
                                             Liên hệ người bán
-                                        </button>
-                                        <button
-                                            onClick={() => hanldeSeeEvaluate(order[0].orderID)}
-                                            className={clsx(styles.order_purchase__btnContact)}
-                                        >
-                                            Xem đánh giá shop
                                         </button>
                                     </div>
                                 </div>
@@ -246,6 +274,8 @@ function Finish(props) {
                                                                         star.id,
                                                                         orderDetails.ID,
                                                                         orderDetails.productID,
+                                                                        comments[`comment-${orderDetails.ID}`],
+                                                                        setValueStar(star.id),
                                                                     )
                                                                 }
                                                             ></div>
@@ -258,8 +288,21 @@ function Finish(props) {
                                             placeholder="Để lại đánh giá"
                                             className={clsx(styles.table__comment)}
                                             cols="100"
-                                            value={comments}
-                                            onChange={(e) => setComments(e.target.value)}
+                                            value={comments[`comment-${orderDetails.ID}`] || ''}
+                                            onChange={(e) =>
+                                                setComments((prevComments) => ({
+                                                    ...prevComments,
+                                                    [`comment-${orderDetails.ID}`]: e.target.value,
+                                                }))
+                                            }
+                                            onBlur={() =>
+                                                handleStar(
+                                                    valueStar,
+                                                    orderDetails.ID,
+                                                    orderDetails.productID,
+                                                    comments[`comment-${orderDetails.ID}`],
+                                                )
+                                            }
                                         />
                                     </div>
                                 );
@@ -313,7 +356,7 @@ function Finish(props) {
                                             <p style={{ fontSize: 20 }}>{orderDetails.tenSp}</p>
                                         </div>
                                         <div className={clsx(styles.table__quality)}>
-                                            <p>Chất lượng sản phẩm:</p>
+                                            <p className="min-w-[160px]">Chất lượng sản phẩm:</p>
                                             <form method="PUT" className={clsx(styles.right_formstar)}>
                                                 <div className={clsx(styles.describe_star)}>
                                                     {stars.map((star) => {
@@ -321,7 +364,6 @@ function Finish(props) {
                                                             <div
                                                                 key={star.id}
                                                                 className={clsx(
-                                                                    styles.describe__star,
                                                                     `${star.class}`,
 
                                                                     ratings.map((rating) => {
@@ -329,7 +371,7 @@ function Finish(props) {
                                                                             rating.productId
                                                                             ? rating.numberRating === star.id
                                                                                 ? 'active'
-                                                                                : ''
+                                                                                : 'hidden'
                                                                             : '';
                                                                     }),
                                                                 )}
@@ -338,6 +380,22 @@ function Finish(props) {
                                                     })}
                                                 </div>
                                             </form>
+                                        </div>
+
+                                        <div className={clsx(styles.table__quality)}>
+                                            {ratings.map((rating) => {
+                                                return (
+                                                    orderDetails.productID === rating.productId &&
+                                                    (rating.comment ? (
+                                                        <>
+                                                            <p className="min-w-[160px]">Nhận xét sản phẩm:</p>
+                                                            <p>{rating.comment}</p>
+                                                        </>
+                                                    ) : (
+                                                        ''
+                                                    ))
+                                                );
+                                            })}
                                         </div>
                                     </div>
                                 );

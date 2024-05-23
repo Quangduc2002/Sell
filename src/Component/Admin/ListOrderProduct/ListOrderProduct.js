@@ -194,12 +194,14 @@ function ListOrderProduct(props) {
                     >
                         <table className={clsx(styles.table, 'border-collapse p-2 border w-[1070px]')}>
                             <thead className="border-collapse p-2">
-                                <tr className="border-collapse p-2 p-2">
+                                <tr className="border-collapse p-2 ">
                                     <th className="bg-[#ddd] text-left border-collapse p-2">Mã ĐH</th>
                                     <th className="bg-[#ddd] text-left border-collapse p-2">Tên khách hàng</th>
                                     <th className="bg-[#ddd] text-left border-collapse p-2">Địa chỉ</th>
                                     <th className="bg-[#ddd] text-left border-collapse p-2">Số điện thoại</th>
-                                    <th className="bg-[#ddd] text-left border-collapse p-2">Phương thức thanh toán</th>
+                                    <th className="bg-[#ddd] border-collapse p-2 text-center">
+                                        Phương thức thanh toán
+                                    </th>
                                     <th className="bg-[#ddd] text-left border-collapse p-2">Trạng thái đơn hàng</th>
                                     <th className="bg-[#ddd] text-left border-collapse p-2">Chi tiết đơn hàng</th>
                                 </tr>
@@ -208,12 +210,16 @@ function ListOrderProduct(props) {
                                 {currentUserSearch.length === 0
                                     ? currentListOrder.map((order) => {
                                           return (
-                                              <tr className="border-collapse p-2 p-2" key={order.ID}>
+                                              <tr className="border-collapse p-2 " key={order.ID}>
                                                   <td className="border-collapse p-2">MDH{order.ID}</td>
                                                   <td className="border-collapse p-2">{order.tenKH}</td>
                                                   <td className="border-collapse p-2">{order.diaChi}</td>
                                                   <td className="border-collapse p-2">{order.soDT}</td>
-                                                  <td className="border-collapse p-2">{order.phuongThucTT}</td>
+                                                  <td className="border-collapse p-2 text-center">
+                                                      {order.isPay === true
+                                                          ? 'Đã thanh toán'
+                                                          : 'Thanh toán khi nhận hàng'}
+                                                  </td>
                                                   <td className="border-collapse p-2">
                                                       {order.trangThaiDH === 1 ? (
                                                           <button className={clsx(styles.table_confirmed, 'text-sm')}>

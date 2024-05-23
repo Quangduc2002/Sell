@@ -17,16 +17,18 @@ function LayoutOrder(props) {
     const [checkStar, setCheckStar] = useState([]);
     const [show, setShow] = useState(false);
     const [show1, setShow1] = useState(false);
+    const [comments, setComments] = useState([]);
+    const [valueStar, setValueStar] = useState('');
     const { user } = useContext(UserContext);
     const navigate = useNavigate();
-    const handleStar = (numberRating, orderID, productID) => {
-        setCheckStar([...checkStar, { numberRating, orderID, productID }]);
+    const handleStar = (numberRating, orderID, productID, comment) => {
+        setCheckStar([...checkStar, { numberRating, orderID, productID, comment }]);
         if (checkStar.length !== 0) {
             for (let i = 0; i < checkStar.length; i++) {
                 if (checkStar[i].orderID === orderID) {
                     setCheckStar([
                         ...checkStar.filter((check) => check.orderID !== orderID),
-                        { numberRating, orderID, productID },
+                        { numberRating, orderID, productID, comment },
                     ]);
                 }
             }
@@ -56,6 +58,10 @@ function LayoutOrder(props) {
                                 setShow={setShow}
                                 show1={show1}
                                 setShow1={setShow1}
+                                comments={comments}
+                                setComments={setComments}
+                                valueStar={valueStar}
+                                setValueStar={setValueStar}
                             />
                         }
                     />
@@ -72,6 +78,10 @@ function LayoutOrder(props) {
                                 setShow={setShow}
                                 show1={show1}
                                 setShow1={setShow1}
+                                comments={comments}
+                                setComments={setComments}
+                                valueStar={valueStar}
+                                setValueStar={setValueStar}
                             />
                         }
                     />

@@ -27,7 +27,7 @@ function Sidebar(props) {
         <div
             className={clsx(
                 styles.sidebar,
-                'md:visible md:translate-x-0 bottom-0 top-0 xs:invisible xs:-translate-x-full xs:absolute md:static z-10',
+                'md:visible md:translate-x-0 bottom-0 top-0 xs:invisible xs:-translate-x-full xs:absolute md:static z-10 py-4',
                 styles.menu,
                 menu ? styles.current : '',
             )}

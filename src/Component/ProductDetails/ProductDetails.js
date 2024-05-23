@@ -1,30 +1,34 @@
+/* eslint-disable no-useless-rename */
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useContext } from 'react';
 import Slider from 'react-slick';
 import { useParams, Link } from 'react-router-dom';
 import clsx from 'clsx';
+import moment from 'moment';
 import { motion, spring, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import styles from '../ProductDetails/ProductDetails.module.scss';
 import Free from '../../assets/Image/free.png';
 import Loading from '../Loading/Loading';
 import '../Product/Product.css';
-import { fetchUser } from '../../services/UseServices';
+import { fetchUser, axiosPost } from '../../services/UseServices';
 import Product from '../Product/Product';
+import Pagination from '../Pagination/Pagination';
 import { UserContext } from '../../Context/UserContext';
 
 function ProductDetails(props) {
-    const { onAdd, count, setCount, toast } = props;
+    const { onAdd, count, setCount, toast, isActive, handleNext, handlePrevious, currentPage, pagination } = props;
     let { id } = useParams();
     const [product, setProduct] = useState([]);
-    const [ratings, setRatings] = useState([]);
-    const [evaluations, setEvaluations] = useState([]);
+    // const [ratings, setRatings] = useState([]);
+    // const [evaluations, setEvaluations] = useState([]);
+    const [evaluaAll, setEvaluaAll] = useState([]);
     const [similarProduct, setSimilarProduct] = useState([]);
     const [showDescribetion, setShowDescribetion] = useState(true);
     const [selectedId, setSelectedId] = useState(null);
     const { user } = useContext(UserContext);
 
     const navigate = useNavigate();
-
     const settings1 = {
         speed: 1000,
         infinite: false,
@@ -82,9 +86,9 @@ function ProductDetails(props) {
 
     useEffect(() => {
         getProductDetails(id);
-        getEvaluation(id);
-        getRating();
-    }, [id]);
+        getEvaluation(id, currentPage);
+        // getRating(id);
+    }, [id, currentPage]);
 
     useEffect(() => {
         if (product.length !== 0) {
@@ -97,16 +101,22 @@ function ProductDetails(props) {
         setTimeout(() => setProduct(res.data), 1000);
     };
 
-    const getRating = async () => {
-        if (localStorage.account) {
-            let res = await fetchUser(`/products/${JSON.parse(localStorage.account).id}/getRating`);
-            setTimeout(() => setRatings(res.data), 1000);
-        }
-    };
+    // const getRating = async (id) => {
+    //     if (localStorage.account) {
+    //         let res = await axiosPost(`/products/${id}/getRating`, {
+    //             userId: JSON.parse(localStorage.account).id,
+    //         });
+    //         setTimeout(() => setRatings(res.data), 1000);
+    //     }
+    // };
 
     const getEvaluation = async (id) => {
-        let res = await fetchUser(`/products/${id}/evaluation`);
-        setEvaluations(res.data);
+        // let res1 = await fetchUser(`/products/${id}/evaluation`);
+        let res2 = await axiosPost(`/products/${id}/evaluaAll`, {
+            currentPage: currentPage,
+        });
+        // setEvaluations(res1.data);
+        setEvaluaAll(res2.data);
     };
 
     const getSimilarProduct = async (smlproduct) => {
@@ -156,6 +166,7 @@ function ProductDetails(props) {
             setCount(count - 1);
         }
     };
+
     return (
         <div style={{ backgroundColor: 'rgb(248, 249, 251)', paddingBottom: 60 }}>
             <div className={clsx(styles.room1)}>
@@ -187,13 +198,12 @@ function ProductDetails(props) {
                     }}
                 >
                     <div className={clsx(styles.productDetail)}>
-                        <div className={clsx(styles.images)}>
-                            <img
-                                src={`http://localhost:3000/Image/${product.image}`}
-                                alt=""
+                        <div className={clsx(styles.images, 'relative')}>
+                            <img src={`http://localhost:3000/Image/${product.image}`} alt="" layoutId={product.ID} />
+                            <i
                                 onClick={() => setSelectedId(product.ID)}
-                                layoutId={product.ID}
-                            />
+                                className="fa-solid fa-up-right-and-down-left-from-center absolute bottom-8 left-12 text-xl w-10 h-10 flex items-center justify-center border border-black rounded-full cursor-pointer hover:bg-[#f62d3e] hover:border-0 hover:text-white transition duration-500 ease-in-out"
+                            ></i>
                         </div>
                         <div className={clsx(styles.right)}>
                             <h1 className="text-3xl">{product.tenSp}</h1>
@@ -381,7 +391,7 @@ function ProductDetails(props) {
                                     type: spring,
                                 }}
                             >
-                                <h2>Bạn hãy nhận xét “{product.tenSp}” </h2>
+                                <h2>Đánh giá sản phẩm “{product.tenSp}” </h2>
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
                                     <div>
                                         <span style={{ borderBottom: '1px solid', color: '#f8ce0b' }}>
@@ -397,60 +407,110 @@ function ProductDetails(props) {
                                     </div>
                                 </div>
 
-                                <p>
-                                    Đánh giá của bạn <span>*</span>
-                                </p>
-
-                                <form
-                                    method="PUT"
-                                    action={`/products/${id}/rating`}
-                                    className={clsx(styles.right_formstar)}
-                                >
-                                    <div className={clsx(styles.describe_star)}>
-                                        {stars.map((star) => {
-                                            return (
-                                                <div
-                                                    key={star.id}
-                                                    className={clsx(
-                                                        styles.describe__star,
-                                                        `${star.class}`,
-                                                        ratings.map((rating) => {
-                                                            return product.ID === rating.productId
-                                                                ? rating.numberRating === star.id
-                                                                    ? 'active'
-                                                                    : ''
-                                                                : '';
-                                                        }),
-                                                    )}
-                                                ></div>
-                                            );
-                                        })}
-                                    </div>
-                                </form>
-
-                                <div>
-                                    <p>Đánh giá sản phẩm</p>
-                                    <div className={clsx(styles.describe_evaluation)}>
-                                        {stars.map((star, index) => {
-                                            return (
-                                                <div key={star.id} className={clsx(styles.describe_evaluation__star)}>
-                                                    <span style={{ color: 'rgb(248, 206, 11)' }}>
-                                                        ({evaluations[index].count} vote)
-                                                    </span>
-                                                    &nbsp;
+                                <div className="border-b pb-4">
+                                    <p>Sản phẩm đã được đánh giá</p>
+                                    <div className={clsx(styles.describe_evaluation, 'flex items-center gap-10')}>
+                                        <div className="ml-14">
+                                            <p className="text-xl uppercase font-normal">Sao trung bình</p>
+                                            <div
+                                                className={clsx(
+                                                    styles.describe_evaluation__star,
+                                                    'justify-center mt-2 text-xl',
+                                                )}
+                                            >
+                                                <span className="text-[#f8ce0b]">{product.tongDanhGia.toFixed(1)}</span>
+                                                &nbsp;
+                                                <div className={clsx('star star-1 active')}></div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            {stars.map((star, index) => {
+                                                return (
                                                     <div
                                                         key={star.id}
                                                         className={clsx(
-                                                            `${star.class}`,
-                                                            'star',
-                                                            index + 1 === star.id ? 'active' : ' ',
+                                                            styles.describe_evaluation__star,
+                                                            'items-center gap-2',
                                                         )}
-                                                    ></div>
-                                                </div>
-                                            );
-                                        })}
+                                                    >
+                                                        <div className="flex">
+                                                            <span>{star.id}</span>
+                                                            &nbsp;
+                                                            <div
+                                                                key={star.id}
+                                                                className={clsx('star star-1 active')}
+                                                            ></div>
+                                                        </div>
+                                                        <div className="w-52 h-2 bg-[#ccc] rounded-lg">
+                                                            <div
+                                                                style={{
+                                                                    width: `${
+                                                                        evaluaAll?.ratings.length > 0
+                                                                            ? (
+                                                                                  evaluaAll?.ratings.filter(
+                                                                                      (item) =>
+                                                                                          item.numberRating === star.id,
+                                                                                  ).length / evaluaAll?.ratings.length
+                                                                              ).toFixed(2) * 100
+                                                                            : 0
+                                                                    }%`,
+                                                                }}
+                                                                className={`bg-[#f8ce0b] h-2 rounded-lg`}
+                                                            ></div>
+                                                        </div>
+                                                        <div>
+                                                            {evaluaAll.ratings.length > 0
+                                                                ? (
+                                                                      evaluaAll?.ratings.filter(
+                                                                          (item) => item.numberRating === star.id,
+                                                                      ).length / evaluaAll?.ratings.length
+                                                                  ).toFixed(2) * 100
+                                                                : 0}
+                                                            %
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
                                     </div>
                                 </div>
+
+                                <div className="mt-6">
+                                    {evaluaAll?.ratings.map((item, index) => (
+                                        <div
+                                            key={index}
+                                            className={`flex gap-4  ${index === 0 ? 'pb-4' : 'py-4'} border-b`}
+                                        >
+                                            <div>
+                                                <img
+                                                    className="w-10 h-10 rounded-full"
+                                                    src={`http://localhost:3000/Image/${item.User.image}`}
+                                                    alt=""
+                                                />
+                                            </div>
+                                            <div>
+                                                <p className="!mt-0">{item.User.name}</p>
+                                                <div className={clsx(`star-${item.numberRating} active`)}></div>
+                                                <p className="!mt-0 text-[#00000066]">
+                                                    {moment(item?.createdAt).format('DD/MM/YYYY HH:mm')}
+                                                </p>
+                                                <p className="!mt-0">{item.comment ? item.comment : ''}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                                {evaluaAll?.totalRatings > 0 && (
+                                    <div className="mt-6">
+                                        <Pagination
+                                            productPerPage={evaluaAll.limit}
+                                            totalProduct={evaluaAll.totalRatings}
+                                            pagination={pagination}
+                                            isActive={isActive}
+                                            handleNext={handleNext}
+                                            handlePrevious={handlePrevious}
+                                        />
+                                    </div>
+                                )}
                             </motion.div>
                         )}
                     </div>
@@ -474,8 +534,7 @@ function ProductDetails(props) {
                         {selectedId && (
                             <motion.div
                                 style={{ transform: 'translate(-50%, -50%)' }}
-                                className="z-20 fixed top-1/2 left-1/2 -translate-y-1/2 w-1/2
-                            "
+                                className="z-20 fixed top-1/2 left-1/2 -translate-y-1/2 w-1/2"
                                 layoutId={selectedId}
                             >
                                 <motion.img

@@ -128,7 +128,7 @@ function ListProduct(props) {
 
     // sắp xếp giá
     const hanldeSortPrice = (sort, sortField) => {
-        const sortOrderByPrice = _.orderBy(products, [sortField], [sort]);
+        const sortOrderByPrice = _.orderBy(products, [(item) => parseFloat(item[sortField])], [sort]);
         setProducts(sortOrderByPrice);
         if (currentProductSearch.length > 0) {
             setSucceSearch(sortOrderByPrice);
@@ -269,7 +269,7 @@ function ListProduct(props) {
                     >
                         <table className={clsx(styles.table, 'border-collapse p-2 border w-[1070px]')}>
                             <thead className="border-collapse p-2">
-                                <tr className="border-collapse p-2 p-2">
+                                <tr className="border-collapse  p-2">
                                     <th className="bg-[#ddd] text-left border-collapse p-2"></th>
                                     <th className="bg-[#ddd] text-left border-collapse p-2">STT</th>
                                     <th className="bg-[#ddd] text-left border-collapse p-2">
@@ -308,16 +308,16 @@ function ListProduct(props) {
                                             ></i>
                                         )}
                                     </th>
-                                    <th className="text-center bg-[#ddd] text-left border-collapse p-2">Số lượng</th>
-                                    <th className="text-center bg-[#ddd] text-left border-collapse p-2">Sửa </th>
-                                    <th className="text-center bg-[#ddd] text-left border-collapse p-2">Xóa</th>
+                                    <th className="bg-[#ddd] text-left border-collapse p-2">Số lượng</th>
+                                    <th className="bg-[#ddd] text-left border-collapse p-2">Sửa </th>
+                                    <th className="bg-[#ddd] text-left border-collapse p-2">Xóa</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {currentProductSearch.length === 0
                                     ? paginationProduct.map((product) => {
                                           return (
-                                              <tr className="border-collapse p-2 p-2" key={product.ID}>
+                                              <tr className="border-collapse  p-2" key={product.ID}>
                                                   <td className="border-collapse p-2">
                                                       <input
                                                           checked={isChecked.includes(product.ID)}
@@ -364,7 +364,7 @@ function ListProduct(props) {
                                       })
                                     : currentProductSearch.map((product) => {
                                           return (
-                                              <tr className="border-collapse p-2 p-2" key={product.ID}>
+                                              <tr className="border-collapse  p-2" key={product.ID}>
                                                   <td className="border-collapse p-2">
                                                       <input
                                                           checked={isChecked.includes(product.ID)}

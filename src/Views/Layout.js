@@ -271,7 +271,19 @@ function Layout(props) {
 
                 <Route
                     path={path.ProductDetails}
-                    element={<ProductDetails count={count} setCount={setCount} onAdd={onAdd} toast={toast} />}
+                    element={
+                        <ProductDetails
+                            count={count}
+                            setCount={setCount}
+                            onAdd={onAdd}
+                            toast={toast}
+                            isActive={isActive}
+                            handleNext={handleNext}
+                            handlePrevious={handlePrevious}
+                            currentPage={currentPage}
+                            pagination={pagination}
+                        />
+                    }
                 />
                 <Route path={path.LayoutOrder} element={<LayoutOrder onAdd={onAdd} toast={toast} />}>
                     <Route path={path.LayoutOrderAll} element={<OrderAll toast={toast} />} />

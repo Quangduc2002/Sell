@@ -126,8 +126,8 @@ function Login(props) {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
         if (validateForm()) {
+            e.preventDefault();
             axiosPost(
                 '/user/login',
                 {
@@ -162,7 +162,7 @@ function Login(props) {
                     }
                 })
                 .catch((err) => {
-                    if (err.response.data.errCode === 3) {
+                    if (err?.response?.data?.errCode === 3) {
                         toast.error(err.response.data.message);
                     }
                 });
@@ -205,7 +205,7 @@ function Login(props) {
     const handlePressEnter = (event) => {
         // event.preventDefault();
         if (event.key === 'Enter') {
-            handleSubmit();
+            handleSubmit(event);
         }
     };
 

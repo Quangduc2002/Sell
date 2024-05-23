@@ -57,3 +57,17 @@
     z-index: 2;
     transform-origin: 0%;
 }
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar:horizontal {
+    height: 6px;
+}
+
+/* scrollbar itself */
+::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 8px;
+    border: 1px solid #fff;
+}

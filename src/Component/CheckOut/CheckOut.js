@@ -2,9 +2,10 @@ import React, { useState, useEffect, useContext } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { fetchUser, axiosPost } from '../../services/UseServices';
 import { UserContext } from '../../Context/UserContext';
+import PayPal from '../Paypal/Paypal';
 
 function CheckOut(props) {
-    const { cartItems, toast } = props;
+    const { cartItems, toast, setCartItems } = props;
     const [tenKH, setTenKH] = useState('');
     const [soDT, setSoDT] = useState('');
     const [email, setEmail] = useState('');
@@ -65,26 +66,52 @@ function CheckOut(props) {
     };
 
     const handleOrder = async (e) => {
-        e.preventDefault();
+        // e.preventDefault();
         if (Object.entries(user.account).length !== 0) {
             if (handleValidation()) {
-                await axiosPost('/order', {
-                    Product: cartItems,
-                    tenKH: tenKH,
-                    soDT: soDT,
-                    diaChi: diaChi,
-                    email: email,
-                    phuongThucTT: thanhToan,
-                    note: note,
-                    trangThaiDH: 0,
-                    maKH: user.account.getUser.id,
-                })
-                    .then((res) => {
-                        toast.success('Mua sản phẩm thành công ');
+                if (thanhToan === 'Chuyển khoản ngân hàng') {
+                    await axiosPost('/order', {
+                        Product: cartItems,
+                        tenKH: tenKH,
+                        soDT: soDT,
+                        diaChi: diaChi,
+                        email: email,
+                        phuongThucTT: thanhToan,
+                        note: note,
+                        trangThaiDH: 0,
+                        maKH: user.account.getUser.id,
+                        isPay: true,
                     })
-                    .catch((err) => {
-                        toast.error(err);
-                    });
+                        .then((res) => {
+                            setCartItems([]);
+                            window.history.back();
+                            toast.success('Mua sản phẩm thành công ');
+                        })
+                        .catch((err) => {
+                            toast.error(err);
+                        });
+                } else {
+                    await axiosPost('/order', {
+                        Product: cartItems,
+                        tenKH: tenKH,
+                        soDT: soDT,
+                        diaChi: diaChi,
+                        email: email,
+                        phuongThucTT: thanhToan,
+                        note: note,
+                        trangThaiDH: 0,
+                        maKH: user.account.getUser.id,
+                        isPay: false,
+                    })
+                        .then((res) => {
+                            setCartItems([]);
+                            window.history.back();
+                            toast.success('Mua sản phẩm thành công ');
+                        })
+                        .catch((err) => {
+                            toast.error(err);
+                        });
+                }
             }
         } else {
             navigate('/Login');
@@ -101,11 +128,11 @@ function CheckOut(props) {
                             to={'/giohang'}
                             className="focus:outline-none hover:underline no-underline text-gray-500 text-sm"
                         >
-                            <i className="fa-solid fa-arrow-left"></i>&nbsp;Back
+                            <i className="fa-solid fa-arrow-left"></i>&nbsp;Quay lại
                         </NavLink>
                     </div>
                     <div className="mb-2">
-                        <h1 className="text-3xl md:text-5xl font-bold text-gray-600">Checkout.</h1>
+                        <h1 className="text-3xl md:text-5xl font-bold text-gray-600">Thủ tục thanh toán</h1>
                     </div>
                 </div>
 
@@ -117,7 +144,10 @@ function CheckOut(props) {
                                     cartItems.map((cartItem) => {
                                         tongTien += cartItem.total;
                                         return (
-                                            <div className="w-full mx-auto text-gray-800 font-light mb-6 border-b border-gray-200 pb-6">
+                                            <div
+                                                key={cartItem.ID}
+                                                className="w-full mx-auto text-gray-800 font-light mb-6 border-b border-gray-200 pb-6"
+                                            >
                                                 <div className="w-full flex items-center">
                                                     <div className="overflow-hidden rounded-lg w-16 h-16 bg-gray-50 border border-gray-200">
                                                         <img
@@ -182,7 +212,7 @@ function CheckOut(props) {
                                         <div className="flex-grow xxs:pl-3 xs:pl-0">
                                             <input
                                                 className={`${
-                                                    formErrors.tenKH ? 'border-red-500' : ''
+                                                    formErrors.tenKH ? '!border-red-500' : ''
                                                 } xs:w-full  border border-slate-400 px-2 focus:border-gray-300 outline-none focus:ring rounded-lg py-2`}
                                                 value={tenKH}
                                                 onChange={(e) => setTenKH(e.target.value)}
@@ -197,7 +227,7 @@ function CheckOut(props) {
                                         <div className="flex-grow xxs:pl-3 xs:pl-0">
                                             <input
                                                 className={`${
-                                                    formErrors.email ? 'border-red-500' : ''
+                                                    formErrors.email ? '!border-red-500' : ''
                                                 } xs:w-full  border border-slate-400 px-2 focus:border-gray-300 outline-none focus:ring rounded-lg py-2`}
                                                 value={email}
                                                 onChange={(e) => setEmail(e.target.value)}
@@ -212,7 +242,7 @@ function CheckOut(props) {
                                         <div className="flex-grow xxs:pl-3 xs:pl-0">
                                             <input
                                                 className={`${
-                                                    formErrors.soDT ? 'border-red-500' : ''
+                                                    formErrors.soDT ? '!border-red-500' : ''
                                                 } xs:w-full  border border-slate-400 px-2 focus:border-gray-300 outline-none focus:ring rounded-lg py-2`}
                                                 value={soDT}
                                                 onChange={(e) => setSoDT(e.target.value)}
@@ -227,7 +257,7 @@ function CheckOut(props) {
                                         <div className="flex-grow xxs:pl-3 xs:pl-0">
                                             <input
                                                 className={`${
-                                                    formErrors.diaChi ? 'border-red-500' : ''
+                                                    formErrors.diaChi ? '!border-red-500' : ''
                                                 } xs:w-full  border border-slate-400 px-2 focus:border-gray-300 outline-none focus:ring rounded-lg py-2`}
                                                 value={diaChi}
                                                 onChange={(e) => setDiaChi(e.target.value)}
@@ -258,7 +288,9 @@ function CheckOut(props) {
 
                                         <select
                                             onChange={(e) => setThanhToan(e.target.value)}
-                                            className="py-2 px-2 w-full mt-2.5 focus:ring focus:border-gray-300 outline-none block border border-gray-200 rounded-lg text-sm "
+                                            className={`${
+                                                formErrors.thanhToan ? '!border-red-500' : ''
+                                            } py-2 px-2 w-full mt-2.5 focus:ring focus:border-gray-300 outline-none block border border-gray-200 rounded-lg text-sm `}
                                         >
                                             <option className="hidden">Phương thức thanh toán</option>
                                             <option value="Thanh toán khi nhận hàng">Thanh toán khi nhận hàng</option>
@@ -267,59 +299,21 @@ function CheckOut(props) {
                                     </div>
                                 </div>
 
-                                {thanhToan === 'Chuyển khoản ngân hàng' && (
-                                    <div className="w-full mx-auto rounded-lg bg-white border border-gray-200 text-gray-800 font-light mb-6">
-                                        <div className="w-full p-3 border-b border-gray-200">
-                                            <div className="mb-5"></div>
-                                            <div>
-                                                <div className="mb-3">
-                                                    <label className="text-gray-600 font-semibold text-sm mb-2 ml-1">
-                                                        Tên thẻ
-                                                    </label>
-                                                    <div>
-                                                        <input
-                                                            className="w-full px-3 py-2 mb-1 border border-gray-200 rounded-md focus:outline-none focus:border-indigo-500 transition-colors"
-                                                            placeholder="PHAM QUANG DUC"
-                                                            type="text"
-                                                        />
-                                                    </div>
-                                                </div>
-                                                <div className="mb-3">
-                                                    <label className="text-gray-600 font-semibold text-sm mb-2 ml-1">
-                                                        Số thẻ
-                                                    </label>
-                                                    <div>
-                                                        <input
-                                                            className="w-full px-3 py-2 mb-1 border border-gray-200 rounded-md focus:outline-none focus:border-indigo-500 transition-colors"
-                                                            placeholder="0000 0000 0000 0000"
-                                                            type="text"
-                                                        />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="w-full p-3">
-                                            <label for="type2" className="flex items-center cursor-pointer">
-                                                <img
-                                                    src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg"
-                                                    width="80"
-                                                    alt=""
-                                                    className="ml-3"
-                                                />
-                                            </label>
-                                        </div>
+                                {thanhToan === 'Chuyển khoản ngân hàng' ? (
+                                    <PayPal
+                                        handleOrder={handleOrder}
+                                        amount={Math.round((tongTien + 300000) / 23500)}
+                                    />
+                                ) : (
+                                    <div>
+                                        <button
+                                            onClick={handleOrder}
+                                            className="block w-full max-w-xs mx-auto  bg-[#ee4d2d] hover:bg-[#c52432] text-white rounded-lg px-3 py-2 font-semibold"
+                                        >
+                                            <i className="mdi mdi-lock-outline mr-1"></i> Mua ngay
+                                        </button>
                                     </div>
                                 )}
-
-                                <div>
-                                    <button
-                                        onClick={handleOrder}
-                                        className="block w-full max-w-xs mx-auto  bg-[#ee4d2d] hover:bg-[#c52432] text-white rounded-lg px-3 py-2 font-semibold"
-                                    >
-                                        <i className="mdi mdi-lock-outline mr-1"></i>{' '}
-                                        {thanhToan === 'Chuyển khoản ngân hàng' ? 'Thanh toán ngay' : 'Mua ngay'}
-                                    </button>
-                                </div>
                             </div>
                         </div>
                     </div>
