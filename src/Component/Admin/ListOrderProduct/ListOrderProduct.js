@@ -253,7 +253,7 @@ function ListOrderProduct(props) {
                                       })
                                     : currentUserSearch.map((order) => {
                                           return (
-                                              <tr className="border-collapse p-2 p-2" key={order.ID}>
+                                              <tr className="border-collapse p-2" key={order.ID}>
                                                   <td className="border-collapse p-2">MDH{order.ID}</td>
                                                   <td className="border-collapse p-2">{order.tenKH}</td>
                                                   <td className="border-collapse p-2">{order.diaChi}</td>

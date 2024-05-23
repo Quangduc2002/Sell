@@ -362,7 +362,7 @@ function ListCustomer(props) {
                             }}
                         >
                             <thead className="border-collapse p-2">
-                                <tr className="border-collapse p-2 p-2">
+                                <tr className="border-collapse p-2 ">
                                     <th className="bg-[#ddd] text-left border-collapse p-2">Email</th>
                                     <th className="bg-[#ddd] text-left border-collapse p-2">
                                         {showUsers ? 'Tên khách hàng' : 'Tên nhân viên'}
@@ -372,9 +372,7 @@ function ListCustomer(props) {
                                     ) : (
                                         <>
                                             <th className="bg-[#ddd] text-left border-collapse p-2">Ngày sinh</th>
-                                            <th className="bg-[#ddd] text-left border-collapse p-2 text-center">
-                                                Giới tính
-                                            </th>
+                                            <th className="bg-[#ddd] border-collapse p-2 text-center">Giới tính</th>
                                         </>
                                     )}
                                     {showUsers ? (
@@ -382,14 +380,14 @@ function ListCustomer(props) {
                                     ) : (
                                         ''
                                     )}
-                                    <th className="bg-[#ddd] text-left border-collapse p-2 text-center">Xóa</th>
+                                    <th className="bg-[#ddd] border-collapse p-2 text-center">Xóa</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {currentUserSearch.length === 0
                                     ? currentUsers.map((user) => {
                                           return (
-                                              <tr className="border-collapse p-2 p-2" key={user.ID}>
+                                              <tr className="border-collapse p-2 " key={user.ID}>
                                                   <td className="border-collapse p-2" style={{ minWidth: 300 }}>
                                                       {user.email}
                                                   </td>
@@ -435,7 +433,7 @@ function ListCustomer(props) {
                                       })
                                     : currentUserSearch.map((user) => {
                                           return (
-                                              <tr className="border-collapse p-2 p-2" key={user.ID}>
+                                              <tr className="border-collapse p-2" key={user.ID}>
                                                   <td className="border-collapse p-2" style={{ minWidth: 300 }}>
                                                       {user.email}
                                                   </td>
